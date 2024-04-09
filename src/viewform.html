@@ -131,7 +131,7 @@
 
         function loadQuestionnaire(id) {
             var userId = localStorage.getItem('userId');
-            $.get(`http://localhost:3000/users/${userId}/questionnaires/${id}`, function(data) {
+            $.get(`process.env.BACKEND_URL/users/${userId}/questionnaires/${id}`, function(data) {
                 const questionnaire = data;
                 if (questionnaire && questionnaire.questions) {
                     const formType = questionnaire.type.toLowerCase(); // Convertimos a minúsculas para manejarlo de manera uniforme

@@ -64,7 +64,7 @@
         }
 
         function loadResults(chatbotId, questionnaireId) {
-            $.get(`http://localhost:3000/results?chatbotId=${chatbotId}&questionnaireId=${questionnaireId}`, function (results) {
+            $.get(`process.env.BACKEND_URL/results?chatbotId=${chatbotId}&questionnaireId=${questionnaireId}`, function (results) {
                 console.log(results);
                 const susValues = results
                     .filter(result => result.sus !== -1)
@@ -74,7 +74,7 @@
                     createChart(susValues);
                 } else {
                     var userId = localStorage.getItem('userId');
-                    $.get(`http://localhost:3000/users/${userId}/questionnaires/${questionnaireId}`, function (questionnaire) {
+                    $.get(`process.env.BACKEND_URL/users/${userId}/questionnaires/${questionnaireId}`, function (questionnaire) {
                         console.log(questionnaire);
                         if (questionnaire && questionnaire.questions) {
                             console.log(questionnaire.questions);

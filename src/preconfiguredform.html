@@ -303,7 +303,7 @@
             var userId = localStorage.getItem('userId');
             $.ajax({
                 type: 'POST',
-                url: 'http://localhost:3000/users/'+userId+'/questionnaires',
+                url: 'process.env.BACKEND_URL/users/'+userId+'/questionnaires',
                 contentType: 'application/json',
                 data: JSON.stringify({
                     type: 'preconfigured',

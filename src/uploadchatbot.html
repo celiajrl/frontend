@@ -97,7 +97,7 @@
             var userId = localStorage.getItem('userId');
 
             $.ajax({
-                url: 'http://localhost:3000/users/'+userId+'/chatbots',
+                url: 'process.env.BACKEND_URL/users/'+userId+'/chatbots',
                 type: 'POST',
                 data: formData,
                 contentType: false,

@@ -130,7 +130,7 @@
                 var userId = localStorage.getItem('userId');
                 $.ajax({
                     type: 'POST',
-                    url: 'http://localhost:3000/users/'+userId+'/agenda',
+                    url: 'process.env.BACKEND_URL/users/'+userId+'/agenda',
                     contentType: 'application/json',
                     data: JSON.stringify(participant),
                     success: function (response) {
@@ -154,7 +154,7 @@
             console.log(userId);
             $.ajax({
                 type: 'GET',
-                url: 'http://localhost:3000/users/'+userId+'/agenda', 
+                url: 'process.env.BACKEND_URL/users/'+userId+'/agenda', 
                 success: function (data) {
                     displayAgenda(data);
                 },

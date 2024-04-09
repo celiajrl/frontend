@@ -115,7 +115,7 @@
             var userId = localStorage.getItem('userId');
             $.ajax({
                 type: 'GET',
-                url: 'http://localhost:3000/users/' + userId + '/completed-tests',
+                url: 'process.env.BACKEND_URL/users/' + userId + '/completed-tests',
                 success: function (data) {
                     displayCompletedTests(data);
                 },

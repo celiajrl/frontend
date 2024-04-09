@@ -111,7 +111,7 @@
             $('#navbarContainer').load('navbar.html');
             
             var userId = localStorage.getItem('userId');
-            $.get(`http://localhost:3000/users/${userId}/questionnaires`, function (data) {
+            $.get(`process.env.BACKEND_URL/users/${userId}/questionnaires`, function (data) {
                 console.log("Datos recibidos:", data);
                 updateQuestionnaireTable(data);
             })
@@ -153,7 +153,7 @@
                 if (confirm('Delete questionnaire?')) {
                     $.ajax({
                         type: 'DELETE',
-                        url: 'http://localhost:3000/users/'+userId+'/questionnaires/' + questionnaireId,
+                        url: 'process.env.BACKEND_URL/users/'+userId+'/questionnaires/' + questionnaireId,
                         success: function (response) {
                             console.log(response.message);
                             window.location.reload();

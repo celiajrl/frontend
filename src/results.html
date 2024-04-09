@@ -110,9 +110,9 @@
 
         function loadResults(id) {
             var userId = localStorage.getItem('userId');
-            $.get(`http://localhost:3000/results/${id}`, function(rdata) {
+            $.get(`process.env.BACKEND_URL/results/${id}`, function(rdata) {
                 const questionnaireId = rdata.questionnaireId;
-                $.get(`http://localhost:3000/users/${userId}/questionnaires/${questionnaireId}`, function(qdata) {
+                $.get(`process.env.BACKEND_URL/users/${userId}/questionnaires/${questionnaireId}`, function(qdata) {
                     const questionnaire = qdata;
                     if (questionnaire && questionnaire.questions) {
                         const formType = questionnaire.type.toLowerCase(); 
