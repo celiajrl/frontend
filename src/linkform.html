@@ -166,9 +166,9 @@
             
             var userId = localStorage.getItem('userId');
 
-            $.get(`process.env.BACKEND_URL/users/${userId}/questionnaires`, function (data) {
+            $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires`, function (data) {
     
-                $.get(`process.env.BACKEND_URL/users/${userId}/chatbots/${chatbotId}/questionnaires`, function (linkedData) {
+                $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/chatbots/${chatbotId}/questionnaires`, function (linkedData) {
     
                     updateQuestionnaireTable(chatbotId, data, linkedData);
                 })
@@ -231,7 +231,7 @@
             if (isLinked) {
                 $.ajax({
                     type: 'PATCH',
-                    url: `process.env.BACKEND_URL/users/${userId}/chatbots/${chatbotId}/unlink-questionnaire`,
+                    url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/chatbots/${chatbotId}/unlink-questionnaire`,
                     contentType: 'application/json',
                     data: JSON.stringify(requestBody),
                     success: function (response) {
@@ -244,7 +244,7 @@
             } else {
                 $.ajax({
                     type: 'PATCH',
-                    url: `process.env.BACKEND_URL/users/${userId}/chatbots/${chatbotId}/link-questionnaire`,
+                    url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/chatbots/${chatbotId}/link-questionnaire`,
                     contentType: 'application/json',
                     data: JSON.stringify(requestBody),
                     success: function (response) {

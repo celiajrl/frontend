@@ -64,7 +64,7 @@
         }
 
         function loadResults(chatbotId, questionnaireId) {
-            $.get(`process.env.BACKEND_URL/results?chatbotId=${chatbotId}&questionnaireId=${questionnaireId}`, function (results) {
+            $.get(`https://backend-chatbotevaluator.up.railway.app/results?chatbotId=${chatbotId}&questionnaireId=${questionnaireId}`, function (results) {
                 console.log(results);
                 const susValues = results
                     .filter(result => result.sus !== -1)
@@ -74,7 +74,7 @@
                     createChart(susValues);
                 } else {
                     var userId = localStorage.getItem('userId');
-                    $.get(`process.env.BACKEND_URL/users/${userId}/questionnaires/${questionnaireId}`, function (questionnaire) {
+                    $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires/${questionnaireId}`, function (questionnaire) {
                         console.log(questionnaire);
                         if (questionnaire && questionnaire.questions) {
                             console.log(questionnaire.questions);
