@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Chatbots</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/home.css" rel="stylesheet">
+    <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <style>
+        #chatbotContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-gap: 10px;
+            justify-content: center;
+            align-items: center;
+            max-height: calc(100vh - 170px); 
+            overflow-y: auto;
+            padding: 10px;
+        }
+    
+        .chatbot-card {
+            background-color: #ce93d8;
+            padding: 10px;
+            border-radius: 8px;
+            color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .chatbot-card h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .chatbot-card p {
+            font-size: 12px; 
+            margin: 2px 0; 
+        }
+
+        .chatbot-card a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .chatbot-card {
+            position: relative;
+        }
+
+        .chatbot-options {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        .chatbot-options a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+            
+    </style>
+</head>
+
+<body>
+    <div id="navbarContainer"></div>
+
+    <header>
+        <div class="header-content">
+            <div class="header-content-inner">
+                <div id="chatbotContainer"></div>
+                <div class="text-center mt-4">
+                    <a href="uploadchatbot.html" class="btn btn-primary btn-lg">Upload Chatbot</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/custom.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#navbarContainer').load('navbar.html');
+            var userId = localStorage.getItem('userId');
+            $.get('http://localhost:3000/users/'+userId+'/chatbots', function (data) {
+                updateChatbotContainer(data);
+            })
+            .fail(function(error) {
+                console.error("Error en la solicitud:", error);
+            });
+
+            $(document).on('click', '.chatbot-options a.edit-chatbot', function (event) {
+                event.preventDefault();
+                var chatbotId = $(this).data('id'); 
+                window.location.href = 'editchatbot.html?id=' + encodeURIComponent(chatbotId);
+            });
+
+
+            $(document).on('click', '.chatbot-options a.delete-chatbot', function (event) {
+                event.preventDefault();
+                var chatbotId = $(this).data('id');
+                var userId = localStorage.getItem('userId');
+                if (confirm('Delete chatbot?')) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: 'http://localhost:3000/users/'+userId+'/chatbots/' + chatbotId,
+                        success: function (response) {
+                            window.location.reload();
+                        },
+                        error: function (error) {
+                            console.error(error);
+                        }
+                    });
+                }
+                            
+                });
+            });
+
+        function updateChatbotContainer(chatbots) {
+            var chatbotContainer = $('#chatbotContainer');
+            chatbotContainer.empty();
+
+            chatbots.forEach(function (chatbot) {
+                var chatbotCardHtml = createChatbotCard(chatbot);
+                chatbotContainer.append(chatbotCardHtml);
+            });
+        }
+
+        function createChatbotCard(chatbot) {
+            var chatbotCardHtml = `
+                <div class="chatbot-card">
+                    <h3>${chatbot.name}</h3>
+                    <p><strong>ID:</strong> ${chatbot._id}</p>
+                    <p><strong>Version:</strong> ${chatbot.version}</p>
+                    <p><strong>Date:</strong> ${chatbot.date}</p>
+                    <div class="chatbot-options">
+                        <a href="#" data-id="${chatbot._id}" class="edit-chatbot">Edit</a>
+                        <a href="#" data-id="${chatbot._id}" class="delete-chatbot">Delete</a>
+                        <a href="linkform.html?id=${encodeURIComponent(chatbot._id)}">Link Form</a>                    
+                    </div>
+                </div>
+            `;
+
+            return chatbotCardHtml;
+        }
+    </script>
+</body>
+
+</html>

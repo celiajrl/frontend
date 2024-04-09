@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Forms</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/home.css" rel="stylesheet">
+    <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <style>
+        #tablaQuestionnaires {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-gap: 10px;
+            justify-content: center;
+            align-items: center;
+            max-height: calc(100vh - 270px); 
+            overflow-y: auto;
+            margin-top: 20px;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            border-collapse: collapse;
+        }
+
+        #tablaQuestionnaires th,
+        #tablaQuestionnaires td {
+            border: 1px solid #ddd;
+            padding: 16px;
+            text-align: left;
+            vertical-align: middle;
+            width: auto;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background-color: #ce93d8;
+        }
+
+        #tablaQuestionnaires th {
+            background-color: #ce93d8;
+            color: white;
+        }
+
+        #tablaQuestionnaires button {
+            background-color: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 10px 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #tablaQuestionnaires button:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        #createFormButton {
+            background-color: #673ab7;
+            color: white;
+            border: 1px solid white; 
+            padding: 10px 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #createFormButton:hover {
+            background-color: #5e35b1;
+            border-color: #673ab7; 
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="navbarContainer"></div>
+
+    <header>
+        <div class="header-content">
+            <div class="header-content-inner">
+                <table id="tablaQuestionnaires">
+                    <thead>
+                        <tr>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+                <div class="text-center mt-4">
+                    <a href="uploadform.html" class="btn btn-primary btn-lg">Create Form</a>
+                </div>
+            </div>
+        </div>
+        
+    </header>
+
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/custom.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#navbarContainer').load('navbar.html');
+            
+            var userId = localStorage.getItem('userId');
+            $.get(`http://localhost:3000/users/${userId}/questionnaires`, function (data) {
+                console.log("Datos recibidos:", data);
+                updateQuestionnaireTable(data);
+            })
+            .fail(function (error) {
+                console.error("Error en la solicitud:", error);
+            });
+        });
+    
+        function updateQuestionnaireTable(questionnaires) {
+            const tablaQuestionnairesElement = $("#tablaQuestionnaires tbody");
+    
+            tablaQuestionnairesElement.empty();
+    
+            questionnaires.forEach((questionnaire, index) => {
+                const fila = $("<tr>").html(`
+                    <td>${index}</td>
+                    <td>Questionnaire ${index}</td>
+                    <td>
+                        <button onclick="viewQuestionnaire('${questionnaire._id}')" class="btn btn-info btn-sm">View</button>
+                        <button onclick="editQuestionnaire('${questionnaire._id}')" class="btn btn-warning btn-sm">Edit</button>
+                        <button onclick="removeQuestionnaire('${questionnaire._id}')" class="btn btn-danger btn-sm">Remove</button>
+                    </td>
+                `);
+                tablaQuestionnairesElement.append(fila);
+            });
+        }
+    
+        function viewQuestionnaire(questionnaireId) {
+            window.location.href = 'viewform.html?id=' + questionnaireId; 
+        }
+
+        function editQuestionnaire(questionnaireId) {
+            console.log("Edit questionnaire with ID:", questionnaireId);
+        }
+    
+        function removeQuestionnaire(questionnaireId) {
+            var userId = localStorage.getItem('userId');
+            event.preventDefault();
+                if (confirm('Delete questionnaire?')) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: 'http://localhost:3000/users/'+userId+'/questionnaires/' + questionnaireId,
+                        success: function (response) {
+                            console.log(response.message);
+                            window.location.reload();
+                        },
+                        error: function (error) {
+                            console.error(error);
+                        }
+                    });
+                }
+        }
+    </script>
+    
+
+</body>
+
+</html>

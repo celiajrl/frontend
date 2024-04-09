@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Raleway|Ubuntu" rel="stylesheet">
+    <link rel="stylesheet" href="src/css/styles.css">
+
+    <title>Chatbot evaluator</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    
+    <div class="contenedor-Questionnaires">
+        <ul class="contenedor-tabs">
+            <li class="tab tab-segunda active" data-tab="iniciar-sesion"><a href="#iniciar-sesion">Log in</a></li>
+            <li class="tab tab-primera" data-tab="registrarse"><a href="#registrarse">Register</a></li>
+        </ul>
+
+        <div class="contenido-tab">
+            <div id="iniciar-sesion">
+                <h1>Log in</h1>
+                <form id="form-login" action="#" method="post">
+                    <div class="contenedor-input">
+                        <label for="username">
+                            Username <span class="req">*</span>
+                        </label>
+                        <input type="text" id="username" name="username" autocomplete="username" required>
+                    </div>
+
+                    <div class="contenedor-input">
+                        <label for="password">
+                            Password <span class="req">*</span>
+                        </label>
+                        <input type="password" id="password" name="password" autocomplete="current-password" required>
+                    </div>
+                    <p class="forgot"><a href="#">Forgot your password?</a></p>
+                    <input type="submit" class="button button-block" value="Iniciar Sesión">
+                </form>
+            </div>
+
+            <div id="registrarse">
+                <h1>Register</h1>
+                <form id="form-registro" action="#" method="post">
+                    <div class="fila-arriba">
+                        <div class="contenedor-input">
+                            <label for="name">
+                                Name <span class="req">*</span>
+                            </label>
+                            <input type="text" id="name" name="name" autocomplete="given-name" required>
+                        </div>
+
+                        <div class="contenedor-input">
+                            <label for="surname">
+                                Surname <span class="req">*</span>
+                            </label>
+                            <input type="text" id="surname" name="surname" autocomplete="family-name" required>
+                        </div>
+                    </div>
+                    <div class="contenedor-input">
+                        <label for="reg-username">
+                            Username <span class="req">*</span>
+                        </label>
+                        <input type="text" id="reg-username" name="reg-username" autocomplete="username" required>
+                    </div>
+                    <div class="contenedor-input">
+                        <label for="email">
+                            Email <span class="req">*</span>
+                        </label>
+                        <input type="email" id="email" name="email" autocomplete="email" required>
+                    </div>
+                    <div class="contenedor-input">
+                        <label for="reg-password">
+                            Password <span class="req">*</span>
+                        </label>
+                        <input type="password" id="reg-password" name="reg-password" autocomplete="new-password" required>
+                    </div>
+
+                    <div class="contenedor-input">
+                        <label for="repeat-password">
+                            Repeat password <span class="req">*</span>
+                        </label>
+                        <input type="password" id="repeat-password" name="repeat-password" autocomplete="new-password" required>
+                    </div>
+
+                    <input type="submit" class="button button-block" value="Registrarse">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="src/js/script.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            function switchTab(tabName) {
+                $('.tab-content').removeClass('active');
+                $('#' + tabName).addClass('active');
+                $('.contenedor-tabs li').removeClass('active');
+                $('.contenedor-tabs li[data-tab="' + tabName + '"]').addClass('active');
+            }
+            $('.contenedor-tabs li').on('click', function (event) {
+                event.preventDefault();
+                var tabName = $(this).data('tab');
+                console.log('Clicked tab:', tabName);
+                switchTab(tabName);
+            });
+
+            switchTab($('.contenedor-tabs li:first-child').data('tab'));
+        
+            $('#form-login').submit(function (event) {
+                event.preventDefault();
+                var username = $('#form-login input[name="username"]').val();
+                var password = $('#form-login input[name="password"]').val();
+
+                $.ajax({
+                    url: 'http://localhost:3000/login',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ username: username, password: password }),
+                    success: function (response) {
+                        if (response.message === 'Login successful') {
+                            localStorage.setItem('userId', response.user._id); 
+                            localStorage.setItem('username', response.user.username);
+                            alert(response.message);
+                            window.location.href = 'src/home.html';
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        handleError(xhr);
+                    }
+                });
+            });
+
+            $('#form-registro').submit(function (event) {
+                event.preventDefault();
+                var name = $('#form-registro input[name="name"]').val();
+                var surname = $('#form-registro input[name="surname"]').val();
+                var regUsername = $('#form-registro input[name="reg-username"]').val();
+                var email = $('#form-registro input[name="email"]').val();
+                var regPassword = $('#form-registro input[name="reg-password"]').val();
+                var repeatPassword = $('#form-registro input[name="repeat-password"]').val();
+
+                $.ajax({
+                    url: 'http://localhost:3000/register',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        name: name,
+                        surname: surname,
+                        username: regUsername,
+                        email: email,
+                        password: regPassword,
+                        repeat: repeatPassword
+                    }),
+                    success: function (response) {
+                        if (response.message === 'Registration successful') {
+                            localStorage.setItem('userId', response.user._id); 
+                            localStorage.setItem('username', response.user.username);
+                            window.location.href = 'src/home.html';
+                        } else if (response.message === 'Passwords do not match') {
+                            alert('Error: Las contraseñas no coinciden. Por favor, inténtalo de nuevo.');
+                        } else if (response.message === 'Username or email already in use') {
+                            alert('Error: Nombre de usuario o correo electrónico ya en uso. Por favor, elige otros.');
+                        } else {
+                            alert('Error desconocido en el registro. Por favor, intenta de nuevo.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        handleError(xhr);
+                    }
+                });
+            });
+
+            function handleError(xhr) {
+                console.error(xhr);
+                if (xhr.status === 401) {
+                    alert('Credenciales incorrectas. Por favor, verifica tu nombre de usuario y contraseña.');
+                } else if (xhr.status === 500) {
+                    alert('Ocurrió un error interno en el servidor. Por favor, intenta de nuevo más tarde.');
+                } else {
+                    alert('Error desconocido. Por favor, verifica tus credenciales o intenta de nuevo.');
+                }
+            }
+        });
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Results</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/home.css" rel="stylesheet">
+    <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <style>
+        #tableContainer {
+            background-color: #ce93d8;
+            padding: 20px; 
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #ce93d8;
+            color: white;
+        }
+
+        .scale-options {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap; /* Evita que los elementos se envuelvan en varias líneas */
+            overflow-x: auto; /* Agrega desplazamiento horizontal si los elementos se desbordan */
+            max-width: 100%; /* Ajusta el ancho máximo para evitar el desbordamiento horizontal */
+        }
+
+        .scale-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #fff;
+            margin-right: 15px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Agregar transición para un cambio suave de color de fondo */
+        }
+
+        .scale-circle.selected {
+            background-color: #6a1b9a; /* Cambiar el color de fondo del círculo seleccionado */
+            color: #fff; /* Cambiar el color del texto para que sea visible en el círculo seleccionado */
+        }
+
+        .scale-circle:hover {
+            background-color: #f0f0f0; /* Cambiar el color de fondo al pasar el mouse */
+        }
+
+        .text-input {
+            background-color: #e0e0e0; /* Cambiar el color de fondo del campo de texto */
+            color: #000; /* Cambiar el color del texto para que sea visible */
+        }
+
+        .yes-no-options {
+            display: flex;
+            align-items: center;
+        }
+
+        .yes-no-options input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="navbarContainer"></div>
+    <header>
+        <div class="header-content">
+            <div class="header-content-inner" id="tableContainer">
+                <table id="questionsTableBody">
+                </table>
+            </div>
+            <button type="button" class="btn btn-primary btn-lg back" onclick="goBack()">Return</button>
+        </div>
+    </header>
+
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/custom.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#navbarContainer').load('navbar.html');
+            const urlParams = new URLSearchParams(window.location.search);
+            const resultId = urlParams.get('resultId');
+            loadResults(resultId);
+        });
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function loadResults(id) {
+            var userId = localStorage.getItem('userId');
+            $.get(`http://localhost:3000/results/${id}`, function(rdata) {
+                const questionnaireId = rdata.questionnaireId;
+                $.get(`http://localhost:3000/users/${userId}/questionnaires/${questionnaireId}`, function(qdata) {
+                    const questionnaire = qdata;
+                    if (questionnaire && questionnaire.questions) {
+                        const formType = questionnaire.type.toLowerCase(); 
+                        if (formType === 'preconfigured') {
+                            displayPreconfiguredQuestions(rdata.answers, questionnaire.questions);
+                        } else if (formType === 'custom') {
+                            displayCustomQuestions(rdata.answers, questionnaire.questions);
+                        } else {
+                            console.error('Unknown form type:', formType);
+                        }
+                    }
+            });
+            });
+        }
+
+        function displayPreconfiguredQuestions(answers, questions) {
+            const tbody = $('#questionsTableBody');
+            tbody.empty();
+
+            questions.forEach(function (question, index) {
+                const row = $('<tr>');
+
+                // Celda para la respuesta positiva
+                const positiveCell = $('<td>').text((index * 2) + 1 + '. ' + question.positive);
+                const positiveAnswerCell = $('<td>'); 
+
+                // Obtener el valor de la respuesta positiva para la escala del 1 al 5
+                const positiveAnswerValue = answers[index * 2 + 1];
+                // Crear la escala de 1 al 5 con la respuesta seleccionada para la respuesta positiva
+                const positiveScaleWidget = $('<div>').addClass('scale-options');
+                for (let i = 1; i <= 5; i++) {
+                    const circle = $('<span>').addClass('scale-circle').text(i);
+                    if (i == positiveAnswerValue) {
+                        circle.addClass('selected');
+                    }
+                    positiveScaleWidget.append(circle);
+                }
+                positiveAnswerCell.append(positiveScaleWidget);
+
+                // Celda para la respuesta negativa
+                const negativeCell = $('<td>').text((index * 2) + 2 + '. ' + question.negative);
+                const negativeAnswerCell = $('<td>');
+
+                // Obtener el valor de la respuesta negativa para la escala del 1 al 5
+                const negativeAnswerValue = answers[index * 2 + 2];
+                // Crear la escala de 1 al 5 con la respuesta seleccionada para la respuesta negativa
+                const negativeScaleWidget = $('<div>').addClass('scale-options');
+                for (let i = 1; i <= 5; i++) {
+                    const circle = $('<span>').addClass('scale-circle').text(i);
+                    if (i == negativeAnswerValue) {
+                        circle.addClass('selected');
+                    }
+                    negativeScaleWidget.append(circle);
+                }
+                negativeAnswerCell.append(negativeScaleWidget);
+
+                row.append(positiveCell, positiveAnswerCell);
+                tbody.append(row);
+
+                const row2 = $('<tr>');
+                row2.append(negativeCell, negativeAnswerCell);
+                tbody.append(row2);
+            });
+        }
+
+
+
+
+    function displayCustomQuestions(answers, questions) {
+        const tbody = $('#questionsTableBody');
+        tbody.empty();
+
+        questions.forEach(function (question, index) {
+            const row = $('<tr>');
+            const questionCell = $('<td>').text((index + 1) + '. ' + question.question);
+            const answerCell = $('<td>'); // Celda para la respuesta
+
+            // Determinar el tipo de pregunta y generar el widget correspondiente
+            switch (question.type.toLowerCase()) {
+                case 'scale':
+                    const scaleValue = answers[index + 1]; // Obtener el valor de la escala de las respuestas
+                    const scaleWidget = $('<div>').addClass('scale-options');
+                    for (let i = 1; i <= 5; i++) {
+                        const circle = $('<span>').addClass('scale-circle').text(i);
+                        if (i == scaleValue) {
+                            circle.addClass('selected');
+                        }
+                        scaleWidget.append(circle);
+                    }
+                    answerCell.append(scaleWidget);
+                    break;
+                case 'yesno':
+                    const yesNoValue = answers[index + 1]; // Obtener el valor de Yes/No de las respuestas
+                    const yesNoWidget = $('<div>').addClass('yes-no-options');
+                    const yesLabel = $('<label>').text('Yes');
+                    const yesCheckbox = $('<input>').attr({
+                        type: 'checkbox',
+                        checked: yesNoValue === 'Yes', // Marcar el checkbox si la respuesta es 'Yes'
+                        disabled: true
+                    });
+                    const noLabel = $('<label>').text('No');
+                    const noCheckbox = $('<input>').attr({
+                        type: 'checkbox',
+                        checked: yesNoValue === 'No', // Marcar el checkbox si la respuesta es 'No'
+                        disabled: true
+                    });
+                    yesNoWidget.append(yesCheckbox, yesLabel, noCheckbox, noLabel);
+                    answerCell.append(yesNoWidget);
+                    break;
+                case 'text':
+                    const textValue = answers[index + 1]; // Obtener el valor de texto de las respuestas
+                    const textWidget = $('<input>').attr({
+                        type: 'text',
+                        value: textValue,
+                        readonly: true, // Hacer que el campo sea de solo lectura
+                        class: 'text-input' // Agregar la clase para el estilo del campo de texto
+                    });
+                    answerCell.append(textWidget);
+                    break;
+
+                case 'list':
+                    const listValue = answers[index + 1]; // Obtener el valor de la lista de las respuestas
+                    const listWidget = $('<select>').attr('disabled', true);
+                    question.answerOptions.forEach(function(option) {
+                        const optionElement = $('<option>').attr('value', option).text(option);
+                        if (option === listValue) {
+                            optionElement.attr('selected', true); // Seleccionar la opción que coincide con la respuesta
+                        }
+                        listWidget.append(optionElement);
+                    });
+                    answerCell.append(listWidget);
+                    break;
+                default:
+                    answerCell.text('Unknown Type');
+                    break;
+            }
+
+            row.append(questionCell, answerCell);
+            tbody.append(row);
+        });
+    }
+
+
+    </script>
+
+</body>
+
+</html>

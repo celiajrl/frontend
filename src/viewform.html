@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>View Form</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/home.css" rel="stylesheet">
+    <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <style>
+        form {
+            background-color: #ce93d8;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #fff;
+            max-height: 300px; 
+            overflow-y: auto; 
+        }
+
+        .preconfigured-options {
+            display: none;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+
+        .scale-options {
+            display: flex;
+            align-items: center;
+        }
+
+        .scale-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #fff;
+            margin-right: 15px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            cursor: pointer;
+        }
+
+        .preconfigured-question {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        select.form-control {
+            width: 100%; 
+            max-width: none; 
+        }
+        .add-question {
+            display: block;
+            margin-top: 30px;
+        }
+
+        .preconfigured-options.show {
+            display: block;
+        }
+
+        input {
+            color: #000; 
+        }
+
+        .question-cell {
+            width: 100%;
+            text-align: left;
+            padding-right: 15px; 
+        }
+
+        .question-cell,
+        .answer-cell {
+            padding-bottom: 20px; /* Ajusta el valor según sea necesario para aumentar el espacio entre filas */
+        }
+
+        .text-input {
+            width: 200px; /* Ajusta el ancho según sea necesario */
+            max-width: 100%; /* Permite que el ancho máximo sea igual al ancho del contenedor */
+        }
+
+
+        
+    </style>
+</head>
+
+
+<body>
+    <div id="navbarContainer"></div>
+    <header>
+        <div class="header-content">
+            <div class="header-content-inner">
+                <form id="formoptions">
+                    <table class="preconfigured-options" id="questionTableBody">
+                        
+                    </table>
+                </form>
+            </div>
+            <button type="button" class="btn btn-primary btn-lg back" onclick="goBack()">Return</button>
+        </div>
+        
+    </header>
+
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/custom.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#navbarContainer').load('navbar.html');
+            $('.preconfigured-options').show();
+            const urlParams = new URLSearchParams(window.location.search);
+            const questionnaireId = urlParams.get('id');
+            loadQuestionnaire(questionnaireId);
+        });
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function loadQuestionnaire(id) {
+            var userId = localStorage.getItem('userId');
+            $.get(`http://localhost:3000/users/${userId}/questionnaires/${id}`, function(data) {
+                const questionnaire = data;
+                if (questionnaire && questionnaire.questions) {
+                    const formType = questionnaire.type.toLowerCase(); // Convertimos a minúsculas para manejarlo de manera uniforme
+                    if (formType === 'preconfigured') {
+                        // Si es preconfigurado, muestra las preguntas predefinidas
+                        displayPreconfiguredQuestions(questionnaire.questions);
+                    } else if (formType === 'custom') {
+                        // Si es personalizado, muestra las preguntas personalizadas
+                        displayCustomQuestions(questionnaire.questions);
+                    } else {
+                        console.error('Tipo de formulario desconocido:', formType);
+                    }
+                }
+            });
+        }
+
+        function displayPreconfiguredQuestions(questions) {
+            const tbody = $('#questionTableBody');
+            tbody.empty();
+
+            let counter = 1; 
+
+            questions.forEach(function (question, index) {
+                const row = $('<tr>');
+                const positiveCell = $('<td>').addClass('question-cell').text(counter + '. ' + question.positive);
+                const scaleOptionsCell = $('<td>').addClass('scale-options');
+
+                for (let i = 1; i <= 5; i++) {
+                    const scaleCircle = $('<div>').addClass('scale-circle').text(i);
+                    scaleOptionsCell.append(scaleCircle);
+                }
+
+                row.append(positiveCell, scaleOptionsCell);
+                tbody.append(row);
+
+                const negrow = $('<tr>');
+                const negativeCell = $('<td>').addClass('question-cell').text((counter + 1) + '. ' + question.negative);
+
+                negrow.append(negativeCell, scaleOptionsCell.clone()); 
+                tbody.append(negrow);
+
+                counter += 2; 
+            });
+        }
+
+        function displayCustomQuestions(questions) {
+        const tbody = $('#questionTableBody');
+        tbody.empty();
+
+        questions.forEach(function (question, index) {
+            const row = $('<tr>');
+            const questionCell = $('<td>').addClass('question-cell').text((index + 1) + '. ' + question.question);
+            const answerInputCell = $('<td>').addClass('answer-cell'); // Celda para la entrada de respuesta
+
+            // Determina el tipo de pregunta y genera la entrada de respuesta correspondiente
+            switch (question.type.toLowerCase()) {
+                case 'scale':
+                    const scaleOptions = $('<div>').addClass('scale-options');
+
+                    // Genera círculos de escala del 1 al 5
+                    for (let j = 1; j <= 5; j++) {
+                        const scaleCircle = $('<div>').addClass('scale-circle').text(j);
+                        scaleCircle.on('click', function(event) {
+                            selectScale(j, index + 1); // Llama a la función selectScale con el valor del círculo de escala y el número de pregunta
+                        });
+                        scaleOptions.append(scaleCircle);
+                    }
+
+                    answerInputCell.append(scaleOptions);
+                    break;
+                case 'yesno':
+                    const yesNoOptions = $('<div>').addClass('yes-no-options');
+
+                    // Añade botones de opción Yes/No
+                    const yesRadio = $('<input>').attr({ type: 'radio', name: 'answer' + (index + 1), value: 'Yes', disabled: true });
+                    const noRadio = $('<input>').attr({ type: 'radio', name: 'answer' + (index + 1), value: 'No', disabled: true });
+
+                    yesNoOptions.append(yesRadio, ' Yes ', noRadio, ' No');
+                    answerInputCell.append(yesNoOptions);
+                    break;
+                case 'text':
+                    // Añade un campo de texto para la respuesta de texto
+                    const textInput = $('<input>').attr({ type: 'text', class: 'form-control text-input', id: 'answer' + (index + 1), placeholder: 'Enter answer', readonly: true });
+                    answerInputCell.append(textInput);
+                    break;
+                    case 'list':
+                        // Crea una lista desplegable para la entrada de respuesta
+                        const selectInput = $('<select>').addClass('form-control').attr({ id: 'answer' + (index + 1) }).css('width', '150px');
+                        selectInput.append($('<option>', { value: '', text: 'Select option...' })); // Opción predeterminada
+                        // Agrega opciones a la lista desplegable
+                        question.answerOptions.forEach(function(option) {
+                            selectInput.append($('<option>', { value: option, text: option }));
+                        });
+                        answerInputCell.append(selectInput);
+                        break;
+
+                default:
+                    answerInputCell.text('Unknown Type');
+                    break;
+            }
+
+            row.append(questionCell, answerInputCell);
+            tbody.append(row);
+        });
+    }
+
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Preconfigured Form</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/home.css" rel="stylesheet">
+    <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <style>
+        form {
+            background-color: #ce93d8;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #fff;
+            max-height: 400px; 
+            overflow-y: auto; 
+        }
+
+        .preconfigured-options {
+            display: none;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .scale-options {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; 
+        }
+
+        .scale-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #fff;
+            margin-right: 15px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            cursor: pointer;
+        }
+
+        .preconfigured-question {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .add-question {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .preconfigured-options.show {
+            display: block;
+        }
+
+        input {
+            color: #000; 
+        }
+    </style>
+</head>
+
+
+<body>
+    <div id="navbarContainer"></div>
+    <header>
+        <div class="header-content">
+            <div class="header-content-inner">
+                <form id="formoptions">
+                <table class="preconfigured-options">
+                    <tr>
+                        <th>Questions (SUS)</th>
+                    </tr>
+                    <tr class="form-group preconfigured-question" id="question1">
+                        <td>1. I think that I would like to use this system frequently.</td>
+                        <td class="scale-options">
+                            <div class="scale-circle" onclick="selectScale(1, 1)">1</div>
+                            <div class="scale-circle" onclick="selectScale(2, 1)">2</div>
+                            <div class="scale-circle" onclick="selectScale(3, 1)">3</div>
+                            <div class="scale-circle" onclick="selectScale(4, 1)">4</div>
+                            <div class="scale-circle" onclick="selectScale(5, 1)">5</div>
+                        </td>
+                    </tr>
+                    <tr class="form-group preconfigured-question" id="question2">
+                        <td>2. I found the system unnecessarily complex.</td>
+                        <td class="scale-options">
+                            <div class="scale-circle" onclick="selectScale(1, 1)">1</div>
+                            <div class="scale-circle" onclick="selectScale(2, 1)">2</div>
+                            <div class="scale-circle" onclick="selectScale(3, 1)">3</div>
+                            <div class="scale-circle" onclick="selectScale(4, 1)">4</div>
+                            <div class="scale-circle" onclick="selectScale(5, 1)">5</div>
+                        </td>
+                    </tr>
+                    <tr class="form-group preconfigured-question" id="question3">
+                        <td>3. I thought the system was easy to use.</td>
+                        <td class="scale-options">
+                            <div class="scale-circle" onclick="selectScale(1, 1)">1</div>
+                            <div class="scale-circle" onclick="selectScale(2, 1)">2</div>
+                            <div class="scale-circle" onclick="selectScale(3, 1)">3</div>
+                            <div class="scale-circle" onclick="selectScale(4, 1)">4</div>
+                            <div class="scale-circle" onclick="selectScale(5, 1)">5</div>
+                        </td>
+                    </tr>
+                    <tr class="form-group preconfigured-question" id="question4">
+                        <td>4. I think that I would need the support of a technical person to be able to use this system.</td>
+                        <td class="scale-options">
+                            <div class="scale-circle" onclick="selectScale(1, 1)">1</div>
+                            <div class="scale-circle" onclick="selectScale(2, 1)">2</div>
+                            <div class="scale-circle" onclick="selectScale(3, 1)">3</div>
+                            <div class="scale-circle" onclick="selectScale(4, 1)">4</div>
+                            <div class="scale-circle" onclick="selectScale(5, 1)">5</div>
+                        </td>
+                    </tr>
+                    <tr class="form-group preconfigured-question" id="question5">
+                        <td>5. I found the various functions in this system were well integrated.</td>
+                        <td class="scale-options">
+                            <div class="scale-circle" onclick="selectScale(1, 1)">1</div>
+                            <div class="scale-circle" onclick="selectScale(2, 1)">2</div>
+                            <div class="scale-circle" onclick="selectScale(3, 1)">3</div>
+                            <div class="scale-circle" onclick="selectScale(4, 1)">4</div>
+                            <div class="scale-circle" onclick="selectScale(5, 1)">5</div>
+                        </td>
+                    </tr>
+                    <tr class="form-group preconfigured-question" id="question6">
+                        <td>6. I thought there was too much inconsistency in this system.</td>
+                        <td class="scale-options">
+                            <div class="scale-circle" onclick="selectScale(1, 1)">1</div>
+                            <div class="scale-circle" onclick="selectScale(2, 1)">2</div>
+                            <div class="scale-circle" onclick="selectScale(3, 1)">3</div>
+                            <div class="scale-circle" onclick="selectScale(4, 1)">4</div>
+                            <div class="scale-circle" onclick="selectScale(5, 1)">5</div>
+                        </td>
+                    </tr>
+                    <tr class="form-group preconfigured-question" id="question7">
+                        <td>7. I would imagine that most people would learn to use this system very quickly.</td>
+                        <td class="scale-options">
+                            <div class="scale-circle" onclick="selectScale(1, 1)">1</div>
+                            <div class="scale-circle" onclick="selectScale(2, 1)">2</div>
+                            <div class="scale-circle" onclick="selectScale(3, 1)">3</div>
+                            <div class="scale-circle" onclick="selectScale(4, 1)">4</div>
+                            <div class="scale-circle" onclick="selectScale(5, 1)">5</div>
+                        </td>
+                    </tr>
+                    <tr class="form-group preconfigured-question" id="question8">
+                        <td>8. I found the system very cumbersome to use.</td>
+                        <td class="scale-options">
+                            <div class="scale-circle" onclick="selectScale(1, 1)">1</div>
+                            <div class="scale-circle" onclick="selectScale(2, 1)">2</div>
+                            <div class="scale-circle" onclick="selectScale(3, 1)">3</div>
+                            <div class="scale-circle" onclick="selectScale(4, 1)">4</div>
+                            <div class="scale-circle" onclick="selectScale(5, 1)">5</div>
+                        </td>
+                    </tr>
+                    <tr class="form-group preconfigured-question" id="question9">
+                        <td>9. I felt very confident using the system.</td>
+                        <td class="scale-options">
+                            <div class="scale-circle" onclick="selectScale(1, 1)">1</div>
+                            <div class="scale-circle" onclick="selectScale(2, 1)">2</div>
+                            <div class="scale-circle" onclick="selectScale(3, 1)">3</div>
+                            <div class="scale-circle" onclick="selectScale(4, 1)">4</div>
+                            <div class="scale-circle" onclick="selectScale(5, 1)">5</div>
+                        </td>
+                    </tr>
+                    <tr class="form-group preconfigured-question" id="question10">
+                        <td>10. I needed to learn a lot of things before I could get going with this system.</td>
+                        <td class="scale-options">
+                            <div class="scale-circle" onclick="selectScale(1, 1)">1</div>
+                            <div class="scale-circle" onclick="selectScale(2, 1)">2</div>
+                            <div class="scale-circle" onclick="selectScale(3, 1)">3</div>
+                            <div class="scale-circle" onclick="selectScale(4, 1)">4</div>
+                            <div class="scale-circle" onclick="selectScale(5, 1)">5</div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+                <button type="button" class="btn btn-primary btn-lg add-question" onclick="addAdditionalQuestion()">Add Question</button>
+                <button type="button" class="btn btn-primary btn-lg" onclick="validateAndSubmit()">Submit</button>
+            </div>
+        </div>
+    </header>
+
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/custom.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#navbarContainer').load('navbar.html');
+            $('.preconfigured-options').show();
+        });
+
+        var questionCounter = 10;
+
+
+        function validateAndSubmit() {
+            sendQuestionsToServer();
+            window.location.href = "myforms.html";
+        }
+
+        var questionsData = [
+    { positive: "I think that I would like to use this system frequently.", negative: "I found the system unnecessarily complex." },
+    { positive: "I thought the system was easy to use.", negative: "I think that I would need the support of a technical person to be able to use this system." },
+    { positive: "I found the various functions in this system were well integrated.", negative: "I thought there was too much inconsistency in this system." },
+    { positive: "I would imagine that most people would learn to use this system very quickly.", negative: "I found the system very cumbersome to use." },
+    { positive: "I felt very confident using the system.", negative: "I needed to learn a lot of things before I could get going with this system." }
+    ];
+
+    
+    function addAdditionalQuestion() {
+        var pquestion; 
+        var nquestion;
+        var table = document.querySelector('.preconfigured-options');
+
+        var newRowPositive = table.insertRow();
+        newRowPositive.className = 'form-group preconfigured-question';
+        newRowPositive.id = 'question' + (++questionCounter);
+
+        var positiveCell = newRowPositive.insertCell(0);
+        var positiveInput = document.createElement('input');
+        positiveInput.type = 'text';
+        positiveInput.placeholder = 'Enter positive question';
+        positiveInput.style.color = '#000';
+        positiveInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                pquestion = positiveInput.value;
+                event.preventDefault();
+                positiveInput.blur();
+            }
+        });
+        positiveCell.appendChild(positiveInput);
+
+        var scaleOptionsCell = newRowPositive.insertCell(1);
+        scaleOptionsCell.className = 'scale-options';
+
+        for (var i = 1; i <= 5; i++) {
+            var scaleCircle = document.createElement('div');
+            scaleCircle.className = 'scale-circle';
+            scaleCircle.textContent = i;
+            scaleCircle.onclick = function (event) {
+                selectScale(event.target.textContent, questionCounter);
+            };
+
+            scaleOptionsCell.appendChild(scaleCircle);
+        }
+
+        var x = document.getElementById("input"); 
+
+        var newRowNegative = table.insertRow();
+        newRowNegative.className = 'form-group preconfigured-question';
+        newRowNegative.id = 'question' + (++questionCounter);
+
+        var negativeCell = newRowNegative.insertCell(0);
+        var negativeInput = document.createElement('input');
+        negativeInput.type = 'text';
+        negativeInput.placeholder = 'Enter negative question';
+        negativeInput.style.color = '#000';
+        negativeInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                nquestion = negativeInput.value;
+                event.preventDefault();
+                negativeInput.blur();
+                console.log(pquestion);
+                console.log(nquestion);
+                questionsData.push({
+                    positive: pquestion,
+                    negative: nquestion
+                });
+            }
+        });
+        negativeCell.appendChild(negativeInput);
+
+        var scaleOptionsCellNegative = newRowNegative.insertCell(1);
+        scaleOptionsCellNegative.className = 'scale-options';
+
+        for (var j = 1; j <= 5; j++) {
+            var scaleCircleNegative = document.createElement('div');
+            scaleCircleNegative.className = 'scale-circle';
+            scaleCircleNegative.textContent = j;
+            scaleCircleNegative.onclick = function (event) {
+                selectScale(event.target.textContent, questionCounter);
+            };
+
+            scaleOptionsCellNegative.appendChild(scaleCircleNegative);
+        }
+        
+    }
+
+
+        function sendQuestionsToServer() { 
+            var userId = localStorage.getItem('userId');
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:3000/users/'+userId+'/questionnaires',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    type: 'preconfigured',
+                    questions: questionsData
+                }),
+                error: function (error) {
+                    alert('Error al enviar las preguntas al servidor:', error);
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html>
+
