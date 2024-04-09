@@ -97,7 +97,7 @@
             var userId = localStorage.getItem('userId');
 
             $.ajax({
-                url: process.env.BACKEND_URL+'/users/'+userId+'/chatbots',
+                url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/chatbots',
                 type: 'POST',
                 data: formData,
                 contentType: false,

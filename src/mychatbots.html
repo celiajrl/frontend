@@ -96,7 +96,7 @@
         $(document).ready(function () {
             $('#navbarContainer').load('navbar.html');
             var userId = localStorage.getItem('userId');
-            $.get(process.env.BACKEND_URL+'/users/'+userId+'/chatbots', function (data) {
+            $.get('https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/chatbots', function (data) {
                 updateChatbotContainer(data);
             })
             .fail(function(error) {
@@ -117,7 +117,7 @@
                 if (confirm('Delete chatbot?')) {
                     $.ajax({
                         type: 'DELETE',
-                        url: process.env.BACKEND_URL+'/users/'+userId+'/chatbots/' + chatbotId,
+                        url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/chatbots/' + chatbotId,
                         success: function (response) {
                             window.location.reload();
                         },

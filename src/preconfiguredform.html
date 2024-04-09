@@ -303,7 +303,7 @@
             var userId = localStorage.getItem('userId');
             $.ajax({
                 type: 'POST',
-                url: process.env.BACKEND_URL+'/users/'+userId+'/questionnaires',
+                url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/questionnaires',
                 contentType: 'application/json',
                 data: JSON.stringify({
                     type: 'preconfigured',

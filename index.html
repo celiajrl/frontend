@@ -116,7 +116,7 @@
                 var password = $('#form-login input[name="password"]').val();
 
                 $.ajax({
-                    url: process.env.BACKEND_URL+'/login',
+                    url: 'https://backend-chatbotevaluator.up.railway.app/login',
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({ username: username, password: password }),
@@ -146,7 +146,7 @@
                 var repeatPassword = $('#form-registro input[name="repeat-password"]').val();
 
                 $.ajax({
-                    url: process.env.BACKEND_URL+'/register',
+                    url: 'https://backend-chatbotevaluator.up.railway.app/register',
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({

@@ -153,7 +153,7 @@
                 if (confirm('Delete questionnaire?')) {
                     $.ajax({
                         type: 'DELETE',
-                        url: process.env.BACKEND_URL+'/users/'+userId+'/questionnaires/' + questionnaireId,
+                        url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/questionnaires/' + questionnaireId,
                         success: function (response) {
                             console.log(response.message);
                             window.location.reload();

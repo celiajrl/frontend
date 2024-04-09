@@ -113,7 +113,7 @@
             var userId = localStorage.getItem('userId');
             $.ajax({
                 type: 'GET',
-                url: process.env.BACKEND_URL+'/users/'+userId+'/active-tests', 
+                url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/active-tests', 
                 success: function (data) {
                     displayActiveTests(data);
                 },
