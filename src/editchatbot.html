@@ -77,7 +77,7 @@
             var urlParams = new URLSearchParams(window.location.search);
             var chatbotId = urlParams.get('id');
             var userId = localStorage.getItem('userId');
-            $.get('process.env.BACKEND_URL/users/'+userId+'/chatbots/' + chatbotId, function (data) {
+            $.get(process.env.BACKEND_URL+'/users/'+userId+'/chatbots/' + chatbotId, function (data) {
                 console.log("Datos del Chatbot:", data);
                 fillFormWithData(data);
             })
@@ -99,7 +99,7 @@
             var chatbotVersion = $('#chatbotVersion').val();
             var userId = localStorage.getItem('userId');
             $.ajax({
-                url: 'process.env.BACKEND_URL/users/'+userId+'/chatbots/' + chatbotId,
+                url: process.env.BACKEND_URL+'/users/'+userId+'/chatbots/' + chatbotId,
                 type: 'PATCH',
                 contentType: 'application/json',
                 data: JSON.stringify({

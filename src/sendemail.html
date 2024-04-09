@@ -122,7 +122,7 @@
             var userId = localStorage.getItem('userId');
             $.ajax({
                 type: 'GET',
-                url: 'process.env.BACKEND_URL/users/'+userId+'/agenda',
+                url: process.env.BACKEND_URL+'/users/'+userId+'/agenda',
                 success: function (data) {
                     displayAgenda(data);
                 },
@@ -164,7 +164,7 @@
             if (selectedParticipants.length > 0 && emailTitle && emailText) {
                 $.ajax({
                     type: 'POST',
-                    url: 'process.env.BACKEND_URL/send-email',
+                    url: process.env.BACKEND_URL+'/send-email',
                     contentType: 'application/json',
                     data: JSON.stringify({ userId, selectedParticipants, emailTitle, emailText, chatbotId }),
                     success: function (response) {
