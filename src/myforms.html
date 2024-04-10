@@ -13,7 +13,6 @@
 
     <style>
     #tablaQuestionnaires {
-        display: grid;
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Ajusta el ancho mínimo y máximo de las columnas */
         grid-gap: 10px;
         justify-content: center;
@@ -25,7 +24,6 @@
         margin-left: auto;
         margin-right: auto;
         border-collapse: collapse;
-        overflow-x: hidden; /* Para ocultar la barra de desplazamiento horizontal */
     }
 
     #tablaQuestionnaires th,
@@ -38,8 +36,9 @@
         overflow: hidden;
         text-overflow: ellipsis;
         background-color: #ce93d8;
-        width: 100%; /* Hace que las celdas ocupen todo el ancho disponible */
+        width: auto; /* Cambia el ancho de las columnas a automático */
     }
+
 
     #tablaQuestionnaires th {
         background-color: #ce93d8;
