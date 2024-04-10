@@ -131,7 +131,6 @@
                     <td>Questionnaire ${index}</td>
                     <td>
                         <button onclick="viewQuestionnaire('${questionnaire._id}')" class="btn btn-info btn-sm">View</button>
-                        <button onclick="editQuestionnaire('${questionnaire._id}')" class="btn btn-warning btn-sm">Edit</button>
                         <button onclick="removeQuestionnaire('${questionnaire._id}')" class="btn btn-danger btn-sm">Remove</button>
                     </td>
                 `);
@@ -141,10 +140,6 @@
     
         function viewQuestionnaire(questionnaireId) {
             window.location.href = 'viewform.html?id=' + questionnaireId; 
-        }
-
-        function editQuestionnaire(questionnaireId) {
-            console.log("Edit questionnaire with ID:", questionnaireId);
         }
     
         function removeQuestionnaire(questionnaireId) {
