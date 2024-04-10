@@ -12,54 +12,58 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
     <style>
-    #tablaQuestionnaires {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Ajusta el ancho mínimo y máximo de las columnas */
-        grid-gap: 10px;
-        justify-content: center;
-        align-items: center;
-        max-height: calc(100vh - 270px);
-        overflow-y: auto;
-        margin-top: 20px;
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-        border-collapse: collapse;
-    }
+        form {
+            background-color: #ce93d8;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #fff;
+        }
 
-    #tablaQuestionnaires th,
-    #tablaQuestionnaires td {
-        border: 1px solid #ddd;
-        padding: 16px;
-        text-align: left;
-        vertical-align: middle;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        background-color: #ce93d8;
-        width: auto; /* Cambia el ancho de las columnas a automático */
-    }
+        .tablaQuestionnaires-container {
+            max-height: calc(100vh - 270px);
+            overflow-y: auto;
+            margin-top: 20px;
+        }
 
+        .tablaQuestionnaires {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-    #tablaQuestionnaires th {
-        background-color: #ce93d8;
-        color: white;
-    }
+        .tablaQuestionnaires th,
+        .tablaQuestionnaires td {
+            border: 1px solid #ddd;
+            padding: 16px;
+            text-align: left;
+            vertical-align: middle;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background-color: #ce93d8;
+            color: white;
+            width: auto;
+        }
 
-    #tablaQuestionnaires button {
-        background-color: transparent;
-        color: white;
-        border: 1px solid white;
-        padding: 10px 16px;
-        cursor: pointer;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+        .tablaQuestionnaires th {
+            background-color: #ce93d8;
+            color: white;
+        }
 
-    #tablaQuestionnaires button:hover {
-        background-color: rgba(0, 0, 0, 0.1);
-        border-color: rgba(255, 255, 255, 0.5);
-    }
+        .tablaQuestionnaires button {
+            background-color: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 10px 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
+        .tablaQuestionnaires button:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
 
     </style>
 </head>
@@ -70,21 +74,26 @@
     <header>
         <div class="header-content">
             <div class="header-content-inner">
-                <table id="tablaQuestionnaires">
-                    <thead>
-                        <tr>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-
+                <form id="createForm">
+                    <div class="tablaQuestionnaires-container">
+                        <table class="tablaQuestionnaires">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Questionnaire</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
                 <div class="text-center mt-4">
                     <a href="uploadform.html" class="btn btn-primary btn-lg">Create Form</a>
                 </div>
             </div>
         </div>
-        
     </header>
 
     <script src="js/jquery-1.11.3.min.js"></script>
@@ -95,22 +104,21 @@
     <script>
         $(document).ready(function () {
             $('#navbarContainer').load('navbar.html');
-            
+
             var userId = localStorage.getItem('userId');
             $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires`, function (data) {
                 console.log("Datos recibidos:", data);
                 updateQuestionnaireTable(data);
-            })
-            .fail(function (error) {
+            }).fail(function (error) {
                 console.error("Error en la solicitud:", error);
             });
         });
-    
+
         function updateQuestionnaireTable(questionnaires) {
-            const tablaQuestionnairesElement = $("#tablaQuestionnaires tbody");
-    
+            const tablaQuestionnairesElement = $(".tablaQuestionnaires tbody");
+
             tablaQuestionnairesElement.empty();
-    
+
             questionnaires.forEach((questionnaire, index) => {
                 const fila = $("<tr>").html(`
                     <td>${index}</td>
@@ -123,31 +131,29 @@
                 tablaQuestionnairesElement.append(fila);
             });
         }
-    
+
         function viewQuestionnaire(questionnaireId) {
-            window.location.href = 'viewform.html?id=' + questionnaireId; 
+            window.location.href = 'viewform.html?id=' + questionnaireId;
         }
-    
+
         function removeQuestionnaire(questionnaireId) {
             var userId = localStorage.getItem('userId');
             event.preventDefault();
-                if (confirm('Delete questionnaire?')) {
-                    $.ajax({
-                        type: 'DELETE',
-                        url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/questionnaires/' + questionnaireId,
-                        success: function (response) {
-                            console.log(response.message);
-                            window.location.reload();
-                        },
-                        error: function (error) {
-                            console.error(error);
-                        }
-                    });
-                }
+            if (confirm('Delete questionnaire?')) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: 'https://backend-chatbotevaluator.up.railway.app/users/' + userId + '/questionnaires/' + questionnaireId,
+                    success: function (response) {
+                        console.log(response.message);
+                        window.location.reload();
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    }
+                });
+            }
         }
     </script>
-    
-
 </body>
 
 </html>
