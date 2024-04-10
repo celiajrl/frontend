@@ -215,7 +215,7 @@
 
     
     function addAdditionalQuestion() {
-        var pquestion; 
+        var pquestion;
         var nquestion;
         var table = document.querySelector('.preconfigured-options');
 
@@ -228,12 +228,8 @@
         positiveInput.type = 'text';
         positiveInput.placeholder = 'Enter positive question';
         positiveInput.style.color = '#000';
-        positiveInput.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter') {
-                pquestion = positiveInput.value;
-                event.preventDefault();
-                positiveInput.blur();
-            }
+        positiveInput.addEventListener('input', function (event) {
+            pquestion = positiveInput.value;
         });
         positiveCell.appendChild(positiveInput);
 
@@ -251,8 +247,6 @@
             scaleOptionsCell.appendChild(scaleCircle);
         }
 
-        var x = document.getElementById("input"); 
-
         var newRowNegative = table.insertRow();
         newRowNegative.className = 'form-group preconfigured-question';
         newRowNegative.id = 'question' + (++questionCounter);
@@ -262,18 +256,12 @@
         negativeInput.type = 'text';
         negativeInput.placeholder = 'Enter negative question';
         negativeInput.style.color = '#000';
-        negativeInput.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter') {
-                nquestion = negativeInput.value;
-                event.preventDefault();
-                negativeInput.blur();
-                console.log(pquestion);
-                console.log(nquestion);
-                questionsData.push({
-                    positive: pquestion,
-                    negative: nquestion
-                });
-            }
+        negativeInput.addEventListener('input', function (event) {
+            nquestion = negativeInput.value;
+            questionsData.push({
+                positive: pquestion,
+                negative: nquestion
+            });
         });
         negativeCell.appendChild(negativeInput);
 
@@ -290,8 +278,8 @@
 
             scaleOptionsCellNegative.appendChild(scaleCircleNegative);
         }
-        
     }
+
 
 
         function sendQuestionsToServer() { 
