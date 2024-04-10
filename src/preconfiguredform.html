@@ -310,11 +310,17 @@
                     type: 'preconfigured',
                     questions: questionsData
                 }),
+                success: function (data) {
+                    alert('Success: ' + data);
+                    window.location.href = "myforms.html";
+                },
                 error: function (error) {
                     alert('Error al enviar las preguntas al servidor:', error);
                 }
             });
         }
+
+      
     </script>
 
 </body>
