@@ -203,13 +203,6 @@
         });
 
         var questionCounter = 10;
-
-
-        function validateAndSubmit() {
-            sendQuestionsToServer();
-            window.location.href = "myforms.html";
-        }
-
         var questionsData = [
     { positive: "I think that I would like to use this system frequently.", negative: "I found the system unnecessarily complex." },
     { positive: "I thought the system was easy to use.", negative: "I think that I would need the support of a technical person to be able to use this system." },
@@ -217,6 +210,14 @@
     { positive: "I would imagine that most people would learn to use this system very quickly.", negative: "I found the system very cumbersome to use." },
     { positive: "I felt very confident using the system.", negative: "I needed to learn a lot of things before I could get going with this system." }
     ];
+
+
+        function validateAndSubmit() {
+            sendQuestionsToServer();
+            window.location.href = "myforms.html";
+        }
+
+    
 
     
     function addAdditionalQuestion() {
