@@ -89,26 +89,41 @@
                 return;
             }
 
-            var formData = new FormData();
-            formData.append("name", chatbotTitle);
-            formData.append("version", chatbotVersion);
-            formData.append("zipFile", zipFile);
-            
             var userId = localStorage.getItem('userId');
-
             $.ajax({
                 url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/chatbots',
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
+                type: 'GET',
                 success: function (data) {
-                    console.log("Chatbot creado con éxito:", data);
-                    window.location.href = "mychatbots.html";
+                    var existingChatbots = data.map(chatbot => chatbot.name);
+                    if (existingChatbots.includes(chatbotTitle)) {
+                        alert("The name " + chatbotTitle + " is already in use. Please choose a different name.");
+                    } else {
+                        var formData = new FormData();
+                        formData.append("name", chatbotTitle);
+                        formData.append("version", chatbotVersion);
+                        formData.append("zipFile", zipFile);
+                        
+
+                        $.ajax({
+                            url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/chatbots',
+                            type: 'POST',
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                console.log("Chatbot creado con éxito:", data);
+                                window.location.href = "mychatbots.html";
+                            },
+                            error: function (error) {
+                                console.error("Error en la solicitud:", error);
+                                alert("Error al crear el chatbot. Por favor, inténtalo de nuevo.");
+                            }
+                        });
+                    }
                 },
                 error: function (error) {
                     console.error("Error en la solicitud:", error);
-                    alert("Error al crear el chatbot. Por favor, inténtalo de nuevo.");
+                    alert("Error al verificar el nombre del chatbot. Por favor, inténtalo de nuevo.");
                 }
             });
         }
