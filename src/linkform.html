@@ -14,17 +14,17 @@
     <style>
         #tablaQuestionnaires {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             grid-gap: 10px;
             justify-content: center;
             align-items: center;
-            max-height: calc(100vh - 270px); 
+            max-height: calc(100vh - 270px);
             overflow-y: auto;
             margin-top: 20px;
             width: 100%;
             margin-left: auto;
             margin-right: auto;
             border-collapse: collapse;
+            overflow-x: hidden; /* Para ocultar la barra de desplazamiento horizontal */
         }
 
         #tablaQuestionnaires th,
@@ -58,6 +58,13 @@
             background-color: rgba(0, 0, 0, 0.1);
             border-color: rgba(255, 255, 255, 0.5);
         }
+
+        /* Ajusta la anchura de las columnas de la tabla */
+        #tablaQuestionnaires th,
+        #tablaQuestionnaires td {
+            width: auto; /* Cambia este valor según sea necesario */
+        }
+
     </style>
 </head>
 
