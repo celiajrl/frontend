@@ -14,14 +14,17 @@
     <style>
         #chatbotContainer {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Ajustar el ancho para mostrar 5 chatbots por fila */
             grid-gap: 10px;
             justify-content: center;
             align-items: center;
-            max-height: calc(100vh - 170px); 
-            overflow-y: auto;
+            max-height: calc(100vh - 170px);
             padding: 10px;
+            overflow-y: auto; /* Mantenemos la barra de desplazamiento vertical */
+            max-width: 900px; /* Limitar el ancho de la fila */
+            margin: 0 auto; /* Centrar el contenedor en la página */
         }
+
     
         .chatbot-card {
             background-color: #ce93d8;
@@ -144,7 +147,6 @@
             var chatbotCardHtml = `
                 <div class="chatbot-card">
                     <h3>${chatbot.name}</h3>
-                    <p><strong>ID:</strong> ${chatbot._id}</p>
                     <p><strong>Version:</strong> ${chatbot.version}</p>
                     <p><strong>Date:</strong> ${chatbot.date}</p>
                     <div class="chatbot-options">
