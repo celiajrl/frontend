@@ -109,9 +109,17 @@
             var chatbotId = urlParams.get('id');
 
             $('#sendToParticipantsButton').on('click', function() {
-                var url = 'sendemail.html?id=' + chatbotId;
-                window.location.href = url;
+                var linkedQuestionnaires = $('#tablaQuestionnaires tbody tr').filter(function() {
+                    return $(this).find('td:eq(1)').text() === "Linked";
+                });
+                if (linkedQuestionnaires.length > 0) {
+                    var url = 'sendemail.html?id=' + chatbotId;
+                    window.location.href = url;
+                } else {
+                    alert("No linked questionnaires to send");
+                }
             });
+
             
             var userId = localStorage.getItem('userId');
 
