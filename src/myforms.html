@@ -134,7 +134,7 @@
 
         function viewQuestionnaire(questionnaireId) {
             console.log("intento ir a view para id "+questionnaireId);
-            window.location.href = 'viewform.html?id=' + questionnaireId;
+            window.location.href = 'viewform.html?id=' + encodeURIComponent(questionnaireId);
         }
 
         function removeQuestionnaire(questionnaireId) {

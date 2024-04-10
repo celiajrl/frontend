@@ -95,8 +95,6 @@
                 type: 'GET',
                 success: function (data) {
                     var existingChatbots = data.map(chatbot => chatbot.name);
-                    console.log(existingChatbots);
-                    console.log(chatbotTitle);
                     if (existingChatbots.includes(chatbotTitle)) {
                         alert("The name " + chatbotTitle + " is already in use. Please choose a different name.");
                     } else {
@@ -114,7 +112,7 @@
                             processData: false,
                             success: function (data) {
                                 console.log("Chatbot creado con éxito:", data);
-                                //window.location.href = "mychatbots.html";
+                                window.location.href = "mychatbots.html";
                             },
                             error: function (error) {
                                 console.error("Error en la solicitud:", error);
