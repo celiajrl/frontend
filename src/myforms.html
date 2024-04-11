@@ -21,7 +21,7 @@
         }
 
         .questionnaires-table-container {
-            max-height: 200px;
+            max-height: 350px;
             overflow-y: auto;
             margin-top: 20px;
         }
@@ -140,31 +140,34 @@
                     <td>${index}</td>
                     <td>Questionnaire ${index}</td>
                     <td>
-                        <button onclick="viewQuestionnaire('${questionnaire._id}')" class="btn btn-info btn-sm">View</button>
-                        <button onclick="removeQuestionnaire('${questionnaire._id}')" class="btn btn-danger btn-sm">Remove</button>
+                        <button class="btn btn-info btn-sm view-btn" data-id="${questionnaire._id}">View</button>
+                        <button class="btn btn-danger btn-sm remove-btn" data-id="${questionnaire._id}">Remove</button>
                     </td>
                 `);
                 tablaQuestionnairesElement.append(fila);
             });
 
             if (questionnaires.length > 4) {
-                $(".tablaQuestionnaires-container").css("overflow-y", "scroll");
+                $(".questionnaires-table-container").css("overflow-y", "scroll");
             } else {
-                $(".tablaQuestionnaires-container").css("overflow-y", "hidden");
+                $(".questionnaires-table-container").css("overflow-y", "hidden");
             }
         }
 
-        function viewQuestionnaire(questionnaireId) {
-            window.location.href = 'viewform.html?id=' + questionnaireId;
-        }
+        // Event listener for View button
+        $(document).on("click", ".view-btn", function () {
+            var questionnaireId = $(this).data("id");
+            window.location.href = `viewform.html?id=${questionnaireId}`;
+        });
 
-        function removeQuestionnaire(questionnaireId) {
+        // Event listener for Remove button
+        $(document).on("click", ".remove-btn", function () {
+            var questionnaireId = $(this).data("id");
             var userId = localStorage.getItem('userId');
-            event.preventDefault();
             if (confirm('Delete questionnaire?')) {
                 $.ajax({
                     type: 'DELETE',
-                    url: 'https://backend-chatbotevaluator.up.railway.app/users/' + userId + '/questionnaires/' + questionnaireId,
+                    url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires/${questionnaireId}`,
                     success: function (response) {
                         console.log(response.message);
                         window.location.reload();
@@ -174,7 +177,7 @@
                     }
                 });
             }
-        }
+        });
     </script>
 </body>
 
