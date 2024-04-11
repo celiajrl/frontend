@@ -74,6 +74,8 @@
         
         .dropdown-menu {
             z-index: 1000; /* Ajusta el índice z para que el menú desplegable aparezca sobre la tabla */
+            overflow-y: auto; /* Añade desplazamiento vertical */
+            max-height: 150px; /* Altura máxima del menú desplegable */
         }
     </style>
 </head>
@@ -131,7 +133,7 @@
             $('#participantsTableBody').empty();
 
             activeTests.forEach(function (test) {
-                var dropdownContent = test.questionnaires.map(id => '<a class="dropdown-item" href="#">' + id + '</a>').join('');
+                var dropdownContent = test.questionnaires.map(id => '<a class="dropdown-item" href="viewform.html?id=' + id + '">' + id + '</a>').join('');
                 var newRow = '<tr><td>' + test.chatbotName + '</td><td>' + test.participantName + '</td><td><div class="dropdown"><button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Questionnaires</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' + dropdownContent + '</div></div></td><td>' + test.date + '</td></tr>';
                 $('#participantsTableBody').append(newRow);
             });
