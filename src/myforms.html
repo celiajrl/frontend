@@ -112,14 +112,13 @@
             }).fail(function (error) {
                 console.error("Error en la solicitud:", error);
             });
-
-            $(".view-btn").on("click", function() {
-                // Obtenemos el ID del cuestionario del atributo "data-id"
-                var questionnaireId = $(this).closest("tr").find(".questionnaire-id").text();
-                // Redirigimos a la página viewform.html con el ID del cuestionario
-                window.location.href = `viewform.html?id=${questionnaireId}`;
-            });
         });
+
+        $(document).on("click", ".view-btn", function() {
+            var questionnaireId = $(this).closest("tr").find(".questionnaire-id").text();
+            window.location.href = `viewform.html?id=${questionnaireId}`;
+        });
+
 
         function updateQuestionnaireTable(questionnaires) {
             const tablaQuestionnairesElement = $(".tablaQuestionnaires tbody");
