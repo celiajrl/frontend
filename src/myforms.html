@@ -115,10 +115,10 @@
         });
 
         function updateQuestionnaireTable(questionnaires) {
-            const tablaQuestionnairesElement = $("#tablaQuestionnaires tbody");
-    
+            const tablaQuestionnairesElement = $(".tablaQuestionnaires tbody");
+
             tablaQuestionnairesElement.empty();
-    
+
             questionnaires.forEach((questionnaire, index) => {
                 const fila = $("<tr>").html(`
                     <td>${index}</td>
@@ -132,6 +132,7 @@
                 tablaQuestionnairesElement.append(fila);
             });
         }
+
     
         function viewQuestionnaire(questionnaireId) {
             window.location.href = 'viewform.html?id=' + questionnaireId; 
