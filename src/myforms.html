@@ -5,46 +5,40 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My Forms</title>
+    <title>My questionnaires</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/home.css" rel="stylesheet">
     <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-
     <style>
         body {
             background-color: #ce93d8;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
         }
 
-        .container {
+        .header-content {
             background-color: #ce93d8;
-            border-radius: 15px;
+            border-radius: 8px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
             width: 80%;
-            max-height: calc(100vh - 100px);
+            max-height: calc(100vh - 270px);
             overflow-y: auto;
         }
 
-        #tablaQuestionnaires {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-gap: 10px;
-            justify-content: center;
-            align-items: center;
+        .questionnaires-table-container {
             margin-top: 20px;
-            border-collapse: collapse;
-            width: 100%;
         }
 
-        #tablaQuestionnaires th,
-        #tablaQuestionnaires td {
+        .questionnaires-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .questionnaires-table th,
+        .questionnaires-table td {
             border: 1px solid #ddd;
             padding: 16px;
             text-align: left;
@@ -54,14 +48,15 @@
             text-overflow: ellipsis;
             background-color: #ce93d8;
             color: white;
+            width: auto;
         }
 
-        #tablaQuestionnaires th {
+        .questionnaires-table th {
             background-color: #ce93d8;
             color: white;
         }
 
-        #tablaQuestionnaires button {
+        .add-questionnaire-button {
             background-color: transparent;
             color: white;
             border: 1px solid white;
@@ -69,56 +64,46 @@
             cursor: pointer;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 12px;
         }
 
-        #tablaQuestionnaires button:hover {
+        .add-questionnaire-button:hover {
             background-color: rgba(0, 0, 0, 0.1);
             border-color: rgba(255, 255, 255, 0.5);
         }
 
-        #createFormButton {
-            background-color: #673ab7;
-            color: white;
-            border: 1px solid white;
-            padding: 10px 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
+        .action-buttons {
+            display: flex;
+            justify-content: space-around;
         }
-
-        #createFormButton:hover {
-            background-color: #5e35b1;
-            border-color: #673ab7;
-        }
-
     </style>
 </head>
 
 <body>
     <div id="navbarContainer"></div>
-
     <header>
-        <div class="container">
-            <table id="tablaQuestionnaires">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Questionnaire</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+        <div class="header-content">
+            <div class="header-content-inner">
+                <form id="createForm">
+                    <div class="form-group questionnaires-table-container">
+                        <table class="questionnaires-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Type</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="questionnairesTableBody">
+                            </tbody>
+                        </table>
+                    </div>
 
-            <a href="uploadform.html" id="createFormButton" class="btn btn-primary btn-lg">Create Form</a>
+                    <button type="button" class="btn btn-primary btn-lg add-questionnaire-button" onclick="window.location.href = 'uploadform.html'">Create questionnaire</button>
+                </form>
+            </div>
         </div>
     </header>
-
     <script src="js/jquery-1.11.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.easing.min.js"></script>
@@ -127,10 +112,8 @@
     <script>
         $(document).ready(function () {
             $('#navbarContainer').load('navbar.html');
-
             var userId = localStorage.getItem('userId');
             $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires`, function (data) {
-                console.log("Datos recibidos:", data);
                 updateQuestionnaireTable(data);
             }).fail(function (error) {
                 console.error("Error en la solicitud:", error);
@@ -138,27 +121,17 @@
         });
 
         function updateQuestionnaireTable(questionnaires) {
-            const tablaQuestionnairesElement = $("#tablaQuestionnaires tbody");
-
-            tablaQuestionnairesElement.empty();
-
-            questionnaires.forEach((questionnaire, index) => {
-                const fila = $("<tr>").html(`
-                    <td>${index}</td>
-                    <td>Questionnaire ${index}</td>
-                    <td>
-                        <button onclick="viewQuestionnaire('${questionnaire._id}')" class="btn btn-info btn-sm">View</button>
-                        <button onclick="removeQuestionnaire('${questionnaire._id}')" class="btn btn-danger btn-sm">Remove</button>
-                    </td>
-                `);
-                tablaQuestionnairesElement.append(fila);
+            $('#questionnairesTableBody').empty();
+            questionnaires.forEach(function (questionnaire) {
+                var newRow = '<tr><td>' + questionnaire._id + '</td><td>' + questionnaire.type + '</td><td class="action-buttons"><button type="button" class="btn btn-info btn-sm" onclick="viewQuestionnaire(\'' + questionnaire._id + '\')">View</button><button type="button" class="btn btn-danger btn-sm" onclick="removeQuestionnaire(\'' + questionnaire._id + '\')">Remove</button></td></tr>';
+                $('#questionnairesTableBody').append(newRow);
             });
+
         }
 
         function viewQuestionnaire(questionnaireId) {
             window.location.href = 'viewform.html?id=' + questionnaireId;
         }
-
 
         function removeQuestionnaire(questionnaireId) {
             var userId = localStorage.getItem('userId');
