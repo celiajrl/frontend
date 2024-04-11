@@ -71,11 +71,38 @@
             background-color: rgba(0, 0, 0, 0.1);
             border-color: rgba(255, 255, 255, 0.5);
         }
-        
-        .dropdown-menu {
-            z-index: 1000; /* Ajusta el índice z para que el menú desplegable aparezca sobre la tabla */
-            overflow-y: auto; /* Añade desplazamiento vertical */
-            max-height: 150px; /* Altura máxima del menú desplegable */
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            background-color: #3e8e41;
         }
     </style>
 </head>
@@ -133,8 +160,8 @@
             $('#participantsTableBody').empty();
 
             activeTests.forEach(function (test) {
-                var dropdownContent = test.questionnaires.map(id => '<a class="dropdown-item" href="viewform.html?id=' + id + '">' + id + '</a>').join('');
-                var newRow = '<tr><td>' + test.chatbotName + '</td><td>' + test.participantName + '</td><td><div class="dropdown"><button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Questionnaires</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' + dropdownContent + '</div></div></td><td>' + test.date + '</td></tr>';
+                var dropdownContent = test.questionnaires.map(id => '<a href="viewform.html?id=' + id + '">' + id + '</a>').join('');
+                var newRow = '<tr><td>' + test.chatbotName + '</td><td>' + test.participantName + '</td><td class="dropdown"><div class="dropdown-content">' + dropdownContent + '</div></td><td>' + test.date + '</td></tr>';
                 $('#participantsTableBody').append(newRow);
             });
         }

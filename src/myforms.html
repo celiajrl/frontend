@@ -133,10 +133,8 @@
         }
 
         function viewQuestionnaire(questionnaireId) {
-            console.log("intento ir a view para id "+questionnaireId);
-            window.location.href =  'home.html';
-            //'viewform.html?id=6616a8d0a3df54001c68f4df' 
-            //+ encodeURIComponent(questionnaireId);
+            var url = 'viewform.html?id=' + questionnaireId;
+            window.location.href = url;
         }
 
         function removeQuestionnaire(questionnaireId) {
