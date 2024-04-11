@@ -17,33 +17,44 @@
             background-color: #f0f0f0;
             padding: 10px;
             border-radius: 8px;
-            overflow: auto;
+            overflow: hidden; /* Ocultar los gráficos que desbordan el contenedor */
             max-height: 400px;
-            position: relative; /* Hacer que el contenedor sea relativo para posicionar el botón de flecha */
+            position: relative;
         }
 
         .chart-content {
             width: 100%;
             display: flex;
-            transition: transform 0.3s ease; /* Animación para suavizar el cambio */
+            transition: transform 0.3s ease;
+        }
+
+        .chart-content div {
+            flex-shrink: 0; /* Evitar que los gráficos se enciman unos sobre otros */
         }
 
         .chart-content canvas {
             width: 100%;
             max-width: 100%;
-            height: auto; /* Hacer que los gráficos sean responsivos */
+            height: auto;
         }
 
-        #nextChartButton {
+        .arrow-button {
             position: absolute;
             top: 50%;
-            right: 10px;
             transform: translateY(-50%);
-            background: none;
-            border: none;
             font-size: 24px;
             color: #007bff;
             cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .arrow-button.left {
+            left: 10px;
+        }
+
+        .arrow-button.right {
+            right: 10px;
         }
     </style>
 </head>
@@ -56,9 +67,6 @@
                 <div class="chart-content">
                     <!-- Aquí se mostrarán los gráficos -->
                 </div>
-                <button id="nextChartButton" onclick="showNextChart()">
-                    <i class="fas fa-arrow-right"></i>
-                </button>
             </div>
             <button type="button" class="btn btn-primary btn-lg back" onclick="goBack()">Return</button>
         </div>
@@ -137,9 +145,6 @@
             });
         }
 
-        let currentChartIndex = 0;
-        let charts = [];
-
         function generateListGraph(question, results, index) {
             // Conteo de respuestas para cada opción de la lista
             const optionCounts = {};
@@ -162,10 +167,11 @@
 
             // Crear el canvas para la gráfica
             const chartCanvas = $('<canvas>').addClass('list-chart');
-            $('.chart-content').append($('<div>').append($('<h3>').text(question.question)).append(chartCanvas));
+            const chartContainer = $('<div>').append($('<h3>').text(question.question)).append(chartCanvas);
+            $('#chartContainer .chart-content').append(chartContainer);
             // Generar la gráfica
             const ctx = chartCanvas[0].getContext('2d');
-            const chart = new Chart(ctx, {
+            new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -195,7 +201,6 @@
                     }
                 }
             });
-            charts.push(chart);
         }
 
         function generateYesNoGraph(question, results, index) {
@@ -204,12 +209,13 @@
 
             // Crear un nuevo elemento canvas para el gráfico yesno
             const chartCanvas = $('<canvas>').addClass('doughnut-chart');
-            $('.chart-content').append($('<div>').append($('<h3>').text(question.question)).append(chartCanvas));
+            const chartContainer = $('<div>').append($('<h3>').text(question.question)).append(chartCanvas);
+            $('#chartContainer .chart-content').append(chartContainer);
 
             // Obtener el contexto del canvas
             const ctx = chartCanvas[0].getContext('2d');
 
-            const chart = new Chart(ctx, {
+            new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: ['Yes', 'No'],
@@ -232,7 +238,6 @@
                     maintainAspectRatio: false, // Evita que el gráfico se estire para mantener la relación de aspecto
                 }
             });
-            charts.push(chart);
         }
 
         function createChart(susValues) {
@@ -288,15 +293,28 @@
                     }
                 }
             });
-            charts.push(myChart);
         }
+
+        let currentChartIndex = 0;
 
         function showNextChart() {
             currentChartIndex = (currentChartIndex + 1) % charts.length;
+            updateChartView();
+        }
+
+        function showPreviousChart() {
+            currentChartIndex = (currentChartIndex - 1 + charts.length) % charts.length;
+            updateChartView();
+        }
+
+        function updateChartView() {
             const offsetX = -currentChartIndex * 100;
-            $('.chart-content').css('transform', `translateX(${offsetX}%)`);
+            $('#chartContainer .chart-content').css('transform', `translateX(${offsetX}%)`);
         }
     </script>
+
+    <button class="arrow-button left" onclick="showPreviousChart()">&#10094;</button>
+    <button class="arrow-button right" onclick="showNextChart()">&#10095;</button>
 
 </body>
 
