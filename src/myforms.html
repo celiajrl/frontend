@@ -124,18 +124,13 @@
                     <td>${index}</td>
                     <td>Questionnaire ${index}</td>
                     <td>
-                        <button onclick="viewQuestionnaire('${questionnaire._id}')" class="btn btn-info btn-sm">View</button>
+                        <button onclick="window.location.href='viewform.html?id=${questionnaire._id}'" class="btn btn-info btn-sm">View</button>
                         <button onclick="removeQuestionnaire('${questionnaire._id}')" class="btn btn-danger btn-sm">Remove</button>
                     </td>
                 `);
                 tablaQuestionnairesElement.append(fila);
             });
         }
-
-        function viewQuestionnaire(questionnaireId) {
-            window.location.href = 'viewform.html?id=' + questionnaireId; 
-        }
-
 
         function removeQuestionnaire(questionnaireId) {
             var userId = localStorage.getItem('userId');
