@@ -22,26 +22,19 @@
             height: 100vh;
         }
 
-        .header-content {
+        .container {
             background-color: #ce93d8;
-            border-radius: 8px;
+            border-radius: 15px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 80%;
             max-height: calc(100vh - 100px);
             overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        #tablaContainer {
-            overflow-x: auto;
         }
 
         #tablaQuestionnaires {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             grid-gap: 10px;
             justify-content: center;
             align-items: center;
@@ -61,7 +54,6 @@
             text-overflow: ellipsis;
             background-color: #ce93d8;
             color: white;
-            width: auto;
         }
 
         #tablaQuestionnaires th {
@@ -77,10 +69,6 @@
             cursor: pointer;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            bottom: 20px;
-            left: calc(50% - 30px);
-            z-index: 1;
         }
 
         #tablaQuestionnaires button:hover {
@@ -96,6 +84,10 @@
             cursor: pointer;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
         }
 
         #createFormButton:hover {
@@ -110,21 +102,20 @@
     <div id="navbarContainer"></div>
 
     <header>
-        <div class="header-content">
-            <div id="tablaContainer">
-                <table id="tablaQuestionnaires">
-                    <thead>
-                        <tr>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+        <div class="container">
+            <table id="tablaQuestionnaires">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Questionnaire</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
 
-            <div>
-                <a href="uploadform.html" id="createFormButton" class="btn btn-primary btn-lg">Create Form</a>
-            </div>
+            <a href="uploadform.html" id="createFormButton" class="btn btn-primary btn-lg">Create Form</a>
         </div>
     </header>
 
@@ -167,6 +158,7 @@
         function viewQuestionnaire(questionnaireId) {
             window.location.href = 'viewform.html?id=' + questionnaireId;
         }
+
 
         function removeQuestionnaire(questionnaireId) {
             var userId = localStorage.getItem('userId');
