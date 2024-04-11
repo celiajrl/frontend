@@ -134,8 +134,9 @@
 
         function viewQuestionnaire(questionnaireId) {
             var url = 'viewform.html?id=' + questionnaireId;
-            window.location.href = url;
+            window.location = url;
         }
+
 
         function removeQuestionnaire(questionnaireId) {
             var userId = localStorage.getItem('userId');
