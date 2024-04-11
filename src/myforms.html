@@ -20,17 +20,17 @@
             margin-left: auto;
             margin-right: auto;
             max-width: 80%;
-            overflow-x: hidden;
-            overflow-y: auto;
+            overflow: hidden;
         }
 
-        #tablaQuestionnaires {
+        .tablaQuestionnaires {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 20px;
         }
 
-        #tablaQuestionnaires th,
-        #tablaQuestionnaires td {
+        .tablaQuestionnaires th,
+        .tablaQuestionnaires td {
             border: 1px solid #ddd;
             padding: 16px;
             text-align: left;
@@ -42,12 +42,12 @@
             color: white;
         }
 
-        #tablaQuestionnaires th {
+        .tablaQuestionnaires th {
             background-color: #ce93d8;
             color: white;
         }
 
-        #tablaQuestionnaires button {
+        .tablaQuestionnaires button {
             background-color: transparent;
             color: white;
             border: 1px solid white;
@@ -57,7 +57,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        #tablaQuestionnaires button:hover {
+        .tablaQuestionnaires button:hover {
             background-color: rgba(0, 0, 0, 0.1);
             border-color: rgba(255, 255, 255, 0.5);
         }
@@ -87,7 +87,7 @@
         <div class="header-content">
             <div class="header-content-inner">
                 <div class="tablaQuestionnaires-container">
-                    <table id="tablaQuestionnaires">
+                    <table class="tablaQuestionnaires">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -127,7 +127,7 @@
         });
 
         function updateQuestionnaireTable(questionnaires) {
-            const tablaQuestionnairesElement = $("#tablaQuestionnaires tbody");
+            const tablaQuestionnairesElement = $(".tablaQuestionnaires tbody");
 
             tablaQuestionnairesElement.empty();
 
@@ -142,6 +142,12 @@
                 `);
                 tablaQuestionnairesElement.append(fila);
             });
+
+            if (questionnaires.length > 4) {
+                $(".tablaQuestionnaires-container").css("overflow-y", "scroll");
+            } else {
+                $(".tablaQuestionnaires-container").css("overflow-y", "hidden");
+            }
         }
 
         function viewQuestionnaire(questionnaireId) {
