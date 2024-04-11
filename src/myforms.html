@@ -127,7 +127,7 @@
         function updateQuestionnaireTable(questionnaires) {
             $('#questionnairesTableBody').empty();
             questionnaires.forEach(function (questionnaire) {
-                var newRow = '<tr><td>' + questionnaire._id + '</td><td>' + questionnaire.type + '</td><td class="action-buttons"><button type="button" class="btn btn-sm" onclick="viewQuestionnaire(\'' + questionnaire._id + '\')">View</button><button type="button" class="btn btn-sm" onclick="removeQuestionnaire(\'' + questionnaire._id + '\')">Remove</button></td></tr>';
+                var newRow = '<tr><td>' + questionnaire._id + '</td><td>' + questionnaire.type + '</td><td class="action-buttons"><button type="button" class="btn btn-sm" style="background-color: transparent; color: white;" onclick="viewQuestionnaire(\'' + questionnaire._id + '\')">View</button><button type="button" class="btn btn-sm" style="background-color: transparent; color: white;" onclick="removeQuestionnaire(\'' + questionnaire._id + '\')">Remove</button></td></tr>';
                 $('#questionnairesTableBody').append(newRow);
             });
         }
