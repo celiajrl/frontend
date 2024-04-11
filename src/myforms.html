@@ -12,25 +12,39 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
     <style>
-        .tablaQuestionnaires-container {
+        body {
+            background-color: #ce93d8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header-content {
+            background-color: #ce93d8;
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            width: 80%;
+            max-height: calc(100vh - 270px);
+            overflow-y: auto;
+        }
+
+        #tablaContainer {
+            overflow-x: auto;
+        }
+
+        #tablaQuestionnaires {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-gap: 10px;
+            justify-content: center;
+            align-items: center;
             margin-top: 20px;
-            margin-left: auto;
-            margin-right: auto;
-            max-width: 80%;
-            overflow: hidden;
-        }
-
-        .tablaQuestionnaires {
-            width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
         }
 
-        .tablaQuestionnaires th,
-        .tablaQuestionnaires td {
+        #tablaQuestionnaires th,
+        #tablaQuestionnaires td {
             border: 1px solid #ddd;
             padding: 16px;
             text-align: left;
@@ -40,14 +54,15 @@
             text-overflow: ellipsis;
             background-color: #ce93d8;
             color: white;
+            width: auto;
         }
 
-        .tablaQuestionnaires th {
+        #tablaQuestionnaires th {
             background-color: #ce93d8;
             color: white;
         }
 
-        .tablaQuestionnaires button {
+        #tablaQuestionnaires button {
             background-color: transparent;
             color: white;
             border: 1px solid white;
@@ -57,7 +72,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .tablaQuestionnaires button:hover {
+        #tablaQuestionnaires button:hover {
             background-color: rgba(0, 0, 0, 0.1);
             border-color: rgba(255, 255, 255, 0.5);
         }
@@ -85,29 +100,22 @@
 
     <header>
         <div class="header-content">
-            <div class="header-content-inner">
-                <form id="createForm">
-                    <div class="form-group questionnaires-table-container">
-                        <table class="tablaQuestionnaires">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Questionnaire</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="text-center mt-4">
-                        <a href="uploadform.html" class="btn btn-primary btn-lg">Create Form</a>
-                    </div>
-                </form>
+            <div id="tablaContainer">
+                <table id="tablaQuestionnaires">
+                    <thead>
+                        <tr>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div class="text-center mt-4">
+                    <a href="uploadform.html" class="btn btn-primary btn-lg">Create Form</a>
+                </div>
             </div>
-        </div>
 
+            
+        </div>
     </header>
 
     <script src="js/jquery-1.11.3.min.js"></script>
@@ -129,7 +137,7 @@
         });
 
         function updateQuestionnaireTable(questionnaires) {
-            const tablaQuestionnairesElement = $(".tablaQuestionnaires tbody");
+            const tablaQuestionnairesElement = $("#tablaQuestionnaires tbody");
 
             tablaQuestionnairesElement.empty();
 
@@ -144,17 +152,12 @@
                 `);
                 tablaQuestionnairesElement.append(fila);
             });
-
-            if (questionnaires.length > 4) {
-                $(".tablaQuestionnaires-container").css("overflow-y", "scroll");
-            } else {
-                $(".tablaQuestionnaires-container").css("overflow-y", "hidden");
-            }
         }
 
         function viewQuestionnaire(questionnaireId) {
             window.location.href = 'viewform.html?id=' + questionnaireId;
         }
+
 
         function removeQuestionnaire(questionnaireId) {
             var userId = localStorage.getItem('userId');
