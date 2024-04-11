@@ -20,7 +20,7 @@
         }
 
         .questionnaires-table-container {
-            max-height: 200px;
+            max-height: 300px;
             overflow-y: auto;
             margin-top: 20px;
         }
@@ -127,7 +127,7 @@
         function updateQuestionnaireTable(questionnaires) {
             $('#questionnairesTableBody').empty();
             questionnaires.forEach(function (questionnaire) {
-                var newRow = '<tr><td>' + questionnaire._id + '</td><td>' + questionnaire.type + '</td><td class="action-buttons"><button type="button" class="btn btn-info btn-sm" onclick="viewQuestionnaire(\'' + questionnaire._id + '\')">View</button><button type="button" class="btn btn-danger btn-sm" onclick="removeQuestionnaire(\'' + questionnaire._id + '\')">Remove</button></td></tr>';
+                var newRow = '<tr><td>' + questionnaire._id + '</td><td>' + questionnaire.type + '</td><td class="action-buttons"><button type="button" class="btn btn-sm" onclick="viewQuestionnaire(\'' + questionnaire._id + '\')">View</button><button type="button" class="btn btn-sm" onclick="removeQuestionnaire(\'' + questionnaire._id + '\')">Remove</button></td></tr>';
                 $('#questionnairesTableBody').append(newRow);
             });
         }
