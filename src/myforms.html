@@ -12,21 +12,23 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
     <style>
-        .tablaQuestionnaires-container {
+        form {
+            background-color: #ce93d8;
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #fff;
+        }
+
+        .questionnaires-table-container {
+            max-height: 200px;
+            overflow-y: auto;
             margin-top: 20px;
-            margin-left: auto;
-            margin-right: auto;
-            max-width: 80%;
-            overflow: hidden;
         }
 
         .tablaQuestionnaires {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
         }
 
         .tablaQuestionnaires th,
@@ -40,11 +42,11 @@
             text-overflow: ellipsis;
             background-color: #ce93d8;
             color: white;
+            width: 350px;
         }
 
         .tablaQuestionnaires th {
-            background-color: #ce93d8;
-            color: white;
+            text-align: center;
         }
 
         .tablaQuestionnaires button {
@@ -86,23 +88,25 @@
     <header>
         <div class="header-content">
             <div class="header-content-inner">
-                <div class="tablaQuestionnaires-container">
-                    <table class="tablaQuestionnaires">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Questionnaire</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
+                <form id="createForm">
+                    <div class="form-group questionnaires-table-container">
+                        <table class="tablaQuestionnaires">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Questionnaire</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
 
-                <div class="text-center mt-4">
-                    <a href="uploadform.html" class="btn btn-primary btn-lg">Create Form</a>
-                </div>
+                    <div class="text-center mt-4">
+                        <a href="uploadform.html" class="btn btn-primary btn-lg">Create Form</a>
+                    </div>
+                </form>
             </div>
         </div>
 
