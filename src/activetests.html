@@ -91,7 +91,7 @@
                                 <tr>
                                     <th>Chatbot Name</th>
                                     <th>Participant</th>
-                                    <th>Questionnaires</th>
+                                    <th>Questionnaire</th>
                                     <th>Sent Date</th>
                                 </tr>
                             </thead>
@@ -132,9 +132,26 @@
             $('#participantsTableBody').empty();
 
             activeTests.forEach(function (test) {
-                var dropdownContent = test.questionnaires.map(id => '<a href="viewform.html?id=' + id + '">' + id + '</a>').join('');
-                var newRow = '<tr><td>' + test.chatbotName + '</td><td>' + test.participantName + '</td><td class="dropdown"><div class="dropdown-content">' + dropdownContent + '</div></td><td>' + test.date + '</td></tr>';
-                $('#participantsTableBody').append(newRow);
+                var rowCount = Math.max(test.questionnaires.length, 1); // Para asegurar al menos una fila
+
+                for (var i = 0; i < rowCount; i++) {
+                    var chatbotName = i === 0 ? test.chatbotName : '';
+                    var participantName = i === 0 ? test.participantName : '';
+                    var date = i === 0 ? test.date : '';
+
+                    var questionnaire = i < test.questionnaires.length ? test.questionnaires[i] : '';
+
+                    var questionnaireLink = questionnaire ? '<a href="viewform.html?id=' + questionnaire + '">' + questionnaire + '</a>' : '';
+
+                    var newRow = '<tr>' +
+                        '<td>' + chatbotName + '</td>' +
+                        '<td>' + participantName + '</td>' +
+                        '<td>' + questionnaireLink + '</td>' +
+                        '<td>' + date + '</td>' +
+                        '</tr>';
+
+                    $('#participantsTableBody').append(newRow);
+                }
             });
         }
     </script>
