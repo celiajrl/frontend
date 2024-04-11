@@ -11,27 +11,40 @@
     <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
     <style>
-    #chartContainer {
-        width: 80%;
-        margin: 0 auto;
-        background-color: #f0f0f0;
-        padding: 10px;
-        border-radius: 8px;
-        overflow: auto;
-        max-height: 400px;
-    }
+        #chartContainer {
+            width: 80%;
+            margin: 0 auto;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 8px;
+            overflow: auto;
+            max-height: 400px;
+            position: relative; /* Hacer que el contenedor sea relativo para posicionar el botón de flecha */
+        }
 
-    #myChart {
-        width: 90%; /* Hacer que el gráfico ocupe todo el ancho del contenedor */
-        height: 350px; /* Altura predefinida para el gráfico doughnut */
-        max-width: 400px; /* Tamaño máximo del gráfico para evitar que se estire demasiado en pantallas grandes */
-        margin: 0 auto; /* Centrar el gráfico horizontalmente dentro del contenedor */
-    }
+        .chart-content {
+            width: 100%;
+            display: flex;
+            transition: transform 0.3s ease; /* Animación para suavizar el cambio */
+        }
 
-    #chartContainer h3 {
-        color: #333;
-        text-align: center; /* Centrar el texto del título */
-    }
+        .chart-content canvas {
+            width: 100%;
+            max-width: 100%;
+            height: auto; /* Hacer que los gráficos sean responsivos */
+        }
+
+        #nextChartButton {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #007bff;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -39,8 +52,13 @@
     <div id="navbarContainer"></div>
     <header>
         <div class="header-content">
-            <div class="header-content-inner" id="chartContainer">
-                <canvas id="myChart"></canvas>
+            <div id="chartContainer">
+                <div class="chart-content">
+                    <!-- Aquí se mostrarán los gráficos -->
+                </div>
+                <button id="nextChartButton" onclick="showNextChart()">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
             </div>
             <button type="button" class="btn btn-primary btn-lg back" onclick="goBack()">Return</button>
         </div>
@@ -119,6 +137,9 @@
             });
         }
 
+        let currentChartIndex = 0;
+        let charts = [];
+
         function generateListGraph(question, results, index) {
             // Conteo de respuestas para cada opción de la lista
             const optionCounts = {};
@@ -141,10 +162,10 @@
 
             // Crear el canvas para la gráfica
             const chartCanvas = $('<canvas>').addClass('list-chart');
-            $('#chartContainer').append($('<h3>').text(question.question)).append(chartCanvas);
+            $('.chart-content').append($('<div>').append($('<h3>').text(question.question)).append(chartCanvas));
             // Generar la gráfica
             const ctx = chartCanvas[0].getContext('2d');
-            new Chart(ctx, {
+            const chart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -174,6 +195,7 @@
                     }
                 }
             });
+            charts.push(chart);
         }
 
         function generateYesNoGraph(question, results, index) {
@@ -182,12 +204,12 @@
 
             // Crear un nuevo elemento canvas para el gráfico yesno
             const chartCanvas = $('<canvas>').addClass('doughnut-chart');
-            $('#chartContainer').append($('<h3>').text(question.question)).append(chartCanvas);
+            $('.chart-content').append($('<div>').append($('<h3>').text(question.question)).append(chartCanvas));
 
             // Obtener el contexto del canvas
             const ctx = chartCanvas[0].getContext('2d');
 
-            new Chart(ctx, {
+            const chart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: ['Yes', 'No'],
@@ -210,6 +232,7 @@
                     maintainAspectRatio: false, // Evita que el gráfico se estire para mantener la relación de aspecto
                 }
             });
+            charts.push(chart);
         }
 
         function createChart(susValues) {
@@ -265,6 +288,13 @@
                     }
                 }
             });
+            charts.push(myChart);
+        }
+
+        function showNextChart() {
+            currentChartIndex = (currentChartIndex + 1) % charts.length;
+            const offsetX = -currentChartIndex * 100;
+            $('.chart-content').css('transform', `translateX(${offsetX}%)`);
         }
     </script>
 
