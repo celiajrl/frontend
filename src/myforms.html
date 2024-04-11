@@ -115,28 +115,32 @@
         });
 
         function updateQuestionnaireTable(questionnaires) {
-            const tablaQuestionnairesElement = $(".tablaQuestionnaires tbody");
-
+            const tablaQuestionnairesElement = $("#tablaQuestionnaires tbody");
+    
             tablaQuestionnairesElement.empty();
-
+    
             questionnaires.forEach((questionnaire, index) => {
                 const fila = $("<tr>").html(`
                     <td>${index}</td>
                     <td>Questionnaire ${index}</td>
                     <td>
-                        <button class="btn btn-info btn-sm view-btn">View</button>
+                        <button onclick="viewQuestionnaire('${questionnaire._id}')" class="btn btn-info btn-sm">View</button>
+                        <button onclick="editQuestionnaire('${questionnaire._id}')" class="btn btn-warning btn-sm">Edit</button>
                         <button onclick="removeQuestionnaire('${questionnaire._id}')" class="btn btn-danger btn-sm">Remove</button>
                     </td>
                 `);
                 tablaQuestionnairesElement.append(fila);
-                
-                // Agregar evento 'click' al botón 'View'
-                fila.find('.view-btn').on('click', function() {
-                    window.location.href = 'viewform.html?id=' + questionnaire._id;
-                });
             });
-
         }
+    
+        function viewQuestionnaire(questionnaireId) {
+            window.location.href = 'viewform.html?id=' + questionnaireId; 
+        }
+
+        function editQuestionnaire(questionnaireId) {
+            console.log("Edit questionnaire with ID:", questionnaireId);
+        }
+    
 
         function removeQuestionnaire(questionnaireId) {
             var userId = localStorage.getItem('userId');
