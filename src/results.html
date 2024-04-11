@@ -145,7 +145,7 @@
                 const positiveScaleWidget = $('<div>').addClass('scale-options');
                 for (let i = 1; i <= 5; i++) {
                     const circle = $('<span>').addClass('scale-circle').text(i);
-                    if (i == positiveAnswerValue) {
+                    if (i == positiveAnswerValue+2) {
                         circle.addClass('selected');
                     }
                     positiveScaleWidget.append(circle);
@@ -162,7 +162,7 @@
                 const negativeScaleWidget = $('<div>').addClass('scale-options');
                 for (let i = 1; i <= 5; i++) {
                     const circle = $('<span>').addClass('scale-circle').text(i);
-                    if (i == negativeAnswerValue) {
+                    if (i == (5-negativeAnswerValue)+1) {
                         circle.addClass('selected');
                     }
                     negativeScaleWidget.append(circle);
