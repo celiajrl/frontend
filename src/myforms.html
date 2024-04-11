@@ -11,24 +11,17 @@
     <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
     <style>
-        body {
-            background-color: #ce93d8;
-            margin: 0;
-            padding: 0;
-        }
-
-        .header-content {
+        form {
             background-color: #ce93d8;
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 20px auto;
-            width: 80%;
-            max-height: calc(100vh - 270px);
-            overflow-y: auto;
+            color: #fff;
         }
 
         .questionnaires-table-container {
+            max-height: 200px;
+            overflow-y: auto;
             margin-top: 20px;
         }
 
@@ -48,12 +41,11 @@
             text-overflow: ellipsis;
             background-color: #ce93d8;
             color: white;
-            width: auto;
+            width: 350px;
         }
 
         .questionnaires-table th {
-            background-color: #ce93d8;
-            color: white;
+            text-align: center;
         }
 
         .add-questionnaire-button {
@@ -75,6 +67,18 @@
         .action-buttons {
             display: flex;
             justify-content: space-around;
+            background-color: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 10px 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-buttons:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
         }
     </style>
 </head>
@@ -91,7 +95,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Type</th>
-                                    <th>Actions</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody id="questionnairesTableBody">
@@ -117,21 +121,21 @@
                 updateQuestionnaireTable(data);
             }).fail(function (error) {
                 console.error("Error en la solicitud:", error);
-            });
+            }); 
         });
-
+    
         function updateQuestionnaireTable(questionnaires) {
             $('#questionnairesTableBody').empty();
             questionnaires.forEach(function (questionnaire) {
                 var newRow = '<tr><td>' + questionnaire._id + '</td><td>' + questionnaire.type + '</td><td class="action-buttons"><button type="button" class="btn btn-info btn-sm" onclick="viewQuestionnaire(\'' + questionnaire._id + '\')">View</button><button type="button" class="btn btn-danger btn-sm" onclick="removeQuestionnaire(\'' + questionnaire._id + '\')">Remove</button></td></tr>';
                 $('#questionnairesTableBody').append(newRow);
             });
-
         }
 
         function viewQuestionnaire(questionnaireId) {
             window.location.href = 'viewform.html?id=' + questionnaireId;
         }
+
 
         function removeQuestionnaire(questionnaireId) {
             var userId = localStorage.getItem('userId');
