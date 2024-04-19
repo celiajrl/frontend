@@ -41,6 +41,7 @@
         }
 
         #surveyName {
+            align-items: left;
             width: 50%; 
         }
         input.form-control {
@@ -222,11 +223,6 @@
     positiveInput.type = 'text';
     positiveInput.placeholder = 'Introduce a positive question';
     positiveInput.style.color = '#000';
-    positiveInput.addEventListener('blur', function () {
-        if (positiveInput.value.trim() !== '') { 
-            questionsData.push({ positive: positiveInput.value.trim() });
-        }
-    });
     positiveCell.appendChild(positiveInput);
 
     var scaleOptionsCell = newRowPositive.insertCell(1);
@@ -254,8 +250,12 @@
     negativeInput.placeholder = 'Introduce a negative question';
     negativeInput.style.color = '#000';
     negativeInput.addEventListener('blur', function () {
-        if (negativeInput.value.trim() !== '') { 
+        if (negativeInput.value.trim() !== '' && positiveInput.value.trim() !== '') { 
             questionsData.push({ negative: negativeInput.value.trim() });
+            questionsData.push({
+                    positive: positiveInput.value.trim(),
+                    negative: negativeInput.value.trim()
+                });
         }
     });
     negativeCell.appendChild(negativeInput);
