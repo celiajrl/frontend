@@ -82,6 +82,7 @@
                             <option value="preconfigured">Preconfigured Form -- System Usability Scale (SUS)</option>
                         </select>
                     </div>
+                    <button type="button" class="btn btn-primary btn-lg back" onclick="goBack()">Return</button>
 
                     <button type="button" class="btn btn-primary btn-lg" onclick="validateAndSubmit()">Submit</button>
                 </form>
@@ -98,6 +99,11 @@
         $(document).ready(function () {
             $('#navbarContainer').load('navbar.html');
         });
+
+        function goBack() {
+            window.history.back();
+        }
+
 
         function toggleOptions() {
             var formType = document.getElementById("formType").value;

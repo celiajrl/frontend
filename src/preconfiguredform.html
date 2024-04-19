@@ -28,7 +28,7 @@
             height: 20px;
             border-radius: 50%;
             background-color: #fff;
-            margin-right: 15px;
+            margin-right: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -36,8 +36,12 @@
             cursor: pointer;
         }
         input[type="text"] {
-            width: 50%;
-            margin-bottom: 15px;
+            width: 70%;
+            margin-bottom: 10px;
+        }
+
+        #surveyName {
+            width: 50%; 
         }
     </style>
 </head>
@@ -162,6 +166,7 @@
                 <button type="button" class="btn btn-primary btn-lg add-question" onclick="addAdditionalQuestion()">Add Question</button>
                 <button type="button" class="btn btn-primary btn-lg" onclick="sendQuestionsToServer()">Submit</button>
             </div>
+            <button type="button" class="btn btn-primary btn-lg back" onclick="goBack()">Return</button>
         </div>
     </header>
 
@@ -176,6 +181,11 @@
             $('#navbarContainer').load('navbar.html');
             $('.preconfigured-options').show();
         });
+
+        function goBack() {
+            window.history.back();
+        }
+
 
         var questionCounter = 10;
         var questionsData = [
@@ -195,16 +205,17 @@
     var newRowPositive = table.insertRow();
     newRowPositive.className = 'form-group preconfigured-question';
     newRowPositive.id = 'question' + (++questionCounter);
-
+  
     var positiveCell = newRowPositive.insertCell(0);
+    positiveCell.innerHTML = questionCounter + '.';
+
     var positiveInput = document.createElement('input');
     positiveInput.type = 'text';
-    positiveInput.placeholder = 'Introduce una pregunta positiva';
+    positiveInput.placeholder = 'Introduce a positive question';
     positiveInput.style.color = '#000';
     positiveInput.addEventListener('blur', function () {
         if (positiveInput.value.trim() !== '') { 
             questionsData.push({ positive: positiveInput.value.trim() });
-            positiveInput.disabled = true; 
         }
     });
     positiveCell.appendChild(positiveInput);
@@ -227,9 +238,10 @@
     newRowNegative.id = 'question' + (++questionCounter);
 
     var negativeCell = newRowNegative.insertCell(0);
+    negativeCell.innerHTML = questionCounter + '.';
     var negativeInput = document.createElement('input');
     negativeInput.type = 'text';
-    negativeInput.placeholder = 'Introduce una pregunta negativa';
+    negativeInput.placeholder = 'Introduce a negative question';
     negativeInput.style.color = '#000';
     negativeInput.addEventListener('blur', function () {
         if (negativeInput.value.trim() !== '') { 
