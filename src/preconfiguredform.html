@@ -28,18 +28,13 @@
             height: 20px;
             border-radius: 50%;
             background-color: #fff;
-            margin-right: 5px;
+            margin-right: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #000;
             cursor: pointer;
         }
-        input[type="text"] {
-            width: 70%;
-            margin-bottom: 10px;
-        }
-
         #surveyName {
             align-items: left;
             width: 50%; 
@@ -51,7 +46,6 @@
             border: 1px solid #ccc; /* Borde sutil */
             border-radius: 4px; /* Bordes redondeados */
         }
-
     </style>
 </head>
 
@@ -62,7 +56,7 @@
         <div class="header-content">
             <div class="header-content-inner">
                 <div class="form-group">
-                    <input type="text" id="surveyName" class="form-control" placeholder="Introduce a name for the form">
+                    <input type="text" id="surveyName" class="form-control" placeholder="Ingrese el nombre del cuestionario">
                 </div>
                 <form id="formoptions">
                 <table class="preconfigured-options">
@@ -174,7 +168,6 @@
                 <button type="button" class="btn btn-primary btn-lg add-question" onclick="addAdditionalQuestion()">Add Question</button>
                 <button type="button" class="btn btn-primary btn-lg" onclick="sendQuestionsToServer()">Submit</button>
             </div>
-            <button type="button" class="btn btn-primary btn-lg back" onclick="goBack()">Return</button>
         </div>
     </header>
 
@@ -190,11 +183,6 @@
             $('.preconfigured-options').show();
         });
 
-        function goBack() {
-            window.history.back();
-        }
-
-
         var questionCounter = 10;
         var questionsData = [
     { positive: "I think that I would like to use this system frequently.", negative: "I found the system unnecessarily complex." },
@@ -208,74 +196,86 @@
 
     
     function addAdditionalQuestion() {
-    var table = document.querySelector('.preconfigured-options');
+        var pquestion; 
+        var nquestion;
+        var table = document.querySelector('.preconfigured-options');
 
-    var newRowPositive = table.insertRow();
-    newRowPositive.className = 'form-group preconfigured-question';
-    console.log(questionCounter);
-    newRowPositive.id = 'question' + (++questionCounter);
-  
-    var positiveCell = newRowPositive.insertCell(0);
-    positiveCell.innerHTML = questionCounter + '.';
+        var newRowPositive = table.insertRow();
+        newRowPositive.className = 'form-group preconfigured-question';
+        newRowPositive.id = 'question' + (++questionCounter);
 
-    var positiveInput = document.createElement('input');
-    positiveInput.type = 'text';
-    positiveInput.placeholder = 'Introduce a positive question';
-    positiveInput.style.color = '#000';
-    positiveCell.appendChild(positiveInput);
+        var positiveCell = newRowPositive.insertCell(0);
+        var positiveInput = document.createElement('input');
+        positiveInput.type = 'text';
+        positiveInput.placeholder = 'Enter positive question';
+        positiveInput.style.color = '#000';
+        positiveInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                pquestion = positiveInput.value;
+                event.preventDefault();
+                positiveInput.blur();
+            }
+        });
+        positiveCell.appendChild(positiveInput);
 
-    var scaleOptionsCell = newRowPositive.insertCell(1);
-    scaleOptionsCell.className = 'scale-options';
+        var scaleOptionsCell = newRowPositive.insertCell(1);
+        scaleOptionsCell.className = 'scale-options';
 
-    for (var i = 1; i <= 5; i++) {
-        var scaleCircle = document.createElement('div');
-        scaleCircle.className = 'scale-circle';
-        scaleCircle.textContent = i;
-        scaleCircle.onclick = function (event) {
-            selectScale(event.target.textContent, questionCounter);
-        };
-        scaleOptionsCell.appendChild(scaleCircle);
-    }
+        for (var i = 1; i <= 5; i++) {
+            var scaleCircle = document.createElement('div');
+            scaleCircle.className = 'scale-circle';
+            scaleCircle.textContent = i;
+            scaleCircle.onclick = function (event) {
+                selectScale(event.target.textContent, questionCounter);
+            };
 
-    var newRowNegative = table.insertRow();
-    newRowNegative.className = 'form-group preconfigured-question';
-    console.log(questionCounter);
-    newRowNegative.id = 'question' + (++questionCounter);
-
-    var negativeCell = newRowNegative.insertCell(0);
-    negativeCell.innerHTML = questionCounter + '.';
-    var negativeInput = document.createElement('input');
-    negativeInput.type = 'text';
-    negativeInput.placeholder = 'Introduce a negative question';
-    negativeInput.style.color = '#000';
-    negativeInput.addEventListener('blur', function () {
-        if (negativeInput.value.trim() !== '' && positiveInput.value.trim() !== '') { 
-            questionsData.push({ negative: negativeInput.value.trim() });
-            questionsData.push({
-                    positive: positiveInput.value.trim(),
-                    negative: negativeInput.value.trim()
-                });
+            scaleOptionsCell.appendChild(scaleCircle);
         }
-    });
-    negativeCell.appendChild(negativeInput);
 
-    var scaleOptionsCellNegative = newRowNegative.insertCell(1);
-    scaleOptionsCellNegative.className = 'scale-options';
+        var x = document.getElementById("input"); 
 
-    for (var j = 1; j <= 5; j++) {
-        var scaleCircleNegative = document.createElement('div');
-        scaleCircleNegative.className = 'scale-circle';
-        scaleCircleNegative.textContent = j;
-        scaleCircleNegative.onclick = function (event) {
-            selectScale(event.target.textContent, questionCounter);
-        };
-        scaleOptionsCellNegative.appendChild(scaleCircleNegative);
+        var newRowNegative = table.insertRow();
+        newRowNegative.className = 'form-group preconfigured-question';
+        newRowNegative.id = 'question' + (++questionCounter);
+
+        var negativeCell = newRowNegative.insertCell(0);
+        var negativeInput = document.createElement('input');
+        negativeInput.type = 'text';
+        negativeInput.placeholder = 'Enter negative question';
+        negativeInput.style.color = '#000';
+        negativeInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                nquestion = negativeInput.value;
+                event.preventDefault();
+                negativeInput.blur();
+                console.log(pquestion);
+                console.log(nquestion);
+                questionsData.push({
+                    positive: pquestion,
+                    negative: nquestion
+                });
+            }
+        });
+        negativeCell.appendChild(negativeInput);
+
+        var scaleOptionsCellNegative = newRowNegative.insertCell(1);
+        scaleOptionsCellNegative.className = 'scale-options';
+
+        for (var j = 1; j <= 5; j++) {
+            var scaleCircleNegative = document.createElement('div');
+            scaleCircleNegative.className = 'scale-circle';
+            scaleCircleNegative.textContent = j;
+            scaleCircleNegative.onclick = function (event) {
+                selectScale(event.target.textContent, questionCounter);
+            };
+
+            scaleOptionsCellNegative.appendChild(scaleCircleNegative);
+        }
+        
     }
-}
 
 
-
-        function sendQuestionsToServer() { 
+    function sendQuestionsToServer() { 
             var userId = localStorage.getItem('userId');
             var surveyName = document.getElementById('surveyName').value; 
             console.log(questionsData);
@@ -298,6 +298,7 @@
                 }
             });
         }
+
 
       
     </script>
