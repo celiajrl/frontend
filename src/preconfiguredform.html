@@ -204,6 +204,7 @@
 
     var newRowPositive = table.insertRow();
     newRowPositive.className = 'form-group preconfigured-question';
+    console.log(questionCounter);
     newRowPositive.id = 'question' + (++questionCounter);
   
     var positiveCell = newRowPositive.insertCell(0);
@@ -235,6 +236,7 @@
 
     var newRowNegative = table.insertRow();
     newRowNegative.className = 'form-group preconfigured-question';
+    console.log(questionCounter);
     newRowNegative.id = 'question' + (++questionCounter);
 
     var negativeCell = newRowNegative.insertCell(0);
@@ -269,6 +271,7 @@
         function sendQuestionsToServer() { 
             var userId = localStorage.getItem('userId');
             var surveyName = document.getElementById('surveyName').value; 
+            console.log(questionsData);
 
             $.ajax({
                 type: 'POST',
