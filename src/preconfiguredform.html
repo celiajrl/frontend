@@ -43,6 +43,14 @@
         #surveyName {
             width: 50%; 
         }
+        input.form-control {
+            width: 100%;  /* Hacer que el input ocupe todo el ancho de su contenedor */
+            padding: 8px; /* Añadir algo de relleno para hacerlo más fácil de escribir */
+            margin-bottom: 10px; /* Espacio debajo del campo */
+            border: 1px solid #ccc; /* Borde sutil */
+            border-radius: 4px; /* Bordes redondeados */
+        }
+
     </style>
 </head>
 
@@ -52,11 +60,11 @@
     <header>
         <div class="header-content">
             <div class="header-content-inner">
+                <div class="form-group">
+                    <label for="surveyName">Name:</label>
+                    <input type="text" id="surveyName" class="form-control" placeholder="Introduce a name for the form">
+                </div>
                 <form id="formoptions">
-                    <div class="form-group">
-                        <label for="surveyName">Name:</label>
-                        <input type="text" id="surveyName" class="form-control" placeholder="Introduce a name for the form">
-                    </div>
                 <table class="preconfigured-options">
                     <tr>
                         <th>Questions (SUS)</th>
