@@ -35,6 +35,9 @@
             color: #000;
             cursor: pointer;
         }
+        .readonly-input {
+            background-color: #ccc; /* Cambio visual para campos bloqueados */
+        }
         #surveyName {
             align-items: left;
             width: 50%; 
@@ -47,6 +50,7 @@
             border-radius: 4px; /* Bordes redondeados */
         }
     </style>
+
 </head>
 
 
@@ -215,14 +219,25 @@
         positiveInput.style.color = '#000';
         positiveInput.onblur = function () {
             if (this.value.trim() !== "") {
-                this.readOnly = true; // Bloquea la entrada después de la edición
+                markAsReadOnly(this);
                 tempQuestions.positive = this.value;
             } else {
                 alert('Please enter a valid question.');
             }
         };
         positiveCell.appendChild(positiveInput);
-        
+        var scaleOptionsCell = newRowPositive.insertCell(1);
+        scaleOptionsCell.className = 'scale-options';
+        for (var i = 1; i <= 5; i++) {
+            var scaleCircle = document.createElement('div');
+            scaleCircle.className = 'scale-circle';
+            scaleCircle.textContent = i;
+            scaleCircle.onclick = function (event) {
+                selectScale(event.target.textContent, nextQuestionNumber);
+            };
+            scaleOptionsCell.appendChild(scaleCircle);
+        }
+
         questionCounter = ++questionCounter;
         // Añadiendo pregunta negativa
         var newRowNegative = table.insertRow();
@@ -240,7 +255,7 @@
         negativeInput.style.color = '#000';
         negativeInput.onblur = function () {
             if (this.value.trim() !== "") {
-                this.readOnly = true; // Bloquea la entrada después de la edición
+                markAsReadOnly(this);
                 tempQuestions.negative = this.value;
                 // Solo guarda el par si ambas preguntas están completas
                 if (tempQuestions.positive && tempQuestions.negative) {
@@ -255,12 +270,26 @@
             }
         };
         negativeCell.appendChild(negativeInput);
+        var scaleOptionsCellNegative = newRowNegative.insertCell(1);
+        scaleOptionsCellNegative.className = 'scale-options';
+        for (var j = 1; j <= 5; j++) {
+            var scaleCircleNegative = document.createElement('div');
+            scaleCircleNegative.className = 'scale-circle';
+            scaleCircleNegative.textContent = j;
+            scaleCircleNegative.onclick = function (event) {
+                selectScale(event.target.textContent, nextNegativeQuestionNumber);
+            };
+            scaleOptionsCellNegative.appendChild(scaleCircleNegative);
+        }
     }
 
     function sendQuestionsToServer() { 
             var userId = localStorage.getItem('userId');
-            var surveyName = document.getElementById('surveyName').value; 
-            console.log(questionsData);
+            var surveyName = document.getElementById('surveyName').value.trim();
+            if (surveyName === "") {
+                alert('Please enter a name for the questionnaire.');
+                return;
+            }
 
             $.ajax({
                 type: 'POST',
@@ -281,7 +310,10 @@
             });
         }
 
-
+        function markAsReadOnly(inputElement) {
+            inputElement.readOnly = true;
+            inputElement.classList.add('readonly-input');
+        }
       
     </script>
 
