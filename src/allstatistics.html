@@ -124,10 +124,16 @@
                 if (!(test.chatbotId in groupedByChatbot)) {
                     groupedByChatbot[test.chatbotId] = {
                         chatbotName: test.chatbotName,
-                        questionnaires: new Set() // Utiliza un conjunto para almacenar IDs de cuestionarios únicos
+                        questionnaires: [] // Utiliza un arreglo para almacenar objetos de cuestionarios
                     };
                 }
-                groupedByChatbot[test.chatbotId].questionnaires.add(test.questionnaireId); // Agrega el ID del cuestionario al conjunto
+                // Verifica si el cuestionario ya está en el arreglo para evitar duplicados
+                if (!groupedByChatbot[test.chatbotId].questionnaires.some(q => q.id === test.questionnaireId)) {
+                    groupedByChatbot[test.chatbotId].questionnaires.push({
+                        id: test.questionnaireId,
+                        name: test.questionnaireName // Almacena el ID y el nombre del cuestionario
+                    });
+                }
             });
 
             $('#participantsTableBody').empty();
@@ -135,14 +141,15 @@
             for (var chatbotId in groupedByChatbot) {
                 var chatbotData = groupedByChatbot[chatbotId];
                 var questionnairesHtml = '<ul>';
-                chatbotData.questionnaires.forEach(function (questionnaireId) { // Itera sobre los IDs de los cuestionarios en el conjunto
-                    questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaireId + '">' + questionnaireId + '</a></li>';
+                chatbotData.questionnaires.forEach(function (questionnaire) { // Itera sobre los objetos de cuestionarios
+                    questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaire.id + '">' + questionnaire.name + '</a></li>';
                 });
                 questionnairesHtml += '</ul>';
                 var newRow = '<tr><td>' + chatbotData.chatbotName + '</td><td>' + questionnairesHtml + '</td></tr>';
                 $('#participantsTableBody').append(newRow);
             }
         }
+
     </script>
 </body>
 </html>

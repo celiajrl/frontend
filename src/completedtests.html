@@ -85,7 +85,7 @@
                                 <tr>
                                     <th>Chatbot Name</th>
                                     <th>Participant</th>
-                                    <th>Questionnaire ID</th>
+                                    <th>Questionnaire</th>
                                     <th>Type</th>
                                     <th>Completion Date</th>
                                     <th>Responses</th> 
@@ -128,7 +128,7 @@
             $('#participantsTableBody').empty();
 
             completedTests.forEach(function (test) {
-                var newRow = '<tr><td>' + test.chatbotName + '</td><td>' + test.participantName + '</td><td>' + test.questionnaireId + '</td><td>' + test.type + '</td><td>' + test.date + '</td><td><a href="results.html?resultId=' + test.resultId + '">View</a></td></tr>';
+                var newRow = '<tr><td>' + test.chatbotName + '</td><td>' + test.participantName + '</td><td>' + test.questionnaireName + '</td><td>' + test.type + '</td><td>' + test.date + '</td><td><a href="results.html?resultId=' + test.resultId + '">View</a></td></tr>';
                 $('#participantsTableBody').append(newRow);
             });
         }

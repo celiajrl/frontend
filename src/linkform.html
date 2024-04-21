@@ -168,7 +168,7 @@
                     const buttonLabel = isLinked ? "Unlink" : "Link";
                     const fila = $("<tr>").html(`
                         <td>${index}</td>
-                        <td>${linkedStatus}</td>
+                        <td>${questionnaire.name}</td>
                         <td>
                             <button onclick="linkOrUnlinkQuestionnaire('${chatbotId}','${questionnaire._id}', ${isLinked})" class="btn btn-primary btn-sm">${buttonLabel}</button>
                         </td>
