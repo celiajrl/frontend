@@ -195,7 +195,7 @@
             // Update in backend
             $.ajax({
                 type: 'PATCH',
-                url: 'https://backend-chatbotevaluator.up.railway.app/users/userId/agenda/participantId',
+                url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/agenda/'+participantId,
                 contentType: 'application/json',
                 data: JSON.stringify({name: name, surname: surname, email: email}),
                 success: function () {
@@ -209,22 +209,29 @@
                 }
             });
         }
+// RUTA PARA ELIMINAR UN PARTICIPANTE DE LA AGENDA DE UN USUARIO
+app.delete('/users/'+userId+'/agenda/'+participantId, (req, res) => {
+    const userId = req.params.userId;
+    const participantId = req.params.participantId;
 
-        function deleteParticipant(index) {
-            if (confirm("Are you sure you want to delete this participant?")) {
-                var row = $('#participant-' + index);
-                $.ajax({
-                    type: 'DELETE',
-                    url: 'https://backend-chatbotevaluator.up.railway.app/users/userId/agenda/participantId',
-                    success: function () {
-                        row.remove();
-                    },
-                    error: function (error) {
-                        console.error('Error deleting participant:', error);
-                    }
-                });
-            }
-        }
+    if (ObjectId.isValid(userId) && ObjectId.isValid(participantId)) {
+        db.collection('agenda')
+            .deleteOne({ _id: ObjectId(participantId), userId: ObjectId(userId) })
+            .then(result => {
+                if (result.deletedCount === 0) {
+                    res.status(404).json({ message: 'No participant found with that ID' });
+                } else {
+                    res.status(200).json({ message: 'Participant deleted successfully' });
+                }
+            })
+            .catch(err => {
+                res.status(500).json({ error: 'Could not delete participant' });
+            });
+    } else {
+        res.status(400).json({ error: 'Invalid user ID or participant ID' });
+    }
+});
+
     </script>
 </body>
 </html>
