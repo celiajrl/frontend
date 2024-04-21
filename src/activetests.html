@@ -136,12 +136,11 @@
                 for (var i = 0; i < rowCount; i++) {
                     var chatbotName = i === 0 ? test.chatbotName : '';
                     var participantName = i === 0 ? test.participantName : '';
-                    var questionnaireName = i === 0 ? test.questionnaireName : '';
                     var date = i === 0 ? test.date : '';
 
                     var questionnaire = i < test.questionnaires.length ? test.questionnaires[i] : '';
 
-                    var questionnaireLink = questionnaire ? '<a href="viewform.html?id=' + questionnaire + '">' + questionnaire.name + '</a>' : '';
+                    var questionnaireLink = questionnaire ? '<a href="viewform.html?id=' + questionnaire + '">' + test.questionnairesName[i] + '</a>' : '';
 
                     var newRow = '<tr>' +
                         '<td>' + chatbotName + '</td>' +
