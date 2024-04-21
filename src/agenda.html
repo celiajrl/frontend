@@ -46,12 +46,13 @@
             color: white;
         }
 
-        .add-participant-input {
+        .add-participant-input, .edit-input {
+            padding: 8px;
             width: calc(33.33% - 50px);
-            margin-right: 30px;
-            margin-left: 10px;
-            margin-bottom: 12px;
-            color: #000;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            color: #333;
+            background-color: #fff;
         }
 
         .add-participant-button, .edit-button, .delete-button {
@@ -66,16 +67,6 @@
 
         .add-participant-button:hover, .edit-button:hover, .delete-button:hover {
             background-color: #5a6268; /* Un gris más oscuro para el hover */
-        }
-
-        input.edit-input {
-            padding: 8px;
-            width: 100%; /* Hace que el input use todo el espacio de la celda */
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            color: #333;
-            background-color: #fff;
         }
     </style>
 </head>
@@ -99,14 +90,12 @@
                             <tbody id="participantsTableBody"></tbody>
                         </table>
                     </div>
-
                     <div class="form-group">
                         <input type="text" class="add-participant-input" placeholder="Enter Name" id="participantName">
                         <input type="text" class="add-participant-input" placeholder="Enter Surname" id="participantSurname">
                         <input type="text" class="add-participant-input" placeholder="Enter Email" id="participantEmail">
+                        <button type="button" class="btn btn-primary btn-lg add-participant-button" onclick="addParticipant()">Add Participant</button>
                     </div>
-
-                    <button type="button" class="btn btn-primary btn-lg add-participant-button" onclick="addParticipant()">Add Participant</button>
                 </form>
             </div>
         </div>
@@ -205,21 +194,30 @@
             var oldSurname = row.find('.surname').attr('data-old-value');
             var oldEmail = row.find('.email').attr('data-old-value');
 
-            var userId = localStorage.getItem('userId');
-            $.ajax({
-                type: 'PATCH',
-                url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda/find-participant`,
-                data: JSON.stringify({name: oldName, surname: oldSurname, email: oldEmail}),
-                contentType: 'application/json',
-                success: function (data) {
-                    row.find('.name').text(newName).attr('data-old-value', newName);
-                    row.find('.surname').text(newSurname).attr('data-old-value', newSurname);
-                    row.find('.email').text(newEmail).attr('data-old-value', newEmail);
-                    row.find('td:nth-child(4)').html(`<button class="btn edit-button" onclick="editParticipant(${index})">Edit</button>`);
-                },
-                error: function (error) {
-                    alert('Error updating participant: ' + error.responseText);
+            // First fetch the participant ID using the old values
+            getParticipantId(oldName, oldSurname, oldEmail, function(err, participantId) {
+                if (err) {
+                    alert(err);
+                    return; // Stop the function if there's an error
                 }
+
+                var userId = localStorage.getItem('userId');
+                // Then update the participant information
+                $.ajax({
+                    type: 'PATCH',
+                    url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda/${participantId}`,
+                    contentType: 'application/json',
+                    data: JSON.stringify({name: newName, surname: newSurname, email: newEmail}),
+                    success: function () {
+                        row.find('.name').text(newName).attr('data-old-value', newName);
+                        row.find('.surname').text(newSurname).attr('data-old-value', newSurname);
+                        row.find('.email').text(newEmail).attr('data-old-value', newEmail);
+                        row.find('td:nth-child(4)').html(`<button class="btn edit-button" onclick="editParticipant(${index})">Edit</button>`);
+                    },
+                    error: function (error) {
+                        console.error('Error saving participant:', error);
+                    }
+                });
             });
         }
 
@@ -229,21 +227,45 @@
             var oldSurname = row.find('.surname').attr('data-old-value');
             var oldEmail = row.find('.email').attr('data-old-value');
 
-            var userId = localStorage.getItem('userId');
             if (confirm("Are you sure you want to delete this participant?")) {
-                $.ajax({
-                    type: 'DELETE',
-                    url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda/find-participant`,
-                    data: JSON.stringify({name: oldName, surname: oldSurname, email: oldEmail}),
-                    contentType: 'application/json',
-                    success: function () {
-                        row.remove();
-                    },
-                    error: function (error) {
-                        alert('Error deleting participant: ' + error.responseText);
+                getParticipantId(oldName, oldSurname, oldEmail, function(err, participantId) {
+                    if (err) {
+                        alert(err);
+                        return; // Exit if there's an error
                     }
+
+                    var userId = localStorage.getItem('userId');
+                    $.ajax({
+                        type: 'DELETE',
+                        url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda/${participantId}`,
+                        success: function () {
+                            row.remove();
+                        },
+                        error: function (error) {
+                            console.error('Error deleting participant:', error);
+                        }
+                    });
                 });
             }
+        }
+
+        function getParticipantId(name, surname, email, callback) {
+            var userId = localStorage.getItem('userId');
+            $.ajax({
+                type: 'GET',
+                url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/find-participant`,
+                data: { name: name, surname: surname, email: email },
+                success: function (response) {
+                    if (response && response._id) {
+                        callback(null, response._id);
+                    } else {
+                        callback("Participant not found", null);
+                    }
+                },
+                error: function (error) {
+                    callback("Error fetching participant ID: " + error.responseText, null);
+                }
+            });
         }
     </script>
 </body>
