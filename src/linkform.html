@@ -109,8 +109,10 @@
 
             $('#sendToParticipantsButton').on('click', function() {
                 var linkedQuestionnaires = $('#tablaQuestionnaires tbody tr').filter(function() {
-                    return $(this).find('td:eq(1)').text() === "Linked";
+                    // Acceder al botón dentro de cada fila y verificar su texto
+                    return $(this).find('td:last button').text().trim() === "Unlink"; // Suponiendo que el botón para desvincular dice "Unlink"
                 });
+        
                 if (linkedQuestionnaires.length > 0) {
                     var url = 'sendemail.html?id=' + chatbotId;
                     window.location.href = url;
