@@ -68,6 +68,30 @@
             background-color: rgba(0, 0, 0, 0.1);
             border-color: rgba(255, 255, 255, 0.5);
         }
+
+        .add-participant-button, .edit-button, .delete-button {
+            background-color: #6c757d; /* Gris oscuro para mejor contraste */
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .add-participant-button:hover, .edit-button:hover, .delete-button:hover {
+            background-color: #5a6268; /* Un gris más oscuro para el hover */
+        }
+
+        /* Estilos para los campos de entrada en modo edición */
+        input.edit-input {
+            width: 95%; /* Ajustar al tamaño de la celda */
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+        }
+
     </style>
 </head>
 <body>
@@ -180,10 +204,11 @@
             var surname = row.find('.surname').text();
             var email = row.find('.email').text();
 
-            row.find('.name').html(`<input type="text" value="${name}">`);
-            row.find('.surname').html(`<input type="text" value="${surname}">`);
-            row.find('.email').html(`<input type="text" value="${email}">`);
-            row.find('td:nth-child(4)').html(`<button onclick="saveParticipant(${index})">Save</button>`);
+            // Asigna clases para los inputs para aplicar estilos
+            row.find('.name').html(`<input type="text" class="edit-input" value="${name}">`);
+            row.find('.surname').html(`<input type="text" class="edit-input" value="${surname}">`);
+            row.find('.email').html(`<input type="text" class="edit-input" value="${email}">`);
+            row.find('td:nth-child(4)').html(`<button class="btn btn-success edit-button" onclick="saveParticipant(${index})">Save</button>`);
         }
 
         function saveParticipant(index) {
@@ -191,46 +216,43 @@
             var name = row.find('.name input').val();
             var surname = row.find('.surname input').val();
             var email = row.find('.email input').val();
-            
-            // Update in backend
+            var userId = localStorage.getItem('userId');
+            var participantId = row.attr("data-participant-id"); // Suponiendo que tienes un atributo data-participant-id en la fila
+
+            // Asegúrate de que la URL sea correcta y de que los IDs sean pasados correctamente
             $.ajax({
                 type: 'PATCH',
-                url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/agenda/'+participantId,
+                url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda/${participantId}`,
                 contentType: 'application/json',
                 data: JSON.stringify({name: name, surname: surname, email: email}),
                 success: function () {
                     row.find('.name').html(name);
                     row.find('.surname').html(surname);
                     row.find('.email').html(email);
-                    row.find('td:nth-child(4)').html(`<button onclick="editParticipant(${index})">Edit</button>`);
+                    row.find('td:nth-child(4)').html(`<button class="btn btn-primary edit-button" onclick="editParticipant(${index})">Edit</button>`);
                 },
                 error: function (error) {
                     console.error('Error saving participant:', error);
                 }
             });
         }
-// RUTA PARA ELIMINAR UN PARTICIPANTE DE LA AGENDA DE UN USUARIO
-app.delete('/users/'+userId+'/agenda/'+participantId, (req, res) => {
-    const userId = req.params.userId;
-    const participantId = req.params.participantId;
 
-    if (ObjectId.isValid(userId) && ObjectId.isValid(participantId)) {
-        db.collection('agenda')
-            .deleteOne({ _id: ObjectId(participantId), userId: ObjectId(userId) })
-            .then(result => {
-                if (result.deletedCount === 0) {
-                    res.status(404).json({ message: 'No participant found with that ID' });
-                } else {
-                    res.status(200).json({ message: 'Participant deleted successfully' });
-                }
-            })
-            .catch(err => {
-                res.status(500).json({ error: 'Could not delete participant' });
-            });
-    } else {
-        res.status(400).json({ error: 'Invalid user ID or participant ID' });
-    }
-});
+
+        function deleteParticipant(index) {
+            if (confirm("Are you sure you want to delete this participant?")) {
+                var row = $('#participant-' + index);
+                $.ajax({
+                    type: 'DELETE',
+                    url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/agenda/'+participantId,
+                    success: function () {
+                        row.remove();
+                    },
+                    error: function (error) {
+                        console.error('Error deleting participant:', error);
+                    }
+                });
+            }
+        }
 
     </script>
 </body>
