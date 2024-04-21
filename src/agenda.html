@@ -257,6 +257,7 @@
                 data: { name: name, surname: surname, email: email },
                 success: function (response) {
                     if (response && response._id) {
+                        console.log(response);
                         callback(null, response._id);
                     } else {
                         callback("Participant not found", null);
