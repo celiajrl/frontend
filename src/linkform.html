@@ -146,7 +146,7 @@
                 allQuestionnaires.forEach((questionnaire, index) => {
                     const fila = $("<tr>").html(`
                         <td>${index}</td>
-                        <td>Unlinked</td>
+                        <td>${questionnaire.name}</td>
                         <td>
                             <button onclick="linkOrUnlinkQuestionnaire('${chatbotId}','${questionnaire._id}', false)" class="btn btn-primary btn-sm">Link</button>
                         </td>
