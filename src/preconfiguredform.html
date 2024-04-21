@@ -56,7 +56,7 @@
         <div class="header-content">
             <div class="header-content-inner">
                 <div class="form-group">
-                    <input type="text" id="surveyName" class="form-control" placeholder="Ingrese el nombre del cuestionario">
+                    <input type="text" id="surveyName" class="form-control" placeholder="Add a name for the questionnaire">
                 </div>
                 <form id="formoptions">
                 <table class="preconfigured-options">
@@ -196,83 +196,80 @@
 
     
     function addAdditionalQuestion() {
-        var pquestion; 
-        var nquestion;
         var table = document.querySelector('.preconfigured-options');
 
         var newRowPositive = table.insertRow();
         newRowPositive.className = 'form-group preconfigured-question';
-        newRowPositive.id = 'question' + (++questionCounter);
+        var nextQuestionNumber = ++questionCounter;
+        newRowPositive.id = 'question' + nextQuestionNumber;
 
+        var labelPositive = document.createElement('label');
+        labelPositive.textContent = nextQuestionNumber + '. ';
         var positiveCell = newRowPositive.insertCell(0);
+        positiveCell.appendChild(labelPositive);
+
         var positiveInput = document.createElement('input');
         positiveInput.type = 'text';
         positiveInput.placeholder = 'Enter positive question';
         positiveInput.style.color = '#000';
-        positiveInput.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter') {
-                pquestion = positiveInput.value;
-                event.preventDefault();
-                positiveInput.blur();
-            }
-        });
+        positiveInput.onblur = function () {
+            this.setAttribute('readonly', true); // Bloquea la entrada después de la edición
+            questionsData.push({
+                positive: this.value
+            });
+        };
         positiveCell.appendChild(positiveInput);
 
+        // Opciones de escala para la pregunta positiva
         var scaleOptionsCell = newRowPositive.insertCell(1);
         scaleOptionsCell.className = 'scale-options';
-
         for (var i = 1; i <= 5; i++) {
             var scaleCircle = document.createElement('div');
             scaleCircle.className = 'scale-circle';
             scaleCircle.textContent = i;
             scaleCircle.onclick = function (event) {
-                selectScale(event.target.textContent, questionCounter);
+                selectScale(event.target.textContent, nextQuestionNumber);
             };
-
             scaleOptionsCell.appendChild(scaleCircle);
         }
 
-        var x = document.getElementById("input"); 
-
+        // Añadiendo pregunta negativa
         var newRowNegative = table.insertRow();
         newRowNegative.className = 'form-group preconfigured-question';
-        newRowNegative.id = 'question' + (++questionCounter);
+        var nextNegativeQuestionNumber = ++questionCounter;
+        newRowNegative.id = 'question' + nextNegativeQuestionNumber;
 
+        var labelNegative = document.createElement('label');
+        labelNegative.textContent = nextNegativeQuestionNumber + '. ';
         var negativeCell = newRowNegative.insertCell(0);
+        negativeCell.appendChild(labelNegative);
+
         var negativeInput = document.createElement('input');
         negativeInput.type = 'text';
         negativeInput.placeholder = 'Enter negative question';
         negativeInput.style.color = '#000';
-        negativeInput.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter') {
-                nquestion = negativeInput.value;
-                event.preventDefault();
-                negativeInput.blur();
-                console.log(pquestion);
-                console.log(nquestion);
-                questionsData.push({
-                    positive: pquestion,
-                    negative: nquestion
-                });
-            }
-        });
+        negativeInput.onblur = function () {
+            this.setAttribute('readonly', true); // Bloquea la entrada después de la edición
+            questionsData.push({
+                negative: this.value
+            });
+        };
         negativeCell.appendChild(negativeInput);
 
+        // Opciones de escala para la pregunta negativa
         var scaleOptionsCellNegative = newRowNegative.insertCell(1);
         scaleOptionsCellNegative.className = 'scale-options';
-
         for (var j = 1; j <= 5; j++) {
             var scaleCircleNegative = document.createElement('div');
             scaleCircleNegative.className = 'scale-circle';
             scaleCircleNegative.textContent = j;
             scaleCircleNegative.onclick = function (event) {
-                selectScale(event.target.textContent, questionCounter);
+                selectScale(event.target.textContent, nextNegativeQuestionNumber);
             };
-
             scaleOptionsCellNegative.appendChild(scaleCircleNegative);
         }
-        
     }
+
 
 
     function sendQuestionsToServer() { 
