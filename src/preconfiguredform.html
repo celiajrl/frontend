@@ -27,14 +27,16 @@
         .scale-options {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
+            justify-content: flex-start; /* Mantiene los círculos agrupados */
+            margin-left: auto; /* Empuja el contenedor de los círculos hacia la derecha */
+            padding-right: 20px; /* Asegura un poco de espacio a la derecha para evitar que toque el borde */
         }
         .scale-circle {
             width: 20px;
             height: 20px;
             border-radius: 50%;
             background-color: #fff;
-            margin-right: 15px;
+            margin-right: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -57,7 +59,7 @@
         }
 
         input[type="text"].question-input {
-            width: 60%; /* Aumenta el ancho al 80% del contenedor */
+            width: 75%; /* Aumenta el ancho al 80% del contenedor */
             border: 1px solid #ccc; /* Borde sutil */
         }
 
@@ -184,6 +186,7 @@
                     </tr>
                 </table>
             </form>
+                <button type="button" class="btn btn-primary btn-lg back" onclick="goBack()">Return</button>
                 <button type="button" class="btn btn-primary btn-lg add-question" onclick="addAdditionalQuestion()">Add Question</button>
                 <button type="button" class="btn btn-primary btn-lg" onclick="sendQuestionsToServer()">Submit</button>
             </div>
@@ -201,6 +204,10 @@
             $('#navbarContainer').load('navbar.html');
             $('.preconfigured-options').show();
         });
+
+        function goBack() {
+            window.history.back();
+        }
 
         var questionCounter = 10;
         var questionsData = [
