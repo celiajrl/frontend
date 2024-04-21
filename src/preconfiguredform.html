@@ -56,9 +56,13 @@
             border-radius: 4px; /* Bordes redondeados */
         }
 
+        input[type="text"].question-input {
+            width: 60%; /* Aumenta el ancho al 80% del contenedor */
+            border: 1px solid #ccc; /* Borde sutil */
+        }
+
         .question-text {
             text-align: left; /* Alinea el texto a la derecha */
-            padding-left: 10px; /* Añade un poco de espacio a la derecha para no pegar el texto al borde */
         }
     </style>
 
@@ -227,6 +231,7 @@
 
         var positiveInput = document.createElement('input');
         positiveInput.type = 'text';
+        positiveInput.className = 'question-input';
         positiveInput.placeholder = 'Enter positive question';
         positiveInput.style.color = '#000';
         positiveInput.onblur = function () {
@@ -265,6 +270,7 @@
         negativeCell.className = 'question-text';
 
         var negativeInput = document.createElement('input');
+        negativeInput.className = 'question-input';
         negativeInput.type = 'text';
         negativeInput.placeholder = 'Enter negative question';
         negativeInput.style.color = '#000';
