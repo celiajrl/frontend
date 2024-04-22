@@ -52,6 +52,30 @@
             margin-bottom: 15px;
         }
 
+        .readonly-input {
+            background-color: #ccc; /* Cambio visual para campos bloqueados */
+        }
+        #surveyName {
+            align-items: left;
+            width: 50%; 
+        }
+        input.form-control {
+            width: 100%;  /* Hacer que el input ocupe todo el ancho de su contenedor */
+            padding: 8px; /* Añadir algo de relleno para hacerlo más fácil de escribir */
+            margin-bottom: 10px; /* Espacio debajo del campo */
+            border: 1px solid #ccc; /* Borde sutil */
+            border-radius: 4px; /* Bordes redondeados */
+        }
+
+        input[type="text"].question-input {
+            width: 80%; /* Aumenta el ancho al 80% del contenedor */
+            border: 1px solid #ccc; /* Borde sutil */
+        }
+
+        .question-text {
+            text-align: left; /* Alinea el texto a la derecha */
+        }
+
         .add-question {
             display: block;
             margin-top: 10px;
@@ -127,6 +151,9 @@
     <header>
         <div class="header-content">
             <div class="header-content-inner">
+                <div class="form-group">
+                    <input type="text" id="surveyName" class="form-control" placeholder="Add a name for the questionnaire">
+                </div>
                 <form id="formoptions">
                     <div class="custom-options">
                         <div class="form-group custom-question">
@@ -235,6 +262,11 @@
 
         function sendQuestionsToServer() {
             var questionsData = [];
+            var surveyName = document.getElementById('surveyName').value.trim();
+            if (surveyName === "") {
+                alert('Please enter a name for the questionnaire.');
+                return;
+            }
 
             for (var i = 1; i <= questionCounter; i++) {
                 var question = document.getElementById('question' + i).value;
@@ -259,6 +291,7 @@
                 url: 'https://backend-chatbotevaluator.up.railway.app/users/' + userId + '/questionnaires',
                 contentType: 'application/json',
                 data: JSON.stringify({
+                    name: surveyName,
                     type: 'custom',
                     questions: questionsData
                 }),
