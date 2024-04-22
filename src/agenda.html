@@ -188,6 +188,7 @@
                 type: 'GET',
                 url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/find-participant?name=${encodeURIComponent(name)}&surname=${encodeURIComponent(surname)}&email=${encodeURIComponent(email)}`,
                 success: function (response) {
+                    console.log(response._id);
                     callback(null, response._id);
                 },
                 error: function (error) {
@@ -256,10 +257,12 @@
                     }
 
                     var userId = localStorage.getItem('userId');
+                    console.log(userId);
                     $.ajax({
                         type: 'DELETE',
                         url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda/${participantId}`,
                         success: function () {
+                            alert("Eliminado");
                             row.remove();
                         },
                         error: function (error) {
