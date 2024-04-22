@@ -133,14 +133,15 @@
                 var userId = localStorage.getItem('userId');
                 $.ajax({
                     type: 'POST',
-                    url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/agenda',
+                    url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda`,
                     contentType: 'application/json',
                     data: JSON.stringify(participant),
                     success: function (response) {
+                        console.log('Participant added:', response);
                         location.reload();
                     },
                     error: function (error) {
-                        console.error('Error adding participant:', error);
+                        console.error('Error adding participant:', error.responseText);
                     }
                 });
 
@@ -156,19 +157,19 @@
             var userId = localStorage.getItem('userId');
             $.ajax({
                 type: 'GET',
-                url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/agenda', 
+                url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda`, 
                 success: function (data) {
+                    console.log('Agenda fetched:', data);
                     displayAgenda(data);
                 },
                 error: function (error) {
-                    console.error('Error fetching agenda:', error);
+                    console.error('Error fetching agenda:', error.responseText);
                 }
             });
         }
 
         function displayAgenda(agenda) {
             $('#participantsTableBody').empty();
-
             agenda.forEach(function (participant, index) {
                 var newRow = `<tr id="participant-${index}">
                     <td class="name" data-old-value="${participant.name}">${participant.name}</td>
@@ -182,20 +183,12 @@
         }
 
         function getParticipantId(name, surname, email, callback) {
-            console.log(name);
-            console.log(surname);
-            console.log(email);
             var userId = localStorage.getItem('userId');
             $.ajax({
                 type: 'GET',
-                url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/find-participant?name=${name}&surname=${surname}&email=${email}`,
+                url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/find-participant?name=${encodeURIComponent(name)}&surname=${encodeURIComponent(surname)}&email=${encodeURIComponent(email)}`,
                 success: function (response) {
-                    if (response && response._id) {
-                        console.log(response);
-                        callback(null, response._id);
-                    } else {
-                        callback("Participant not found", null);
-                    }
+                    callback(null, response._id);
                 },
                 error: function (error) {
                     callback("Error fetching participant ID: " + error.responseText, null);
@@ -225,19 +218,12 @@
             var oldSurname = row.find('.surname').attr('data-old-value');
             var oldEmail = row.find('.email').attr('data-old-value');
 
-            console.log(newName);
-            console.log(newSurname);
-            console.log(newEmail);
-
-            // First fetch the participant ID using the old values
             getParticipantId(oldName, oldSurname, oldEmail, function(err, participantId) {
                 if (err) {
                     alert(err);
-                    return; // Stop the function if there's an error
+                    return;
                 }
-                console.log(participantId);
                 var userId = localStorage.getItem('userId');
-                // Then update the participant information
                 $.ajax({
                     type: 'PATCH',
                     url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda/${participantId}`,
@@ -250,7 +236,7 @@
                         row.find('td:nth-child(4)').html(`<button class="btn edit-button" onclick="editParticipant(${index})">Edit</button>`);
                     },
                     error: function (error) {
-                        console.error('Error saving participant:', error);
+                        console.error('Error saving participant:', error.responseText);
                     }
                 });
             });
@@ -258,7 +244,6 @@
 
         function deleteParticipant(index) {
             var row = $('#participant-' + index);
-            console.log(row);
             var oldName = row.find('.name').attr('data-old-value');
             var oldSurname = row.find('.surname').attr('data-old-value');
             var oldEmail = row.find('.email').attr('data-old-value');
@@ -267,12 +252,10 @@
                 getParticipantId(oldName, oldSurname, oldEmail, function(err, participantId) {
                     if (err) {
                         alert(err);
-                        return; // Exit if there's an error
+                        return;
                     }
 
                     var userId = localStorage.getItem('userId');
-                    console.log(userId);
-                    console.log(participantId);
                     $.ajax({
                         type: 'DELETE',
                         url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda/${participantId}`,
@@ -280,7 +263,7 @@
                             row.remove();
                         },
                         error: function (error) {
-                            console.error('Error deleting participant:', error);
+                            console.error('Error deleting participant:', error.responseText);
                         }
                     });
                 });
