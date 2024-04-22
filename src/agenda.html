@@ -56,7 +56,7 @@
         }
 
         .add-participant-button, .edit-button, .delete-button {
-            background-color: #6c757d; /* Gris oscuro para mejor contraste */
+            background-color: #6c3880; /* Gris oscuro para mejor contraste */
             color: white;
             border: none;
             padding: 6px 12px;
@@ -194,13 +194,17 @@
             var oldSurname = row.find('.surname').attr('data-old-value');
             var oldEmail = row.find('.email').attr('data-old-value');
 
+            console.log(oldName);
+            console.log(oldSurname);
+            console.log(oldEmail);
+
             // First fetch the participant ID using the old values
             getParticipantId(oldName, oldSurname, oldEmail, function(err, participantId) {
                 if (err) {
                     alert(err);
                     return; // Stop the function if there's an error
                 }
-
+                console.log(participantId);
                 var userId = localStorage.getItem('userId');
                 // Then update the participant information
                 $.ajax({
