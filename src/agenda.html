@@ -261,10 +261,12 @@
                     }
 
                     var userId = localStorage.getItem('userId');
+                    alert(participantId);
                     $.ajax({
                         type: 'DELETE',
                         url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda/${participantId}`,
                         success: function () {
+                            alert("lo hemos borrao");
                             row.remove();
                         },
                         error: function (error) {
