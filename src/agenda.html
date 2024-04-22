@@ -218,6 +218,8 @@
             var oldName = row.find('.name').attr('data-old-value');
             var oldSurname = row.find('.surname').attr('data-old-value');
             var oldEmail = row.find('.email').attr('data-old-value');
+
+            event.preventDefault();
                
             getParticipantId(oldName, oldSurname, oldEmail, function(err, participantId) {
                 if (err) {
@@ -228,7 +230,7 @@
                     var userId = localStorage.getItem('userId');
                     $.ajax({
                         type: 'PATCH',
-                        url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda/${participantId}`,
+                        url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/agenda/'+participantId,
                         contentType: 'application/json',
                         data: JSON.stringify({name: newName, surname: newSurname, email: newEmail}),
                         success: function () {
@@ -236,6 +238,7 @@
                             row.find('.surname').text(newSurname).attr('data-old-value', newSurname);
                             row.find('.email').text(newEmail).attr('data-old-value', newEmail);
                             row.find('td:nth-child(4)').html(`<button class="btn edit-button" onclick="editParticipant(${index})">Edit</button>`);
+                            window.location.reload();
                         },
                         error: function (error) {
                             console.error('Error saving participant:', error.responseText);
@@ -267,7 +270,6 @@
                             type: 'DELETE',
                             url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/agenda/'+participantId,
                             success: function () {
-                                alert("Eliminado");
                                 window.location.reload();
                             },
                             error: function (error) {
