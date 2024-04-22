@@ -248,7 +248,7 @@
             var oldSurname = row.find('.surname').attr('data-old-value');
             var oldEmail = row.find('.email').attr('data-old-value');
 
-            if (confirm("Are you sure you want to delete this participant?")) {
+            if (confirm("Are you sure you want to delete participant: "+oldName+' '+oldSurname)) {
                 getParticipantId(oldName, oldSurname, oldEmail, function(err, participantId) {
                     if (err) {
                         alert(err);
