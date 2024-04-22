@@ -251,6 +251,8 @@
             var oldSurname = row.find('.surname').attr('data-old-value');
             var oldEmail = row.find('.email').attr('data-old-value');
 
+            var userId = localStorage.getItem('userId');
+            event.preventDefault();
             if (confirm("Are you sure you want to delete participant: "+oldName+' '+oldSurname)) {
                 getParticipantId(oldName, oldSurname, oldEmail, function(err, participantId) {
                     if (err) {
@@ -263,10 +265,10 @@
                         console.log(userId);
                         $.ajax({
                             type: 'DELETE',
-                            url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda/${participantId}`,
+                            url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/agenda/'+participantId,
                             success: function () {
                                 alert("Eliminado");
-                                row.remove();
+                                window.location.reload();
                             },
                             error: function (error) {
                                 console.error('Error deleting participant:', error.responseText);
