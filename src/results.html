@@ -262,21 +262,9 @@
         let csvContent = "data:text/csv;charset=utf-8,";
 
         rows.forEach(function(row) {
-            const rowData = [];
-            row.querySelectorAll("td").forEach(function(cell, index) {
-                if (index % 2 !== 0) { // Solo procesar las celdas de respuestas, no las de preguntas
-                    let answerValue = "";
-                    const selectedOption = cell.querySelector('.selected');
-                    if (selectedOption) { // Si hay una opción seleccionada
-                        answerValue = selectedOption.innerText;
-                    } else {
-                        // Si no hay opción seleccionada, obtener el texto de la celda
-                        answerValue = cell.innerText.trim();
-                    }
-                    rowData.push(answerValue);
-                }
-            });
-            csvContent += rowData.join(",") + "\n";
+            const question = row.querySelector("td:first-child").innerText.trim();
+            const answer = row.querySelector("td:nth-child(2)").innerText.trim();
+            csvContent += `${question},${answer}\n`;
         });
 
         const encodedUri = encodeURI(csvContent);
@@ -287,6 +275,7 @@
 
         link.click();
     }
+
 
 
 
