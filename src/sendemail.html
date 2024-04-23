@@ -169,6 +169,7 @@
                     data: JSON.stringify({ userId, selectedParticipants, emailTitle, emailText, chatbotId }),
                     success: function (response) {
                         alert(response.message);
+                        window.location.href = "mychatbots.html";             
                     },
                     error: function (error) {
                         alert('Error sending email:', error);
