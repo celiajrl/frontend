@@ -265,25 +265,10 @@
             const rowData = [];
             row.querySelectorAll("td").forEach(function(cell, index) {
                 // Si la celda es la celda de la respuesta y contiene opciones de escala o sí/no
-                if (index % 2 !== 0) {
-                    const answer = cell.textContent.trim(); // Obtener el texto de la respuesta
-
-                    // Determinar el tipo de pregunta y ajustar el valor de la respuesta según corresponda
-                    if (cell.querySelector('.selected')) { // Si es una pregunta de escala
-                        const selectedOption = cell.querySelector('.selected').innerText;
-                        rowData.push(selectedOption);
-                    } else if (cell.querySelector('input[type="checkbox"]')) { // Si es una pregunta de sí/no
-                        const checkbox = cell.querySelector('input[type="checkbox"]');
-                        if (checkbox.checked) {
-                            rowData.push(checkbox.nextSibling.textContent.trim()); // Yes si está marcado, No si no lo está
-                        } else {
-                            rowData.push(checkbox.previousSibling.textContent.trim()); // No si está marcado, Yes si no lo está
-                        }
-                    } else if (cell.querySelector('select')) { // Si es una pregunta de lista
-                        rowData.push(cell.querySelector('select').value); // Obtener el valor seleccionado de la lista
-                    } else { // Si es una pregunta de texto o escala
-                        rowData.push(answer); // Simplemente obtener el texto de la celda
-                    }
+                if (index % 2 !== 0 && cell.querySelector('.selected')) {
+                    // Obtener el texto de la opción seleccionada
+                    const selectedOption = cell.querySelector('.selected').innerText;
+                    rowData.push(selectedOption);
                 } else {
                     // De lo contrario, simplemente obtener el texto de la celda
                     rowData.push(cell.innerText);
@@ -300,7 +285,6 @@
 
         link.click();
     }
-
 
 
 
