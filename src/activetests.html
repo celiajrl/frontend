@@ -143,7 +143,7 @@
 
                     var questionnaireLink = questionnaire ? '<a href="viewform.html?id=' + questionnaire + '">' + test.questionnairesName[i] + '</a>' : '';
 
-                    var reminderButton = i === 0 ? '<button onclick="sendReminder(\'' + test.id + '\', \'' + test.participantId + '\')">Resend email</button>' : '';
+                    var reminderButton = i === 0 ? '<button onclick="sendReminder(\'' + test._id + '\', \'' + test.participantId + '\')">Resend email</button>' : '';
 
                     var newRow = '<tr>' +
                         '<td>' + chatbotName + '</td>' +
