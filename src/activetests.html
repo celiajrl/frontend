@@ -92,6 +92,7 @@
                                     <th>Participant</th>
                                     <th>Questionnaire</th>
                                     <th>Sent Date</th>
+                                    <th>Resend email</th>
                                 </tr>
                             </thead>
                             <tbody id="participantsTableBody">
@@ -142,14 +143,32 @@
 
                     var questionnaireLink = questionnaire ? '<a href="viewform.html?id=' + questionnaire + '">' + test.questionnairesName[i] + '</a>' : '';
 
+                    var reminderButton = i === 0 ? '<button onclick="sendReminder(\'' + test.id + '\', \'' + test.participantId + '\')">Resend email</button>' : '';
+
                     var newRow = '<tr>' +
                         '<td>' + chatbotName + '</td>' +
                         '<td>' + participantName + '</td>' +
                         '<td>' + questionnaireLink + '</td>' +
                         '<td>' + date + '</td>' +
+                        '<td>' + reminderButton + '</td>' +
                         '</tr>';
 
                     $('#participantsTableBody').append(newRow);
+                }
+            });
+        }
+
+        function sendReminder(testId, participantId) {
+            $.ajax({
+                type: 'POST',
+                url: 'https://backend-chatbotevaluator.up.railway.app/send-reminder',
+                data: { testId: testId, participantId: participantId },
+                success: function(response) {
+                    alert('Reminder sent successfully!');
+                },
+                error: function(error) {
+                    console.error('Error sending reminder:', error);
+                    alert('Failed to send reminder.');
                 }
             });
         }
