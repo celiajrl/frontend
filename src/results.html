@@ -278,7 +278,12 @@
                             rowData.push(checkbox.previousSibling.textContent.trim()); // No si está marcado, Yes si no lo está
                         }
                     } else if (cell.querySelector('input[type="text"]')) { // Si es una pregunta de texto
-                        rowData.push(cell.querySelector('input[type="text"]').value.trim()); // Obtener el valor del campo de texto
+                        const textField = cell.querySelector('input[type="text"]');
+                        if (textField) {
+                            rowData.push(textField.value.trim()); // Obtener el valor del campo de texto
+                        } else {
+                            rowData.push(''); // Si el campo de texto no existe, dejar el campo vacío
+                        }
                     } else if (cell.querySelector('select')) { // Si es una pregunta de lista
                         rowData.push(cell.querySelector('select').value); // Obtener el valor seleccionado de la lista
                     } else {
