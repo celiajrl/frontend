@@ -75,6 +75,26 @@
         .dropdown:hover .dropdown-content {
             display: block;
         }
+
+        .button {
+            background-color: #34568B; /* Cambiado a un azul más oscuro */
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 14px; /* Asegúrate de que el tamaño del texto sea adecuado */
+        }
+
+        .button:hover {
+            background-color: #263238; /* Un azul aún más oscuro para el hover */
+        }
+
+        .button:focus {
+            outline: none; /* Elimina el borde cuando el botón está enfocado */
+        }
+
     </style>
 </head>
 
@@ -169,7 +189,7 @@
                     contentType: 'application/json',
                     data: JSON.stringify({ testId, participantId }),
                     success: function (response) {
-                        alert(response.message);         
+                        alert('Reminder sent successfully!');       
                     },
                     error: function (error) {
                         alert('Error sending email:', error);
