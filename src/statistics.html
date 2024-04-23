@@ -41,6 +41,7 @@
         <div class="header-content">
             <div class="header-content-inner" id="chartContainer">
                 <canvas id="myChart"></canvas>
+                <button type="button" class="btn btn-primary btn-lg export" onclick="exportChart('myChart', 'chart_export')">Export Chart</button>
             </div>
             <button type="button" class="btn btn-primary btn-lg back" onclick="goBack()">Return</button>
         </div>
@@ -264,6 +265,20 @@
                         }
                     }
                 }
+            });
+        }
+
+        function exportChart(chartId, filename) {
+            const chartCanvas = document.getElementById(chartId);
+            html2canvas(chartCanvas).then(function (canvas) {
+                // Convertir el lienzo a datos de imagen en formato PNG
+                const imageData = canvas.toDataURL('image/png');
+                // Crear un enlace de descarga
+                const link = document.createElement('a');
+                link.download = filename + '.png';
+                link.href = imageData;
+                // Simular clic en el enlace para descargar la imagen
+                link.click();
             });
         }
     </script>
