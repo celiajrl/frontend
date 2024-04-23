@@ -164,17 +164,17 @@
             console.log(participantId);
 
             $.ajax({
-                type: 'POST',
-                url: 'https://backend-chatbotevaluator.up.railway.app/send-reminder',
-                data: { testId: testId, participantId: participantId },
-                success: function(response) {
-                    alert('Reminder sent successfully!');
-                },
-                error: function(error) {
-                    console.error('Error sending reminder:', error);
-                    alert('Failed to send reminder.');
-                }
-            });
+                    type: 'POST',
+                    url: 'https://backend-chatbotevaluator.up.railway.app/send-reminder',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ testId, participantId }),
+                    success: function (response) {
+                        alert(response.message);         
+                    },
+                    error: function (error) {
+                        alert('Error sending email:', error);
+                    }
+                });
         }
     </script>
 </body>
