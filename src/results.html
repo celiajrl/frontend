@@ -273,9 +273,9 @@
                     } else if (cell.querySelector('input[type="checkbox"]')) { // Si es una pregunta de sí/no
                         const checkbox = cell.querySelector('input[type="checkbox"]');
                         if (checkbox.checked) {
-                            rowData.push(checkbox.nextSibling.textContent.trim()); // Yes si está marcado, No si no lo está
+                            rowData.push('Yes'); // Yes si está marcado
                         } else {
-                            rowData.push(checkbox.previousSibling.textContent.trim()); // No si está marcado, Yes si no lo está
+                            rowData.push('No'); // No si no está marcado
                         }
                     } else if (cell.querySelector('input[type="text"]')) { // Si es una pregunta de texto
                         const textField = cell.querySelector('input[type="text"]');
