@@ -75,9 +75,6 @@
             margin-right: 5px;
         }
 
-        .export {
-            margin-top: 10px;
-        }
     </style>
 </head>
 
@@ -266,8 +263,16 @@
 
         rows.forEach(function(row) {
             const rowData = [];
-            row.querySelectorAll("td").forEach(function(cell) {
-                rowData.push(cell.innerText);
+            row.querySelectorAll("td").forEach(function(cell, index) {
+                // Si la celda es la celda de la respuesta y contiene opciones de escala o sí/no
+                if (index % 2 !== 0 && cell.querySelector('.selected')) {
+                    // Obtener el texto de la opción seleccionada
+                    const selectedOption = cell.querySelector('.selected').innerText;
+                    rowData.push(selectedOption);
+                } else {
+                    // De lo contrario, simplemente obtener el texto de la celda
+                    rowData.push(cell.innerText);
+                }
             });
             csvContent += rowData.join(",") + "\n";
         });
@@ -280,6 +285,7 @@
 
         link.click();
     }
+
 
 
     </script>
