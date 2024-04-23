@@ -159,6 +159,10 @@
         }
 
         function sendReminder(testId, participantId) {
+            console.log("reenvio a ");
+            console.log(testId);
+            console.log(participantId);
+
             $.ajax({
                 type: 'POST',
                 url: 'https://backend-chatbotevaluator.up.railway.app/send-reminder',
