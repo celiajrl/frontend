@@ -279,6 +279,7 @@
                         }
                     } else if (cell.querySelector('input[type="text"]')) { // Si es una pregunta de texto
                         const textField = cell.querySelector('input[type="text"]');
+                        console.log(textField);
                         if (textField) {
                             rowData.push(textField.value.trim()); // Obtener el valor del campo de texto
                         } else {
