@@ -230,6 +230,11 @@
             if (questionType === 'scale') {
                 answerInput.innerHTML = '';
 
+                // Crear un contenedor específico para el input numérico
+                var numberInputContainer = document.createElement('div');
+                numberInputContainer.className = 'number-input-container';
+                answerInput.appendChild(numberInputContainer);
+
                 // Crear un input numérico para que el usuario seleccione el límite superior del bucle
                 var numberInput = document.createElement('input');
                 numberInput.type = 'number';
@@ -237,16 +242,19 @@
                 numberInput.min = 1;  // Establecer el mínimo en 1
                 numberInput.max = 10;  // Establecer el máximo en 10
                 numberInput.placeholder = 'Select max value';
-                answerInput.appendChild(numberInput);
+                numberInputContainer.appendChild(numberInput);
+
+                // Crear un contenedor para los círculos de escala
+                var scaleContainer = document.createElement('div');
+                scaleContainer.className = 'scale-container';
+                answerInput.appendChild(scaleContainer);
 
                 // Agregar un evento de escucha para el evento 'input' en el campo de entrada numérica
                 numberInput.addEventListener('input', function() {
                     var maxValue = parseInt(numberInput.value);
                     if (!isNaN(maxValue) && maxValue >= 1 && maxValue <= 10) {
                         // Limpiar los botones existentes antes de generar nuevos
-                        while (answerInput.lastChild !== numberInput) {
-                            answerInput.removeChild(answerInput.lastChild);
-                        }
+                        scaleContainer.innerHTML = '';
 
                         // Generar los botones de la escala usando el valor seleccionado
                         for (var j = 1; j <= maxValue; j++) {
@@ -256,7 +264,7 @@
                             scaleCircle.onclick = function(event) {
                                 selectScale(event.target.textContent, questionNumber);
                             };
-                            answerInput.appendChild(scaleCircle);
+                            scaleContainer.appendChild(scaleCircle);
                         }
                     }
                 });
@@ -266,7 +274,7 @@
                     '<input type="radio" name="answer' + questionNumber + '" value="No" disabled> No' +
                     '</div>';
             } else if (questionType === 'number') {
-                answerInput.innerHTML = '<input type="number" class="form-control text-input" id="answer' + questionNumber + '" placeholder="Enter a number" pattern="[0-9]*" required>';
+                answerInput.innerHTML = '<input type="text" class="form-control text-input" id="answer' + questionNumber + '" placeholder="Enter number" readonly>';
             } else if (questionType === 'text') {
                 answerInput.innerHTML = '<input type="text" class="form-control text-input" id="answer' + questionNumber + '" placeholder="Enter answer" readonly>';
             } else if (questionType === 'list') {
