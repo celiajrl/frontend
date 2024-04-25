@@ -203,6 +203,10 @@
             for (var chatbotId in groupedByChatbot) {
                 var chatbotData = groupedByChatbot[chatbotId];
                 var questionnairesHtml = '<ul>';
+                    
+                console.log(chatbotId);
+                console.log(chatbotData);
+                console.log(activeQuestionnairesByChatbot[chatbotId]);
 
                 // Iteramos sobre los cuestionarios de este chatbot
                 for (var questionnaireId in chatbotData.questionnaires) {
