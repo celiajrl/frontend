@@ -86,8 +86,13 @@
         }
 
         input[type="number"] {
+            width: 50%; /* Aumenta el ancho al 80% del contenedor */
+            border: 1px solid #ccc; /* Borde sutil */
+        }
+
+        .number-input {
             width: 50px;
-            margin-left: 30px;
+            margin-left: 10px;
         }
 
         .text-input {
@@ -258,7 +263,7 @@
                     '<div class="add-link-container">' +
                         '<a href="#" class="add-link" onclick="addToList(' + questionNumber + ')">+</a>' +
                     '</div>' +
-                    '<select multiple class="form-control answer-list" id="answerList' + questionNumber + '">' +
+                    '<select class="form-control answer-list" id="answerList' + questionNumber + '">' +
                     '</select>' +
                 '</div>';
             }
