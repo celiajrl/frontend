@@ -234,8 +234,8 @@
                 var numberInput = document.createElement('input');
                 numberInput.type = 'number';
                 numberInput.className = 'form-control';
-                numberInput.min = 1; // Establecer el mínimo en 1
-                numberInput.max = 10; // Establecer el máximo en 10
+                numberInput.min = 1;  // Establecer el mínimo en 1
+                numberInput.max = 10;  // Establecer el máximo en 10
                 numberInput.placeholder = 'Select max value';
                 answerInput.appendChild(numberInput);
 
@@ -243,7 +243,10 @@
                 numberInput.addEventListener('input', function() {
                     var maxValue = parseInt(numberInput.value);
                     if (!isNaN(maxValue) && maxValue >= 1 && maxValue <= 10) {
-
+                        // Limpiar los botones existentes antes de generar nuevos
+                        while (answerInput.lastChild !== numberInput) {
+                            answerInput.removeChild(answerInput.lastChild);
+                        }
 
                         // Generar los botones de la escala usando el valor seleccionado
                         for (var j = 1; j <= maxValue; j++) {
@@ -308,22 +311,39 @@
             }
 
             for (var i = 1; i <= questionCounter; i++) {
-                var question = document.getElementById('question' + i).value;
+                var question = document.getElementById('question' + i).value.trim();
                 var questionType = document.getElementById('question' + i + 'Type').value;
                 var answerOptions = [];
+                var numberOfScaleCircles = 0; // This will store the number of scale circles generated
 
-                if (questionType === 'list') {
+                // Collect options based on the type of question
+                if (questionType === 'list' || questionType === 'multiselect') {
                     $('#answerList' + i + ' option').each(function() {
                         answerOptions.push($(this).val());
                     });
+                } else if (questionType === 'scale') {
+                    // For scale types, calculate the number of circles from the numeric input for scale
+                    var maxInput = document.getElementById('answerInput' + i).querySelector('input[type="number"]');
+                    console.log(maxInput);
+                    if (maxInput) {
+                        numberOfScaleCircles = parseInt(maxInput.value);
+                        if (!isNaN(numberOfScaleCircles)) {
+                            // Generate a range of values based on the max value for scale type
+                            for (var j = 1; j <= numberOfScaleCircles; j++) {
+                                answerOptions.push(j.toString());
+                            }
+                        }
+                    }
                 }
 
                 questionsData.push({
                     question: question,
                     type: questionType,
-                    answerOptions: answerOptions
+                    answerOptions: answerOptions,
+                    numberOfScaleCircles: numberOfScaleCircles // Store the number of scale circles if applicable
                 });
             }
+
             var userId = localStorage.getItem('userId');
             $.ajax({
                 type: 'POST',
