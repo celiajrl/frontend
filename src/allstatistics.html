@@ -182,15 +182,19 @@
                 var tableBody = $('#participantsTableBody');
                 chatbotData.questionnaires.forEach(function (questionnaire) {
                     var completedCount = 0; // Contador de cuestionarios completados
-                    var activeCount = activeTestsByChatbot[chatbotId].byQuestionnaire[questionnaire.id] || 0; // Obtener la cantidad de cuestionarios activos
-                    var totalCount = completedCount + activeCount; // Calcular el total de cuestionarios
-                    var percentage = totalCount > 0 ? (completedCount / totalCount) * 100 : 0; // Calcular el porcentaje de cuestionarios completados
+                    var activeCount = activeTestsByChatbot[chatbotId].byQuestionnaire[questionnaire.id] || 0; // Obtener el número de cuestionarios activos
+                    completedTests.forEach(function (test) {
+                        if (test.chatbotId === chatbotId && test.questionnaireId === questionnaire.id) {
+                            completedCount++;
+                        }
+                    });
+                    var totalTests = completedCount + activeCount; // Obtener el número total de cuestionarios
+                    var percentage = (totalTests === 0) ? 0 : (completedCount / totalTests) * 100; // Calcular el porcentaje de cuestionarios completados
 
                     var newRow = $('<tr>');
-                    newRow.append('<td>' + chatbotData.chatbotName + '</td>');
-
+                    newRow.append('<td>' + chatbotData.chatbotName + '</td>'); // Agregar el nombre del chatbot
                     var questionnairesHtml = '<td>';
-                    questionnairesHtml += '<span>' + questionnaire.name + '</span>';
+                    questionnairesHtml += questionnaire.name;
                     questionnairesHtml += '<span class="info-icon"><i class="fas fa-info-circle" title="Percentage of answered questionnaires for chatbot: ' + percentage.toFixed(2) + '%"></i></span>';
                     questionnairesHtml += '<br>';
                     questionnairesHtml += '</td>';
