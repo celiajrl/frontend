@@ -224,11 +224,10 @@
                     percentageCompleted = percentageCompleted.toFixed(2);
                     questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaireId + '">' + questionnaire.name + '</a>' + ': ' + percentageCompleted + '%</li>';
                 }
+                questionnairesHtml += '</ul>';
 
                 var chatbotPercentage = (chatbotData.totalCompleted / (chatbotData.totalCompleted + activeQuestionnairesByChatbot[chatbotId].total))*100;
                 chatbotPercentage = chatbotPercentage.toFixed(2);
-
-                questionnairesHtml += '</ul>';
 
                 var newRow = '<tr><td>' + chatbotData.chatbotName + '</td><td>' + questionnairesHtml + '</td></td>' + chatbotPercentage + '%</td></tr>';
                 $('#participantsTableBody').append(newRow);
