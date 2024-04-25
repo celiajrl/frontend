@@ -76,8 +76,8 @@
             display: block;
         }
 
-        .button {
-            background-color: #765183 !important; 
+        .reminder-button {
+            background-color: #765183; 
             color: white;
             border: none;
             padding: 10px 16px;
@@ -86,13 +86,14 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .button:hover {
+        .reminder-button:hover {
             background-color: #352533; 
         }
 
-        .button:focus {
+        .reminder-button:focus {
             outline: none; 
         }
+
 
     </style>
 </head>
@@ -162,7 +163,7 @@
 
                     var questionnaireLink = questionnaire ? '<a href="viewform.html?id=' + questionnaire + '">' + test.questionnairesName[i] + '</a>' : '';
 
-                    var reminderButton = i === 0 ? '<button onclick="sendReminder(\'' + test._id + '\', \'' + test.participantId + '\')">Resend email</button>' : '';
+                    var reminderButton = i === 0 ? '<button class="reminder-button" onclick="sendReminder(\'' + test._id + '\', \'' + test.participantId + '\')">Resend email</button>' : '';
 
                     var newRow = '<tr>' +
                         '<td>' + chatbotName + '</td>' +
@@ -178,9 +179,6 @@
         }
 
         function sendReminder(testId, participantId) {
-            console.log("reenvio a ");
-            console.log(testId);
-            console.log(participantId);
 
             $.ajax({
                     type: 'POST',
@@ -188,12 +186,13 @@
                     contentType: 'application/json',
                     data: JSON.stringify({ testId, participantId }),
                     success: function (response) {
-                        alert('Reminder sent successfully!');       
+                        alert('Reminder sent successfully!');   
+                        window.location.href = "activetests.html";    
                     },
                     error: function (error) {
                         alert('Error sending email:', error);
                     }
-                });
+            });
         }
     </script>
 </body>
