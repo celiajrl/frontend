@@ -129,14 +129,26 @@
 
                 // Verificar si el chatbotId ya existe en activeQuestionnairesByChatbot
                 if (!(chatbotId in activeQuestionnairesByChatbot)) {
-                    // Si no existe, inicializarlo con el número de cuestionarios en este test
                     activeQuestionnairesByChatbot[chatbotId] = {
-                        count: test.questionnaires.length
+                        total: 0, // Inicializar el total de cuestionarios activos en 0
+                        questionnaires: {} // Inicializar un objeto para almacenar el recuento de cada cuestionario
                     };
-                } else {
-                    // Si ya existe, sumar el número de cuestionarios en este test
-                    activeQuestionnairesByChatbot[chatbotId].count += test.questionnaires.length;
                 }
+
+                activeQuestionnairesByChatbot[chatbotId].total += test.questionnaires.length;
+
+                // Iterar sobre los cuestionarios en este test
+                test.questionnaires.forEach(function(questionnaire) {
+
+                    // Verificar si el cuestionario ya existe para este chatbot
+                    if (!(questionnaire in activeQuestionnairesByChatbot[chatbotId].questionnaires)) {
+                        // Si no existe, inicializarlo con 1
+                        activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaireId] = 1;
+                    } else {
+                        // Si ya existe, incrementar el recuento en 1
+                        activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaireId]++;
+                    }
+                });
             });
 
             // Ahora activeQuestionnairesByChatbot contiene el número de cuestionarios activos por chatbot
@@ -195,7 +207,7 @@
                 // Iteramos sobre los cuestionarios de este chatbot
                 for (var questionnaireId in chatbotData.questionnaires) {
                     var questionnaire = chatbotData.questionnaires[questionnaireId];
-                    var percentageCompleted = (questionnaire.completed / (chatbotData.totalCompleted + activeQuestionnairesByChatbot[chatbotId].count)) * 100;
+                    var percentageCompleted = (questionnaire.completed / (questionnaire.completed + activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaireId])) * 100;
                     percentageCompleted = percentageCompleted.toFixed(2);
                     questionnairesHtml += '<li>' + questionnaire.name + ': ' + percentageCompleted + '%</li>';
                 }
