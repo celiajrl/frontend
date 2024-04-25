@@ -167,7 +167,7 @@
                                 <input type="text" class="form-control" id="question1" placeholder="Enter your question">
                             </div>
                             <select class="form-control custom-select" id="question1Type" onchange="toggleInputFields(1)">
-                                <option value="scale">Scale (1-5)</option>
+                                <option value="scale">Scale</option>
                                 <option value="yesno">Yes/No</option>
                                 <option value="number">Numeric</option>
                                 <option value="text">Text</option>
@@ -212,7 +212,7 @@
                 '<input type="text" class="form-control" id="question' + questionCounter + '" placeholder="Enter your question" style="width: 300px;">' +
                 '</div>' +
                 '<select class="form-control custom-select" id="question' + questionCounter + 'Type" onchange="toggleInputFields(' + questionCounter + ')">' +
-                '<option value="scale">Scale (1-5)</option>' +
+                '<option value="scale">Scale</option>' +
                 '<option value="yesno">Yes/No</option>' +
                 '<option value="number">Numeric</option>' +
                 '<option value="text">Text</option>' +
@@ -228,16 +228,34 @@
             var questionType = document.getElementById('question' + questionNumber + 'Type').value;
 
             if (questionType === 'scale') {
-                answerInput.innerHTML = '';
-                for (var j = 1; j <= 5; j++) {
-                    var scaleCircle = document.createElement('div');
-                    scaleCircle.className = 'scale-circle';
-                    scaleCircle.textContent = j;
-                    scaleCircle.onclick = function (event) {
-                        selectScale(event.target.textContent, questionNumber);
-                    };
-                    answerInput.appendChild(scaleCircle);
-                }
+                var upperLimitInput = document.createElement('input');
+                upperLimitInput.setAttribute('type', 'number');
+                upperLimitInput.setAttribute('class', 'form-control text-input');
+                upperLimitInput.setAttribute('id', 'upperLimitInput' + questionNumber);
+                upperLimitInput.setAttribute('placeholder', 'Enter upper limit');
+                upperLimitInput.setAttribute('min', '1');
+                upperLimitInput.setAttribute('max', '10');
+                upperLimitInput.style.marginLeft = '10px'; // Ajustar el margen según sea necesario
+                answerInput.appendChild(upperLimitInput);
+
+                upperLimitInput.addEventListener('change', function() {
+                    var upperLimit = parseInt(upperLimitInput.value);
+                    if (!upperLimit || isNaN(upperLimit) || upperLimit < 1 || upperLimit > 10) {
+                        alert("Please enter a valid number between 1 and 10.");
+                        return;
+                    }
+
+                    answerInput.innerHTML = '';
+                    for (var j = 1; j <= upperLimit; j++) {
+                        var scaleCircle = document.createElement('div');
+                        scaleCircle.className = 'scale-circle';
+                        scaleCircle.textContent = j;
+                        scaleCircle.onclick = function (event) {
+                            selectScale(event.target.textContent, questionNumber);
+                        };
+                        answerInput.appendChild(scaleCircle);
+                    }
+                });
             } else if (questionType === 'yesno') {
                 answerInput.innerHTML = '<div class="yes-no-options">' +
                     '<input type="radio" name="answer' + questionNumber + '" value="Yes" disabled> Yes' +
