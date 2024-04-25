@@ -177,65 +177,68 @@
         }
 
         function displayCustomQuestions(questions) {
-        const tbody = $('#questionTableBody');
-        tbody.empty();
+            const tbody = $('#questionTableBody');
+            tbody.empty();
 
-        questions.forEach(function (question, index) {
-            const row = $('<tr>');
-            const questionCell = $('<td>').addClass('question-cell').text((index + 1) + '. ' + question.question);
-            const answerInputCell = $('<td>').addClass('answer-cell'); // Celda para la entrada de respuesta
+            questions.forEach(function (question, index) {
+                const row = $('<tr>');
+                const questionCell = $('<td>').addClass('question-cell').text((index + 1) + '. ' + question.question);
+                const answerInputCell = $('<td>').addClass('answer-cell'); // Celda para la entrada de respuesta
 
-            // Determina el tipo de pregunta y genera la entrada de respuesta correspondiente
-            switch (question.type.toLowerCase()) {
-                case 'scale':
-                    const scaleOptions = $('<div>').addClass('scale-options');
-
-                    // Genera círculos de escala del 1 al 5
-                    for (let j = 1; j <= 5; j++) {
-                        const scaleCircle = $('<div>').addClass('scale-circle').text(j);
-                        scaleCircle.on('click', function(event) {
-                            selectScale(j, index + 1); // Llama a la función selectScale con el valor del círculo de escala y el número de pregunta
-                        });
-                        scaleOptions.append(scaleCircle);
-                    }
-
-                    answerInputCell.append(scaleOptions);
-                    break;
-                case 'yesno':
-                    const yesNoOptions = $('<div>').addClass('yes-no-options');
-
-                    // Añade botones de opción Yes/No
-                    const yesRadio = $('<input>').attr({ type: 'radio', name: 'answer' + (index + 1), value: 'Yes', disabled: true });
-                    const noRadio = $('<input>').attr({ type: 'radio', name: 'answer' + (index + 1), value: 'No', disabled: true });
-
-                    yesNoOptions.append(yesRadio, ' Yes ', noRadio, ' No');
-                    answerInputCell.append(yesNoOptions);
-                    break;
-                case 'text':
-                    // Añade un campo de texto para la respuesta de texto
-                    const textInput = $('<input>').attr({ type: 'text', class: 'form-control text-input', id: 'answer' + (index + 1), placeholder: 'Enter answer', readonly: true });
-                    answerInputCell.append(textInput);
-                    break;
+                // Determina el tipo de pregunta y genera la entrada de respuesta correspondiente
+                switch (question.type.toLowerCase()) {
+                    case 'scale':
+                        const scaleOptions = $('<div>').addClass('scale-options');
+                        // Genera círculos de escala basados en numberOfScaleCircles o un número predeterminado si no está especificado
+                        const scaleCount = question.numberOfScaleCircles || 5; // Predeterminado a 5 si no se especifica
+                        for (let j = 1; j <= scaleCount; j++) {
+                            const scaleCircle = $('<div>').addClass('scale-circle').text(j);
+                            scaleCircle.on('click', function(event) {
+                                selectScale(j, index + 1); // Llama a la función selectScale con el valor del círculo de escala y el número de pregunta
+                            });
+                            scaleOptions.append(scaleCircle);
+                        }
+                        answerInputCell.append(scaleOptions);
+                        break;
+                    case 'yesno':
+                        const yesNoOptions = $('<div>').addClass('yes-no-options');
+                        const yesRadio = $('<input>').attr({ type: 'radio', name: 'answer' + (index + 1), value: 'Yes', disabled: true });
+                        const noRadio = $('<input>').attr({ type: 'radio', name: 'answer' + (index + 1), value: 'No', disabled: true });
+                        yesNoOptions.append(yesRadio, ' Yes ', noRadio, ' No');
+                        answerInputCell.append(yesNoOptions);
+                        break;
+                    case 'text':
+                        const textInput = $('<input>').attr({ type: 'text', class: 'form-control text-input', id: 'answer' + (index + 1), placeholder: 'Enter answer', readonly: true });
+                        answerInputCell.append(textInput);
+                        break;
+                    case 'number':
+                        const numberInput = $('<input>').attr({ type: 'number', class: 'form-control number-input', id: 'answer' + (index + 1), placeholder: 'Enter number', readonly: true });
+                        answerInputCell.append(numberInput);
+                        break;
                     case 'list':
-                        // Crea una lista desplegable para la entrada de respuesta
                         const selectInput = $('<select>').addClass('form-control').attr({ id: 'answer' + (index + 1) }).css('width', '150px');
-                        selectInput.append($('<option>', { value: '', text: 'Select option...' })); // Opción predeterminada
-                        // Agrega opciones a la lista desplegable
+                        selectInput.append($('<option>', { value: '', text: 'Select option...' }));
                         question.answerOptions.forEach(function(option) {
                             selectInput.append($('<option>', { value: option, text: option }));
                         });
                         answerInputCell.append(selectInput);
                         break;
+                    case 'multiselect':
+                        const multiSelectInput = $('<select>').addClass('form-control').attr({ id: 'answer' + (index + 1), multiple: 'multiple' }).css('width', '150px');
+                        question.answerOptions.forEach(function(option) {
+                            multiSelectInput.append($('<option>', { value: option, text: option }));
+                        });
+                        answerInputCell.append(multiSelectInput);
+                        break;
+                    default:
+                        answerInputCell.text('Unknown Type');
+                        break;
+                }
 
-                default:
-                    answerInputCell.text('Unknown Type');
-                    break;
-            }
-
-            row.append(questionCell, answerInputCell);
-            tbody.append(row);
-        });
-    }
+                row.append(questionCell, answerInputCell);
+                tbody.append(row);
+            });
+        }
 
 
     </script>
