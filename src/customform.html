@@ -164,8 +164,10 @@
                             <select class="form-control custom-select" id="question1Type" onchange="toggleInputFields(1)">
                                 <option value="scale">Scale (1-5)</option>
                                 <option value="yesno">Yes/No</option>
+                                <option value="number">Numeric</option>
                                 <option value="text">Text</option>
                                 <option value="list">List</option>
+                                <option value="multiselect">Multiple selection</option>
                             </select>
                             <div class="answerInput" id="answerInput1"></div>
                         </div>
@@ -207,8 +209,10 @@
                 '<select class="form-control custom-select" id="question' + questionCounter + 'Type" onchange="toggleInputFields(' + questionCounter + ')">' +
                 '<option value="scale">Scale (1-5)</option>' +
                 '<option value="yesno">Yes/No</option>' +
+                '<option value="number">Numeric</option>' +
                 '<option value="text">Text</option>' +
                 '<option value="list">List</option>' +
+                '<option value="multiselect">Multiple selection</option>' +
                 '</select>' +
                 '<div class="answerInput" id="answerInput' + questionCounter + '"></div>';
             table.appendChild(newRow);
@@ -234,6 +238,8 @@
                     '<input type="radio" name="answer' + questionNumber + '" value="Yes" disabled> Yes' +
                     '<input type="radio" name="answer' + questionNumber + '" value="No" disabled> No' +
                     '</div>';
+            } else if (questionType === 'number') {
+                answerInput.innerHTML = '<input type="number" class="form-control text-input" id="answer' + questionNumber + '" placeholder="Enter a number" pattern="[0-9]*" required>';
             } else if (questionType === 'text') {
                 answerInput.innerHTML = '<input type="text" class="form-control text-input" id="answer' + questionNumber + '" placeholder="Enter answer" readonly>';
             } else if (questionType === 'list') {
@@ -246,6 +252,15 @@
                     '</select>' +
                 '</div>';
 
+            } else if (questionType === 'multiselect') {
+                answerInput.innerHTML = '<div class="list-input">' +
+                    '<input type="text" class="form-control text-input" id="listValueInput' + questionNumber + '" placeholder="Enter new value">' +
+                    '<div class="add-link-container">' +
+                        '<a href="#" class="add-link" onclick="addToList(' + questionNumber + ')">+</a>' +
+                    '</div>' +
+                    '<select multiple class="form-control answer-list" id="answerList' + questionNumber + '">' +
+                    '</select>' +
+                '</div>';
             }
         }
 
@@ -296,7 +311,6 @@
                     questions: questionsData
                 }),
                 success: function (data) {
-                    alert('Success: ' + data);
                     window.location.href = "myforms.html";
                 },
                 error: function (error) {
