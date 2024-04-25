@@ -243,8 +243,7 @@
                 numberInput.addEventListener('input', function() {
                     var maxValue = parseInt(numberInput.value);
                     if (!isNaN(maxValue) && maxValue >= 1 && maxValue <= 10) {
-                        // Limpiar el contenido previo del contenedor antes de agregar los botones de la escala
-                        answerInput.innerHTML = '';
+
 
                         // Generar los botones de la escala usando el valor seleccionado
                         for (var j = 1; j <= maxValue; j++) {
