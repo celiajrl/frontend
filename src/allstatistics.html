@@ -143,10 +143,10 @@
                     // Verificar si el cuestionario ya existe para este chatbot
                     if (!(questionnaire in activeQuestionnairesByChatbot[chatbotId].questionnaires)) {
                         // Si no existe, inicializarlo con 1
-                        activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaireId] = 1;
+                        activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaire] = 1;
                     } else {
                         // Si ya existe, incrementar el recuento en 1
-                        activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaireId]++;
+                        activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaire]++;
                     }
                 });
             });
