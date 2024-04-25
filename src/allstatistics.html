@@ -164,14 +164,14 @@
                     };
                 }
                 activeTestsByChatbot[test.chatbotId].total++;
-                console.log(activeTestsByChatbot);
+                console.log(activeTestsByChatbot[test.chatbotId]);
 
                 // Contar los tests activos por cuestionario
                 if (!(test.questionnaireId in activeTestsByChatbot[test.chatbotId].byQuestionnaire)) {
                     activeTestsByChatbot[test.chatbotId].byQuestionnaire[test.questionnaireId] = 0;
                 }
                 activeTestsByChatbot[test.chatbotId].byQuestionnaire[test.questionnaireId]++;
-                console.log(activeTestsByChatbot);
+                console.log(activeTestsByChatbot[test.chatbotId]);
 
             });
 
