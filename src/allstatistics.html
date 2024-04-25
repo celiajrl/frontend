@@ -161,58 +161,50 @@
             var groupedByChatbot = {};
 
             completedTests.forEach(function (test) {
-                console.log('Test '+test);
                 if (!(test.chatbotId in groupedByChatbot)) {
                     groupedByChatbot[test.chatbotId] = {
                         chatbotName: test.chatbotName,
-                        questionnaires: [] // Utiliza un arreglo para almacenar objetos de cuestionarios
+                        questionnaires: {}, // Usaremos un objeto para mantener los cuestionarios y sus recuentos
+                        totalCompleted: 0 // Contador total de cuestionarios completados por chatbot
                     };
-                    console.log(groupedByChatbot);
                 }
-                // Verifica si el cuestionario ya está en el arreglo para evitar duplicados
-                if (!groupedByChatbot[test.chatbotId].questionnaires.some(q => q.id === test.questionnaireId)) {
-                    groupedByChatbot[test.chatbotId].questionnaires.push({
-                        id: test.questionnaireId,
-                        name: test.questionnaireName // Almacena el ID y el nombre del cuestionario
-                    });
-                    console.log(groupedByChatbot);
+
+                // Verificamos si el cuestionario ya está en el objeto de cuestionarios
+                if (!(test.questionnaireId in groupedByChatbot[test.chatbotId].questionnaires)) {
+                    groupedByChatbot[test.chatbotId].questionnaires[test.questionnaireId] = {
+                        name: test.questionnaireName,
+                        completed: 0 // Inicializamos el contador de cuestionarios completados para este cuestionario
+                    };
                 }
+
+                // Incrementamos el contador de cuestionarios completados para este cuestionario y chatbot
+                groupedByChatbot[test.chatbotId].questionnaires[test.questionnaireId].completed++;
+                // Incrementamos el contador total de cuestionarios completados para este chatbot
+                groupedByChatbot[test.chatbotId].totalCompleted++;
             });
-            console.log('Acabo'+groupedByChatbot);
 
             $('#participantsTableBody').empty();
 
-            // Recorrer los chatbots agrupados
+            // Recorremos los chatbots agrupados
             for (var chatbotId in groupedByChatbot) {
                 var chatbotData = groupedByChatbot[chatbotId];
                 var questionnairesHtml = '<ul>';
-                chatbotData.questionnaires.forEach(function (questionnaire) { // Itera sobre los objetos de cuestionarios
-                    questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaire.id + '">' + questionnaire.name + '</a></li>';
-                });
+
+                // Iteramos sobre los cuestionarios de este chatbot
+                for (var questionnaireId in chatbotData.questionnaires) {
+                    var questionnaire = chatbotData.questionnaires[questionnaireId];
+                    var percentageCompleted = (questionnaire.completed / (chatbotData.totalCompleted + activeQuestionnairesByChatbot[chatbotId].count)) * 100;
+                    percentageCompleted = percentageCompleted.toFixed(2);
+                    questionnairesHtml += '<li>' + questionnaire.name + ': ' + percentageCompleted + '%</li>';
+                }
+
                 questionnairesHtml += '</ul>';
 
-                // Obtener el número total de cuestionarios activos para este chatbot
-                var totalActiveQuestionnaires = activeQuestionnairesByChatbot[chatbotId].count;
-                
-                // Obtener el número de cuestionarios completados para este chatbot
-                var completedQuestionnaires = completedTests.filter(function(test) {
-                    return test.chatbotId === chatbotId;
-                }).length;
-
-                // Calcular el porcentaje de cuestionarios completados respecto a los activos
-                var percentageCompleted = (completedQuestionnaires / (totalActiveQuestionnaires + completedQuestionnaires)) * 100;
-
-                // Formatear el porcentaje con dos decimales
-                percentageCompleted = percentageCompleted.toFixed(2);
-
-                // Crear el texto con el porcentaje
-                var percentageText = '' + percentageCompleted + '%';
-
-                // Construir la fila de la tabla con el porcentaje
-                var newRow = '<tr><td>' + chatbotData.chatbotName + '</td><td>' + questionnairesHtml + '</td><td>' + percentageText + '</td></tr>';
+                var newRow = '<tr><td>' + chatbotData.chatbotName + '</td><td>' + questionnairesHtml + '</td></tr>';
                 $('#participantsTableBody').append(newRow);
             }
         }
+
 
 
     </script>
