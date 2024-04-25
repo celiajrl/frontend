@@ -143,6 +143,7 @@
                 type: 'GET',
                 url: 'https://backend-chatbotevaluator.up.railway.app/users/' + userId + '/active-tests',
                 success: function (data) {
+                    console.log(data);
                     processActiveTests(data);
                 },
                 error: function (error) {
@@ -152,7 +153,9 @@
         }
 
         function processActiveTests(activeTests) {
+            
             activeTests.forEach(function (test) {
+                console.log(test);
                 // Contar los tests activos por chatbot
                 if (!(test.chatbotId in activeTestsByChatbot)) {
                     activeTestsByChatbot[test.chatbotId] = {
@@ -161,12 +164,14 @@
                     };
                 }
                 activeTestsByChatbot[test.chatbotId].total++;
+                console.log(activeTestsByChatbot);
 
                 // Contar los tests activos por cuestionario
                 if (!(test.questionnaireId in activeTestsByChatbot[test.chatbotId].byQuestionnaire)) {
                     activeTestsByChatbot[test.chatbotId].byQuestionnaire[test.questionnaireId] = 0;
                 }
                 activeTestsByChatbot[test.chatbotId].byQuestionnaire[test.questionnaireId]++;
+                console.log(activeTestsByChatbot);
 
             });
 
