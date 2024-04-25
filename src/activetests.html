@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
      <style>
         form {
+            max-height: 440px;
             background-color: #ce93d8;
             border-radius: 8px;
             padding: 20px;
@@ -19,7 +20,7 @@
         }
 
         .participants-table-container {
-            max-height: 200px;
+            max-height: 400px;
             overflow-y: auto;
             margin-top: 20px;
         }
@@ -186,7 +187,7 @@
                     contentType: 'application/json',
                     data: JSON.stringify({ testId, participantId }),
                     success: function (response) {
-                        alert('Reminder sent successfully!');   
+                        alert(respinse.message);   
                         window.location.href = "activetests.html";    
                     },
                     error: function (error) {
