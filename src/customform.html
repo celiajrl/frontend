@@ -239,13 +239,13 @@
                 numberInput.placeholder = 'Select max value';
                 answerInput.appendChild(numberInput);
 
-                // Agregar un botón para confirmar la selección
-                var confirmButton = document.createElement('button');
-                confirmButton.textContent = 'Confirm';
-                confirmButton.className = 'btn btn-primary';
-                confirmButton.onclick = function() {
+                // Agregar un evento de escucha para el evento 'input' en el campo de entrada numérica
+                numberInput.addEventListener('input', function() {
                     var maxValue = parseInt(numberInput.value);
                     if (!isNaN(maxValue) && maxValue >= 1 && maxValue <= 10) {
+                        // Limpiar el contenido previo del contenedor antes de agregar los botones de la escala
+                        answerInput.innerHTML = '';
+
                         // Generar los botones de la escala usando el valor seleccionado
                         for (var j = 1; j <= maxValue; j++) {
                             var scaleCircle = document.createElement('div');
@@ -256,11 +256,8 @@
                             };
                             answerInput.appendChild(scaleCircle);
                         }
-                    } else {
-                        alert('Please enter a number between 1 and 10.');
                     }
-                };
-                answerInput.appendChild(confirmButton);
+                });
             } else if (questionType === 'yesno') {
                 answerInput.innerHTML = '<div class="yes-no-options">' +
                     '<input type="radio" name="answer' + questionNumber + '" value="Yes" disabled> Yes' +
