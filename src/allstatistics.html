@@ -71,6 +71,36 @@
             background-color: rgba(0, 0, 0, 0.1);
             border-color: rgba(255, 255, 255, 0.5);
         }
+
+
+        .info-icon {
+            display: inline-block;
+            margin-left: 5px;
+            position: relative;
+        }
+
+        .info-icon i {
+            cursor: pointer;
+        }
+
+        .info-icon i::after {
+            content: attr(title);
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 5px;
+            background-color: #000;
+            color: #fff;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
+            display: none;
+        }
+
+        .info-icon i:hover::after {
+            display: block;
+        }
     </style>
 </head>
 
