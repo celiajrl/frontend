@@ -9,7 +9,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/home.css" rel="stylesheet">
     <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
-    <style>
+     <style>
         form {
             max-height: 440px;
             background-color: #ce93d8;
@@ -71,36 +71,6 @@
             background-color: rgba(0, 0, 0, 0.1);
             border-color: rgba(255, 255, 255, 0.5);
         }
-
-
-        .info-icon {
-            display: inline-block;
-            margin-left: 5px;
-            position: relative;
-        }
-
-        .info-icon i {
-            cursor: pointer;
-        }
-
-        .info-icon i::after {
-            content: attr(title);
-            position: absolute;
-            bottom: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 5px;
-            background-color: #000;
-            color: #fff;
-            border-radius: 5px;
-            font-size: 12px;
-            white-space: nowrap;
-            display: none;
-        }
-
-        .info-icon i:hover::after {
-            display: block;
-        }
     </style>
 </head>
 
@@ -134,8 +104,8 @@
             fetchActiveTests();
             fetchCompletedTests();
         });
-
-        var activeTestsByChatbot = {}; // Almacenar el número de tests activos por chatbot
+        
+        var activeQuestionnairesByChatbot = {};
 
         function fetchActiveTests() {
             var userId = localStorage.getItem('userId');
@@ -143,7 +113,6 @@
                 type: 'GET',
                 url: 'https://backend-chatbotevaluator.up.railway.app/users/' + userId + '/active-tests',
                 success: function (data) {
-                    console.log(data);
                     processActiveTests(data);
                 },
                 error: function (error) {
@@ -153,30 +122,25 @@
         }
 
         function processActiveTests(activeTests) {
-            
+            // Iterar sobre cada elemento de activeTests
             activeTests.forEach(function (test) {
-                console.log(test);
-                // Contar los tests activos por chatbot
-                if (!(test.chatbotId in activeTestsByChatbot)) {
-                    activeTestsByChatbot[test.chatbotId] = {
-                        total: 0,
-                        byQuestionnaire: {} // Almacenar el número de tests activos por cuestionario
+                var chatbotId = test.chatbotId;
+
+                // Verificar si el chatbotId ya existe en activeQuestionnairesByChatbot
+                if (!(chatbotId in activeQuestionnairesByChatbot)) {
+                    // Si no existe, inicializarlo con el número de cuestionarios en este test
+                    activeQuestionnairesByChatbot[chatbotId] = {
+                        count: test.questionnaires.length
                     };
+                } else {
+                    // Si ya existe, sumar el número de cuestionarios en este test
+                    activeQuestionnairesByChatbot[chatbotId].count += test.questionnaires.length;
                 }
-                activeTestsByChatbot[test.chatbotId].total++;
-                console.log(activeTestsByChatbot[test.chatbotId]);
-
-                // Contar los tests activos por cuestionario
-                if (!(test.questionnaireId in activeTestsByChatbot[test.chatbotId].byQuestionnaire)) {
-                    activeTestsByChatbot[test.chatbotId].byQuestionnaire[test.questionnaireId] = 0;
-                }
-                activeTestsByChatbot[test.chatbotId].byQuestionnaire[test.questionnaireId]++;
-                console.log(activeTestsByChatbot[test.chatbotId]);
-
             });
 
+            // Ahora activeQuestionnairesByChatbot contiene el número de cuestionarios activos por chatbot
+            console.log(activeQuestionnairesByChatbot);
         }
-
 
         function fetchCompletedTests() {
             var userId = localStorage.getItem('userId');
@@ -199,48 +163,53 @@
                 if (!(test.chatbotId in groupedByChatbot)) {
                     groupedByChatbot[test.chatbotId] = {
                         chatbotName: test.chatbotName,
-                        questionnaires: []
+                        questionnaires: [] // Utiliza un arreglo para almacenar objetos de cuestionarios
                     };
                 }
+                // Verifica si el cuestionario ya está en el arreglo para evitar duplicados
                 if (!groupedByChatbot[test.chatbotId].questionnaires.some(q => q.id === test.questionnaireId)) {
                     groupedByChatbot[test.chatbotId].questionnaires.push({
                         id: test.questionnaireId,
-                        name: test.questionnaireName
+                        name: test.questionnaireName // Almacena el ID y el nombre del cuestionario
                     });
                 }
             });
 
             $('#participantsTableBody').empty();
 
+            // Recorrer los chatbots agrupados
             for (var chatbotId in groupedByChatbot) {
                 var chatbotData = groupedByChatbot[chatbotId];
-                var tableBody = $('#participantsTableBody');
-                chatbotData.questionnaires.forEach(function (questionnaire) {
-                    var completedCount = 0; // Contador de cuestionarios completados
-                    var activeCount = activeTestsByChatbot[chatbotId].byQuestionnaire[questionnaire.id] || 0; // Obtener el número de cuestionarios activos
-                    completedTests.forEach(function (test) {
-                        if (test.chatbotId === chatbotId && test.questionnaireId === questionnaire.id) {
-                            completedCount++;
-                        }
-                    });
-                    var totalTests = completedCount + activeCount; // Obtener el número total de cuestionarios
-                    var percentage = (totalTests === 0) ? 0 : (completedCount / totalTests) * 100; // Calcular el porcentaje de cuestionarios completados
-
-                    var newRow = $('<tr>');
-                    newRow.append('<td>' + chatbotData.chatbotName + '</td>'); // Agregar el nombre del chatbot
-                    var questionnairesHtml = '<td>';
-                    questionnairesHtml += questionnaire.name;
-                    questionnairesHtml += '<span class="info-icon"><i class="fas fa-info-circle" title="Percentage of answered questionnaires for chatbot: ' + percentage.toFixed(2) + '%"></i></span>';
-                    questionnairesHtml += '<br>';
-                    questionnairesHtml += '</td>';
-
-                    newRow.append(questionnairesHtml);
-                    tableBody.append(newRow);
+                var questionnairesHtml = '<ul>';
+                chatbotData.questionnaires.forEach(function (questionnaire) { // Itera sobre los objetos de cuestionarios
+                    questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaire.id + '">' + questionnaire.name + '</a></li>';
                 });
+                questionnairesHtml += '</ul>';
+
+                // Obtener el número total de cuestionarios activos para este chatbot
+                var totalActiveQuestionnaires = activeQuestionnairesByChatbot[chatbotId].count;
+                
+                // Obtener el número de cuestionarios completados para este chatbot
+                var completedQuestionnaires = completedTests.filter(function(test) {
+                    return test.chatbotId === chatbotId;
+                }).length;
+
+                // Calcular el porcentaje de cuestionarios completados respecto a los activos
+                var percentageCompleted = (completedQuestionnaires / (totalActiveQuestionnaires + completedQuestionnaires)) * 100;
+
+                // Formatear el porcentaje con dos decimales
+                percentageCompleted = percentageCompleted.toFixed(2);
+
+                // Crear el texto con el porcentaje
+                var percentageText = '(' + percentageCompleted + '%)';
+
+                // Construir la fila de la tabla con el porcentaje
+                var newRow = '<tr><td>' + chatbotData.chatbotName + '</td><td>' + questionnairesHtml + '</td><td>' + percentageText + '</td></tr>';
+                $('#participantsTableBody').append(newRow);
             }
         }
 
+
     </script>
 </body>
-
 </html>
