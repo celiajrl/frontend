@@ -222,7 +222,7 @@
                     }
                     var percentageCompleted = (questionnaire.completed / (questionnaire.completed + activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaireId])) * 100;
                     percentageCompleted = percentageCompleted.toFixed(2);
-                    questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaireId + '">' + questionnaire.name + '</a></li>' + ': ' + percentageCompleted + '%';
+                    questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaireId + '">' + questionnaire.name + '</a>' + ': ' + percentageCompleted + '%</li>';
                 }
 
                 var chatbotPercentage = (chatbotData.totalCompleted / (chatbotData.totalCompleted + activeQuestionnairesByChatbot[chatbotId].total))*100;
@@ -230,7 +230,7 @@
 
                 questionnairesHtml += '</ul>';
 
-                var newRow = '<tr><td>' + chatbotData.chatbotName + '</td><td>' + questionnairesHtml + '</td></td>' + chatbotPercentage + '%' + '</td></tr>';
+                var newRow = '<tr><td>' + chatbotData.chatbotName + '</td><td>' + questionnairesHtml + '</td></td>' + chatbotPercentage + '%</td></tr>';
                 $('#participantsTableBody').append(newRow);
             }
         }
