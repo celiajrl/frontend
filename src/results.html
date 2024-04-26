@@ -162,7 +162,7 @@
                 const negativeAnswerCell = $('<td>');
 
                 // Obtener el valor de la respuesta negativa para la escala del 1 al 5
-                const negativeAnswerValue = answers[index * 2 + 2];
+                const negativeAnswerValue = answers[index * 2];
                 // Crear la escala de 1 al 5 con la respuesta seleccionada para la respuesta negativa
                 const negativeScaleWidget = $('<div>').addClass('scale-options');
                 for (let i = 1; i <= 5; i++) {
@@ -299,6 +299,14 @@
                         console.log(textField.value);
                         if (textField) {
                             rowData.push(textField.value.trim()); // Obtener el valor del campo de texto
+                        } else {
+                            rowData.push(''); // Si el campo de texto no existe, dejar el campo vacío
+                        }
+                    } else if (cell.querySelector('input[type="number"]')) { // Si es una pregunta de numero
+                        const numberField = cell.querySelector('input[type="number"]');
+                        console.log(numberField.value);
+                        if (numberField) {
+                            rowData.push(numberField.value.trim()); // Obtener el valor del campo 
                         } else {
                             rowData.push(''); // Si el campo de texto no existe, dejar el campo vacío
                         }
