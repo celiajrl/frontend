@@ -189,13 +189,14 @@
                 const row = $('<tr>');
                 const questionCell = $('<td>').addClass('question-cell').text(index + 1 + '. ' + question.question);
                 const answerCell = $('<td>').addClass('answer-cell');
+                ind = index +1;
 
                 switch (question.type.toLowerCase()) {
                     case 'scale':
                         const scaleOptions = $('<div>').addClass('scale-options');
                         for (let i = 1; i <= (question.numberOfScaleCircles || 5); i++) {
                             const scaleCircle = $('<div>').addClass('scale-circle').text(i);
-                            if (i == answers[index]) {
+                            if (i == answers[ind]) {
                                 scaleCircle.addClass('selected');
                             }
                             scaleCircle.appendTo(scaleOptions);
@@ -204,29 +205,29 @@
                         break;
                     case 'yesno':
                         const yesNoWidget = $('<div>').addClass('yes-no-options');
-                        const yesRadio = $('<input>').attr({type: 'radio', name: 'answer' + index, value: 'Yes', checked: answers[index] === 'Yes'}).css('margin-right', '5px');
-                        const noRadio = $('<input>').attr({type: 'radio', name: 'answer' + index, value: 'No', checked: answers[index] === 'No'});
+                        const yesRadio = $('<input>').attr({type: 'radio', name: 'answer' + index, value: 'Yes', checked: answers[ind] === 'Yes'}).css('margin-right', '5px');
+                        const noRadio = $('<input>').attr({type: 'radio', name: 'answer' + index, value: 'No', checked: answers[ind] === 'No'});
                         yesNoWidget.append(yesRadio, ' Yes ', noRadio, ' No');
                         answerCell.append(yesNoWidget);
                         break;
                     case 'text':
-                        const textInput = $('<input>').attr({type: 'text', class: 'text-input', value: answers[index], readonly: true});
+                        const textInput = $('<input>').attr({type: 'text', class: 'text-input', value: answers[ind], readonly: true});
                         answerCell.append(textInput);
                         break;
                     case 'number':
-                        const numberInput = $('<input>').attr({type: 'number', class: 'number-input', value: answers[index], readonly: true});
+                        const numberInput = $('<input>').attr({type: 'number', class: 'number-input', value: answers[ind], readonly: true});
                         answerCell.append(numberInput);
                         break;
                     case 'list':
                         const selectInput = $('<select>').addClass('form-control').attr('disabled', true);
                         question.answerOptions.forEach(function(option) {
-                            const optionElement = $('<option>').text(option).attr('selected', option === answers[index]);
+                            const optionElement = $('<option>').text(option).attr('selected', option === answers[ind]);
                             selectInput.append(optionElement);
                         });
                         answerCell.append(selectInput);
                         break;
                     case 'multiselect':
-                        const selectedOptions = answers[index].split(','); // assuming answers are stored as a comma-separated string
+                        const selectedOptions = answers[ind].split(','); // assuming answers are stored as a comma-separated string
                         const multiSelectList = $('<ul>');
                         selectedOptions.forEach(function(option) {
                             const listItem = $('<li>').text(option);
