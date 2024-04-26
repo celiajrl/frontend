@@ -137,19 +137,23 @@
             const tbody = $('#questionsTableBody');
             tbody.empty();
 
-            console.log(answers);
-            console.log(questions);
-
+            // Iterar sobre las preguntas por pares
             questions.forEach(function (question, index) {
                 const row = $('<tr>');
 
+                // Índice para las respuestas en el arreglo de respuestas
+                // Pregunta positiva en posiciones impares (0, 2, 4, ... -> 1, 3, 5, ...)
+                const positiveIndex = index * 2;
+                const negativeIndex = positiveIndex + 1; // Pregunta negativa en posiciones pares (1, 3, 5, ... -> 2, 4, 6, ...)
+
                 // Celda para la respuesta positiva
-                const positiveCell = $('<td>').text((index * 2) + 1 + '. ' + question.positive);
-                const positiveAnswerCell = $('<td>'); 
+                const positiveCell = $('<td>').text((positiveIndex + 1) + '. ' + question.positive);
+                const positiveAnswerCell = $('<td>');
 
                 // Obtener el valor de la respuesta positiva para la escala del 1 al 5
-                const positiveAnswerValue = answers[index];
-                console.log(positiveAnswerValue);
+                const positiveAnswerValue = answers[positiveIndex];
+                console.log('Positive answer for question', positiveIndex + 1, ':', positiveAnswerValue);
+                
                 // Crear la escala de 1 al 5 con la respuesta seleccionada para la respuesta positiva
                 const positiveScaleWidget = $('<div>').addClass('scale-options');
                 for (let i = 1; i <= 5; i++) {
@@ -160,14 +164,18 @@
                     positiveScaleWidget.append(circle);
                 }
                 positiveAnswerCell.append(positiveScaleWidget);
+                row.append(positiveCell, positiveAnswerCell);
+                tbody.append(row);
 
                 // Celda para la respuesta negativa
-                const negativeCell = $('<td>').text((index * 2) + 2 + '. ' + question.negative);
+                const row2 = $('<tr>');
+                const negativeCell = $('<td>').text((negativeIndex + 1) + '. ' + question.negative);
                 const negativeAnswerCell = $('<td>');
 
                 // Obtener el valor de la respuesta negativa para la escala del 1 al 5
-                const negativeAnswerValue = answers[index+1];
-                console.log(negativeAnswerValue);
+                const negativeAnswerValue = answers[negativeIndex];
+                console.log('Negative answer for question', negativeIndex + 1, ':', negativeAnswerValue);
+                
                 // Crear la escala de 1 al 5 con la respuesta seleccionada para la respuesta negativa
                 const negativeScaleWidget = $('<div>').addClass('scale-options');
                 for (let i = 1; i <= 5; i++) {
@@ -178,15 +186,11 @@
                     negativeScaleWidget.append(circle);
                 }
                 negativeAnswerCell.append(negativeScaleWidget);
-
-                row.append(positiveCell, positiveAnswerCell);
-                tbody.append(row);
-
-                const row2 = $('<tr>');
                 row2.append(negativeCell, negativeAnswerCell);
                 tbody.append(row2);
             });
         }
+
 
 
 
