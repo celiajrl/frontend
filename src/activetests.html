@@ -162,7 +162,7 @@
 
                     var questionnaire = i < test.questionnaires.length ? test.questionnaires[i] : '';
 
-                    var questionnaireLink = questionnaire ? '<a href="viewform.html?id=' + questionnaire + '">' + test.questionnairesName[test._id] + '</a>' : '';
+                    var questionnaireLink = questionnaire ? '<a href="viewform.html?id=' + questionnaire + '">' + test.questionnairesName[questionnaire] + '</a>' : '';
 
                     var reminderButton = i === 0 ? '<button class="reminder-button" onclick="sendReminder(\'' + test._id + '\', \'' + test.participantId + '\')">Resend email</button>' : '';
 
