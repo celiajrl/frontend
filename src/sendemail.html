@@ -99,7 +99,14 @@
                         <input type="text" class="form-control" id="emailText" value="You have been granted access to chat with my chatbot and answer some questions. Thank you for your time!">
                     </div>
                     
-
+                    <div class="form-group">
+                        <label for="chatbotMessage">Chatbot Welcome Message (Optional):</label>
+                        <textarea class="form-control" id="chatbotMessage" placeholder="(optional) Add a message to explain your chatbot:">
+                            <h1>Welcome to the chatbot test.</h1>
+                            <p>Please take a few minutes to interact with the chatbot by clicking on the blue chat icon available at the bottom right of this screen.<br>To start the conversation type something like "Hey", "Hi"... and wait for the chatbot to answer, this might take a few seconds.<br>When you're ready, click the button below to access the associated questionnaires.<br>Thank you.</p>
+                        </textarea>
+                    </div>
+                    
                     <button type="button" id="sendEmailButton" onclick="sendEmail()">Send Email</button>
                 </form>
             </div>
@@ -157,6 +164,7 @@
 
             var emailTitle = $('#emailTitle').val();
             var emailText = $('#emailText').val();
+            var chatbotMessage = $('#chatbotMessage').val(); 
 
             var urlParams = new URLSearchParams(window.location.search);
             var chatbotId = urlParams.get('id');
@@ -166,7 +174,7 @@
                     type: 'POST',
                     url: 'https://backend-chatbotevaluator.up.railway.app/send-email',
                     contentType: 'application/json',
-                    data: JSON.stringify({ userId, selectedParticipants, emailTitle, emailText, chatbotId }),
+                    data: JSON.stringify({ userId, selectedParticipants, emailTitle, emailText, chatbotId, chatbotMessage }),
                     success: function (response) {
                         alert(response.message);
                         window.location.href = "mychatbots.html";             

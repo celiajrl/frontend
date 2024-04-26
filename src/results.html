@@ -148,7 +148,7 @@
                 const positiveAnswerCell = $('<td>'); 
 
                 // Obtener el valor de la respuesta positiva para la escala del 1 al 5
-                const positiveAnswerValue = answers[index * 2 + 1];
+                const positiveAnswerValue = answers[index];
                 console.log(positiveAnswerValue);
                 // Crear la escala de 1 al 5 con la respuesta seleccionada para la respuesta positiva
                 const positiveScaleWidget = $('<div>').addClass('scale-options');
@@ -166,7 +166,7 @@
                 const negativeAnswerCell = $('<td>');
 
                 // Obtener el valor de la respuesta negativa para la escala del 1 al 5
-                const negativeAnswerValue = answers[index * 2];
+                const negativeAnswerValue = answers[index+1];
                 console.log(negativeAnswerValue);
                 // Crear la escala de 1 al 5 con la respuesta seleccionada para la respuesta negativa
                 const negativeScaleWidget = $('<div>').addClass('scale-options');
