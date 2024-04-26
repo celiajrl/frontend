@@ -197,7 +197,7 @@
                     const scaleWidget = $('<div>').addClass('scale-options');
                     for (let i = 1; i <= 5; i++) {
                         const circle = $('<span>').addClass('scale-circle').text(i);
-                        if (i == scaleValue+1) {
+                        if (i == scaleValue) {
                             circle.addClass('selected');
                         }
                         scaleWidget.append(circle);
