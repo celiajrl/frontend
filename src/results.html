@@ -281,50 +281,47 @@
         rows.forEach(function(row) {
             const rowData = [];
             row.querySelectorAll("td").forEach(function(cell, index) {
-                // Determinar el tipo de celda y ajustar el valor de la respuesta
-                if (index % 2 !== 0) { // Si la celda contiene opciones de respuesta
+                // Si la celda contiene opciones de respuesta
+                if (index % 2 !== 0) {
                     if (cell.querySelector('.selected')) {
-                        // Si es una pregunta de escala, agregar el valor seleccionado
                         rowData.push(cell.querySelector('.selected').innerText);
                     } else if (cell.querySelector('input[type="checkbox"]')) {
-                        // Si es una pregunta de sí/no, verificar si el checkbox está marcado
                         const checkbox = cell.querySelector('input[type="checkbox"]');
                         rowData.push(checkbox.checked ? 'Yes' : 'No');
-                    } else if (cell.querySelector('input[type="text"]'), cell.querySelector('input[type="number"]')) {
-                        // Si es una pregunta de texto o número, obtener el valor del campo
-                        rowData.push(cell.querySelector('input').value.trim());
+                    } else if (cell.querySelector('input[type="text"]')) {
+                        // Asegurar que se captura correctamente el valor de los campos de texto
+                        const textField = cell.querySelector('input[type="text"]');
+                        rowData.push(textField ? textField.value.trim() : '');
+                    } else if (cell.querySelector('input[type="number"]')) {
+                        // Asegurar que se captura correctamente el valor de los campos numéricos
+                        const numberField = cell.querySelector('input[type="number"]');
+                        rowData.push(numberField ? numberField.value.trim() : '');
                     } else if (cell.querySelector('select')) {
-                        // Si es una pregunta de lista, obtener el valor seleccionado
                         rowData.push(cell.querySelector('select').value);
                     } else if (cell.querySelector('ul')) {
-                        // Si es una pregunta de multiselect, concatenar todos los valores seleccionados
                         let selectedOptions = [];
                         cell.querySelectorAll('li').forEach(function(option) {
                             selectedOptions.push(option.textContent.trim());
                         });
-                        rowData.push(selectedOptions.join(", ")); // Concatenar los valores con comas
+                        rowData.push(selectedOptions.join(", "));
                     } else {
-                        // Si no es ninguno de los tipos anteriores, dejar el campo vacío
                         rowData.push('');
                     }
                 } else {
-                    // Para celdas que no son de respuesta, simplemente obtener el texto
                     rowData.push(cell.innerText);
                 }
             });
-            csvContent += rowData.join(",") + "\n"; // Unir los datos de la fila y agregar un salto de línea
+            csvContent += rowData.join(",") + "\n";
         });
 
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
         link.setAttribute("download", "results.csv");
-        document.body.appendChild(link); // Necesario para Firefox
+        document.body.appendChild(link);
 
-        link.click(); // Descargar el archivo CSV generado
+        link.click();
     }
-
-
     </script>
 
 </body>
