@@ -167,7 +167,7 @@
                 const negativeScaleWidget = $('<div>').addClass('scale-options');
                 for (let i = 1; i <= 5; i++) {
                     const circle = $('<span>').addClass('scale-circle').text(i);
-                    if (i == (5-negativeAnswerValue)+1) {
+                    if (i == negativeAnswerValue) {
                         circle.addClass('selected');
                     }
                     negativeScaleWidget.append(circle);
