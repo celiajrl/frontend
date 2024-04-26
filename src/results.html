@@ -181,69 +181,84 @@
 
 
 
-        function displayCustomQuestions(answers, questions) {
-            const tbody = $('#questionsTableBody');
-            tbody.empty();
+    function displayCustomQuestions(answers, questions) {
+        const tbody = $('#questionsTableBody');
+        tbody.empty();
 
-            questions.forEach(function (question, index) {
-                const row = $('<tr>');
-                const questionCell = $('<td>').addClass('question-cell').text(index + 1 + '. ' + question.question);
-                const answerCell = $('<td>').addClass('answer-cell');
-                ind = index +1;
+        questions.forEach(function (question, index) {
+            const row = $('<tr>');
+            const questionCell = $('<td>').text((index + 1) + '. ' + question.question);
+            const answerCell = $('<td>'); // Celda para la respuesta
 
-                switch (question.type.toLowerCase()) {
-                    case 'scale':
-                        const scaleOptions = $('<div>').addClass('scale-options');
-                        for (let i = 1; i <= (question.numberOfScaleCircles || 5); i++) {
-                            const scaleCircle = $('<div>').addClass('scale-circle').text(i);
-                            if (i == answers[ind]) {
-                                scaleCircle.addClass('selected');
-                            }
-                            scaleCircle.appendTo(scaleOptions);
+            // Determinar el tipo de pregunta y generar el widget correspondiente
+            switch (question.type.toLowerCase()) {
+                case 'scale':
+                    const scaleOptions = $('<div>').addClass('scale-options');
+                    for (let i = 1; i <= (question.numberOfScaleCircles || 5); i++) {
+                        const scaleCircle = $('<div>').addClass('scale-circle').text(i);
+                        if (i == answers[index + 1]) {
+                            scaleCircle.addClass('selected');
                         }
-                        answerCell.append(scaleOptions);
-                        break;
-                    case 'yesno':
-                        const yesNoWidget = $('<div>').addClass('yes-no-options');
-                        const yesRadio = $('<input>').attr({type: 'radio', name: 'answer' + index, value: 'Yes', checked: answers[ind] === 'Yes'}).css('margin-right', '5px');
-                        const noRadio = $('<input>').attr({type: 'radio', name: 'answer' + index, value: 'No', checked: answers[ind] === 'No'});
-                        yesNoWidget.append(yesRadio, ' Yes ', noRadio, ' No');
-                        answerCell.append(yesNoWidget);
-                        break;
-                    case 'text':
-                        const textInput = $('<input>').attr({type: 'text', class: 'text-input', value: answers[ind], readonly: true});
-                        answerCell.append(textInput);
-                        break;
-                    case 'number':
-                        const numberInput = $('<input>').attr({type: 'number', class: 'number-input', value: answers[ind], readonly: true});
-                        answerCell.append(numberInput);
-                        break;
-                    case 'list':
-                        const selectInput = $('<select>').addClass('form-control').attr('disabled', true);
-                        question.answerOptions.forEach(function(option) {
-                            const optionElement = $('<option>').text(option).attr('selected', option === answers[ind]);
-                            selectInput.append(optionElement);
-                        });
-                        answerCell.append(selectInput);
-                        break;
-                    case 'multiselect':
-                        const selectedOptions = answers[ind].split(','); // assuming answers are stored as a comma-separated string
-                        const multiSelectList = $('<ul>');
-                        selectedOptions.forEach(function(option) {
-                            const listItem = $('<li>').text(option);
-                            multiSelectList.append(listItem);
-                        });
-                        answerCell.append(multiSelectList);
-                        break;
-                    default:
-                        answerCell.text('Unknown Type');
-                        break;
-                }
+                        scaleCircle.appendTo(scaleOptions);
+                    }
+                    answerCell.append(scaleOptions);
+                    break;
+                case 'yesno':
+                    const yesNoValue = answers[index + 1]; // Obtener el valor de Yes/No de las respuestas
+                    const yesNoWidget = $('<div>').addClass('yes-no-options');
+                    const yesLabel = $('<label>').text('Yes');
+                    const yesCheckbox = $('<input>').attr({
+                        type: 'checkbox',
+                        checked: yesNoValue === 'Yes', // Marcar el checkbox si la respuesta es 'Yes'
+                        disabled: true
+                    });
+                    const noLabel = $('<label>').text('No');
+                    const noCheckbox = $('<input>').attr({
+                        type: 'checkbox',
+                        checked: yesNoValue === 'No', // Marcar el checkbox si la respuesta es 'No'
+                        disabled: true
+                    });
+                    yesNoWidget.append(yesCheckbox, yesLabel, noCheckbox, noLabel);
+                    answerCell.append(yesNoWidget);
+                    break;
+                case 'text':
+                    const textValue = answers[index + 1]; // Obtener el valor de texto de las respuestas
+                    const textWidget = $('<input>').attr({
+                        type: 'text',
+                        value: textValue,
+                        readonly: true, // Hacer que el campo sea de solo lectura
+                        class: 'text-input' // Agregar la clase para el estilo del campo de texto
+                    });
+                    answerCell.append(textWidget);
+                    break;
 
-                row.append(questionCell, answerCell);
-                tbody.append(row);
-            });
-        }
+                case 'number':
+                    const numberInput = $('<input>').attr({type: 'number', class: 'number-input', value: answers[index + 1], readonly: true});
+                    answerCell.append(numberInput);
+                    break;
+
+                case 'list':
+                    const listValue = answers[index + 1]; // Obtener el valor de la lista de las respuestas
+                    const listWidget = $('<select>').attr('disabled', true);
+                    question.answerOptions.forEach(function(option) {
+                        const optionElement = $('<option>').attr('value', option).text(option);
+                        if (option === listValue) {
+                            optionElement.attr('selected', true); // Seleccionar la opción que coincide con la respuesta
+                        }
+                        listWidget.append(optionElement);
+                    });
+                    answerCell.append(listWidget);
+                    break;
+                
+                default:
+                    answerCell.text('Unknown Type');
+                    break;
+            }
+
+            row.append(questionCell, answerCell);
+            tbody.append(row);
+        });
+    }
 
     function exportToCsv() {
         const table = document.getElementById("questionsTableBody");
