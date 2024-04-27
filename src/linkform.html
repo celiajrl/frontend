@@ -123,7 +123,7 @@
 
                 
                 if (isComplete && orders.length > 0) {
-                    var url = 'sendemail.html?id=' + chatbotId;
+                    var url = 'sendemail.html?id=' + chatbotId + '?order='+order;
                     alert('order: '+orders);
                     window.location.href = url;
                 } else {
