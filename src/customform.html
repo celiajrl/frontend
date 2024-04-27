@@ -174,6 +174,8 @@
                                 <option value="list">List</option>
                                 <option value="multiselect">Multiple selection</option>
                             </select>
+                            <input type="checkbox" class="form-control required-checkbox" id="question1Required" title="Mark as required">
+                            <label for="question1Required" class="small">Not optional</label>
                             <div class="answerInput" id="answerInput1"></div>
                         </div>
                     </div>
@@ -209,7 +211,7 @@
             newRow.className = 'form-group custom-question';
             newRow.innerHTML = '<label for="question' + (++questionCounter) + '">Q' + questionCounter + ':</label>' +
                 '<div style="position: relative;">' +
-                '<input type="text" class="form-control" id="question' + questionCounter + '" placeholder="Enter your question" style="width: 300px;">' +
+                '<input type="text" class="form-control" id="question' + questionCounter + '" placeholder="Enter your question">' +
                 '</div>' +
                 '<select class="form-control custom-select" id="question' + questionCounter + 'Type" onchange="toggleInputFields(' + questionCounter + ')">' +
                 '<option value="scale">Scale</option>' +
@@ -219,6 +221,8 @@
                 '<option value="list">List</option>' +
                 '<option value="multiselect">Multiple selection</option>' +
                 '</select>' +
+                '<input type="checkbox" class="required-checkbox" id="question' + questionCounter + 'Required" title="Mark as required">' +
+                '<label for="question' + questionCounter + 'Required" class="small">Required</label>' +
                 '<div class="answerInput" id="answerInput' + questionCounter + '"></div>';
             table.appendChild(newRow);
         }
@@ -321,25 +325,21 @@
             for (var i = 1; i <= questionCounter; i++) {
                 var question = document.getElementById('question' + i).value.trim();
                 var questionType = document.getElementById('question' + i + 'Type').value;
+                var isRequired = document.getElementById('question' + i + 'Required').checked;
                 var answerOptions = [];
-                var numberOfScaleCircles = 0; // This will store the number of scale circles generated
+                var numberOfScaleCircles = 0; // For scale questions
 
-                // Collect options based on the type of question
+                // Gather options based on the type of question
                 if (questionType === 'list' || questionType === 'multiselect') {
                     $('#answerList' + i + ' option').each(function() {
                         answerOptions.push($(this).val());
                     });
                 } else if (questionType === 'scale') {
-                    // For scale types, calculate the number of circles from the numeric input for scale
-                    var maxInput = document.getElementById('answerInput' + i).querySelector('input[type="number"]');
-                    console.log(maxInput);
+                    var maxInput = document.querySelector('#answerInput' + i + ' .number-input');
                     if (maxInput) {
-                        numberOfScaleCircles = parseInt(maxInput.value);
-                        if (!isNaN(numberOfScaleCircles)) {
-                            // Generate a range of values based on the max value for scale type
-                            for (var j = 1; j <= numberOfScaleCircles; j++) {
-                                answerOptions.push(j.toString());
-                            }
+                        numberOfScaleCircles = parseInt(maxInput.value, 10);
+                        for (var j = 1; j <= numberOfScaleCircles; j++) {
+                            answerOptions.push(j.toString());
                         }
                     }
                 }
@@ -347,8 +347,9 @@
                 questionsData.push({
                     question: question,
                     type: questionType,
+                    isRequired: isRequired,
                     answerOptions: answerOptions,
-                    numberOfScaleCircles: numberOfScaleCircles // Store the number of scale circles if applicable
+                    numberOfScaleCircles: numberOfScaleCircles
                 });
             }
 
@@ -362,11 +363,11 @@
                     type: 'custom',
                     questions: questionsData
                 }),
-                success: function (data) {
-                    window.location.href = "myforms.html";
+                success: function(data) {
+                    window.location.href = "myforms.html"; 
                 },
-                error: function (error) {
-                    alert('Error sending questions to server: ' + error);
+                error: function(error) {
+                    alert('Error sending questions to server: ' + error.statusText);
                 }
             });
         }
