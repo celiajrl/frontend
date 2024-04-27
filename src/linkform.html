@@ -118,20 +118,17 @@
             var chatbotId = urlParams.get('id');
 
             $('#sendToParticipantsButton').on('click', function() {
-                var linkedQuestionnaires = $('#tablaQuestionnaires tbody tr').filter(function() {
-                    // Acceder al botón dentro de cada fila y verificar su texto
-                    return $(this).find('td:last button').text().trim() === "Unlink"; // Suponiendo que el botón para desvincular dice "Unlink"
-                });
-        
-                if (linkedQuestionnaires.length > 0) {
+                const orders = $('.order-input').map(function() { return $(this).val(); }).get();
+                const isComplete = orders.length === new Set(orders).size && !orders.some(num => num.trim() === '');
+
+                if (isComplete && orders.length > 0) {
                     var url = 'sendemail.html?id=' + chatbotId;
                     window.location.href = url;
                 } else {
-                    alert("No linked questionnaires to send");
+                    alert("Please make sure every linked questionnaire has a unique and valid order number.");
                 }
             });
-
-            
+                
             var userId = localStorage.getItem('userId');
 
             $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires`, function (data) {
@@ -192,19 +189,6 @@
             combinedList.forEach(fila => tablaQuestionnairesElement.append(fila));
             console.log(combinedList);
         }
-
-        // Función para comprobar el orden antes de enviar
-        $('#sendToParticipantsButton').on('click', function() {
-            const orders = $('.order-input').map(function() { return $(this).val(); }).get();
-            const isComplete = orders.length === new Set(orders).size && !orders.some(num => num.trim() === '');
-
-            if (isComplete && orders.length > 0) {
-                var url = 'sendemail.html?id=' + chatbotId;
-                window.location.href = url;
-            } else {
-                alert("Please make sure every linked questionnaire has a unique and valid order number.");
-            }
-        });
 
         function linkOrUnlinkQuestionnaire(chatbotId, questionnaireId, isLinked) {
             const requestBody = {
