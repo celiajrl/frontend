@@ -115,6 +115,8 @@
     <script src="js/jquery.easing.min.js"></script>
     <script src="js/custom.js"></script>
     <script>
+        let userId;
+        let chatbotId;
         $(document).ready(function () {
             $('#navbarContainer').load('navbar.html');
             initializeQuestionnaires();
@@ -122,8 +124,8 @@
 
         function initializeQuestionnaires() {
             var urlParams = new URLSearchParams(window.location.search);
-            var chatbotId = urlParams.get('id');
-            var userId = localStorage.getItem('userId');
+            chatbotId = urlParams.get('id');
+            userId = localStorage.getItem('userId');
 
             $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/chatbots/${chatbotId}/questionnaires`, function(linkedData) {
                 $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires`, function(allData) {
