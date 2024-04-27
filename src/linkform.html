@@ -112,10 +112,13 @@
     <script src="js/jquery.easing.min.js"></script>
     <script src="js/custom.js"></script>
     <script>
+        let chatbotId;
+        let userId;
         $(document).ready(function () {
             $('#navbarContainer').load('navbar.html');
             var urlParams = new URLSearchParams(window.location.search);
-            var chatbotId = urlParams.get('id');
+            chatbotId = urlParams.get('id');
+            userId = localStorage.getItem('userId');
 
             $('#sendToParticipantsButton').on('click', function() {
                 var orderData = [];
@@ -151,8 +154,6 @@
                 }
             });
 
-                
-            var userId = localStorage.getItem('userId');
 
             $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires`, function (data) {
     
