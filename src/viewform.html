@@ -87,6 +87,23 @@
             max-width: 100%; /* Permite que el ancho máximo sea igual al ancho del contenedor */
         }
 
+        .required-asterisk {
+            color: red;
+            margin-left: 5px;
+            cursor: help;
+        }
+
+        .required-asterisk:hover::after {
+            content: "Answer is compulsory";
+            color: #fff;
+            background-color: #333;
+            padding: 3px 6px;
+            border-radius: 4px;
+            position: absolute;
+            z-index: 1;
+            right: 20px;
+            white-space: nowrap;
+        }
 
         
     </style>
@@ -182,6 +199,7 @@
 
             questions.forEach(function (question, index) {
                 const row = $('<tr>');
+                const questionText = `${index + 1}. ${question.question}${question.isRequired ? '<span class="required-asterisk">*</span>' : ''}`;
                 const questionCell = $('<td>').addClass('question-cell').text((index + 1) + '. ' + question.question);
                 const answerInputCell = $('<td>').addClass('answer-cell'); // Celda para la entrada de respuesta
 

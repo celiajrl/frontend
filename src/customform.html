@@ -148,6 +148,25 @@
         .answer-list {
             width: 150px; 
         }
+
+        .required-asterisk {
+            color: red;
+            margin-left: 5px;
+            cursor: help;
+        }
+
+        .required-asterisk:hover::after {
+            content: "Answer is compulsory";
+            color: #fff;
+            background-color: #333;
+            padding: 3px 6px;
+            border-radius: 4px;
+            position: absolute;
+            z-index: 1;
+            right: 20px;
+            white-space: nowrap;
+        }
+
     </style>
 </head>
 
