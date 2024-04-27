@@ -145,7 +145,7 @@
             tablaQuestionnairesElement.empty();
 
             // Convertimos linkedQuestionnaires en un Set para búsquedas más rápidas
-            const linkedSet = new Set(linkedQuestionnaires.map(item => item._id));
+            const linkedSet = new Set(linkedQuestionnaires.map(item => item));
             console.log(linkedSet);
 
             let linkedList = [];
