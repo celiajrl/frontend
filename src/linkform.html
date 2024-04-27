@@ -118,18 +118,39 @@
             var chatbotId = urlParams.get('id');
 
             $('#sendToParticipantsButton').on('click', function() {
-                const orders = $('.order-input').map(function() { return $(this).val(); }).get();
+                var orderData = [];
+                $('.order-input').each(function() {
+                    orderData.push({
+                        questionnaireId: $(this).data('id'),
+                        order: $(this).val()
+                    });
+                });
+                
+
+                // Verifica que el orden sea completo y válido
+                const orders = orderData.map(item => item.order);
                 const isComplete = orders.length === new Set(orders).size && !orders.some(num => num.trim() === '');
 
-                
                 if (isComplete && orders.length > 0) {
-                    var url = 'sendemail.html?id=' + chatbotId + '?order='+order;
-                    alert('order: '+orders);
-                    window.location.href = url;
+                    $.ajax({
+                        url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/chatbots/${chatbotId}/update-order`,
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ orderData: orderData }),
+                        success: function(response) {
+                            alert(orderData);
+                            window.location.href = 'sendemail.html?id=' + chatbotId;
+                        },
+                        error: function(error) {
+                            console.error('Error updating order: ', error);
+                            alert('Failed to update order.');
+                        }
+                    });
                 } else {
                     alert("Please make sure every linked questionnaire has a unique and valid order number.");
                 }
             });
+
                 
             var userId = localStorage.getItem('userId');
 
