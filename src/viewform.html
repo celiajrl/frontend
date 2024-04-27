@@ -200,7 +200,7 @@
             questions.forEach(function (question, index) {
                 const row = $('<tr>');
                 const questionText = `${index + 1}. ${question.question}${question.isRequired ? '<span class="required-asterisk">*</span>' : ''}`;
-                const questionCell = $('<td>').addClass('question-cell').text((index + 1) + '. ' + question.question);
+                const questionCell = $('<td>').addClass('question-cell').html(questionText);
                 const answerInputCell = $('<td>').addClass('answer-cell'); // Celda para la entrada de respuesta
 
                 // Determina el tipo de pregunta y genera la entrada de respuesta correspondiente
