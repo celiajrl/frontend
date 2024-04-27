@@ -137,7 +137,7 @@
                 if (isComplete && orders.length > 0) {
                     $.ajax({
                         url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/chatbots/${chatbotId}/update-order`,
-                        type: 'POST',
+                        type: 'PATCH',
                         contentType: 'application/json',
                         data: JSON.stringify({ orderData: orderData }),
                         success: function(response) {
