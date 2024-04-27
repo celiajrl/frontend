@@ -24,23 +24,27 @@
         .scale-options {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-            margin-left: 100px; /* Ajustar el margen izquierdo según sea necesario */
+            flex-wrap: nowrap; /* Esta propiedad evitará que los elementos se envuelvan en nuevas líneas */
+            overflow-x: auto; /* Permite el desplazamiento horizontal si los elementos exceden el ancho del contenedor */
+            margin-left: 10px; /* Ajuste según sea necesario para alinear con otros elementos de la interfaz */
+            padding-right: 5px; /* Espacio a la derecha para evitar que los elementos se peguen al borde */
+            width: calc(100% - 150px); /* Ajusta esto según el espacio disponible en tu diseño */
         }
 
-
         .scale-circle {
-            width: 20px;
+            min-width: 20px; /* Establece un ancho mínimo para cada círculo */
             height: 20px;
             border-radius: 50%;
             background-color: #fff;
-            margin-right: 15px;
-            display: inline-flex; /* Mostrar en línea */
+            margin-right: 10px; /* Espacio entre círculos */
+            display: inline-flex; /* Asegura que se comporten como elementos en línea */
             align-items: center;
             justify-content: center;
             color: #000;
             cursor: pointer;
+            border: 1px solid #ccc; /* Opcional: agrega un borde para mejor visualización */
         }
+
 
         .custom-question {
             margin-top: 10px;
@@ -147,24 +151,6 @@
 
         .answer-list {
             width: 150px; 
-        }
-
-        .required-asterisk {
-            color: red;
-            margin-left: 5px;
-            cursor: help;
-        }
-
-        .required-asterisk:hover::after {
-            content: "Answer is compulsory";
-            color: #fff;
-            background-color: #333;
-            padding: 3px 6px;
-            border-radius: 4px;
-            position: absolute;
-            z-index: 1;
-            right: 20px;
-            white-space: nowrap;
         }
 
     </style>

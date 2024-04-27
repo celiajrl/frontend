@@ -9,6 +9,9 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/home.css" rel="stylesheet">
     <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
  
     <style>
         #formContainer {
@@ -64,6 +67,16 @@
             border-color: rgba(255, 255, 255, 0.5);
         }
 
+        #tablaQuestionnaires tbody tr.draggable {
+            cursor: move; 
+        }
+
+        #tablaQuestionnaires tbody tr.ui-sortable-helper {
+            background-color: #a391b9;
+            opacity: 0.85;
+        }
+
+
     </style>
 </head>
 
@@ -104,116 +117,86 @@
     <script>
         $(document).ready(function () {
             $('#navbarContainer').load('navbar.html');
+            initializeQuestionnaires();
+        });
+
+        function initializeQuestionnaires() {
             var urlParams = new URLSearchParams(window.location.search);
             var chatbotId = urlParams.get('id');
+            var userId = localStorage.getItem('userId');
 
-            $('#sendToParticipantsButton').on('click', function() {
-                var linkedQuestionnaires = $('#tablaQuestionnaires tbody tr').filter(function() {
-                    // Acceder al botón dentro de cada fila y verificar su texto
-                    return $(this).find('td:last button').text().trim() === "Unlink"; // Suponiendo que el botón para desvincular dice "Unlink"
+            $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/chatbots/${chatbotId}/questionnaires`, function(linkedData) {
+                $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires`, function(allData) {
+                    updateQuestionnaireTable(chatbotId, allData, linkedData);
+                }).fail(function(error) {
+                    console.error("Error loading all questionnaires:", error);
                 });
-        
-                if (linkedQuestionnaires.length > 0) {
-                    var url = 'sendemail.html?id=' + chatbotId;
-                    window.location.href = url;
+            }).fail(function(linkedError) {
+                console.error("Error loading linked questionnaires:", linkedError);
+            });
+        }
+
+        function updateQuestionnaireTable(chatbotId, allQuestionnaires, linkedQuestionnaires) {
+            const tbody = $("#tablaQuestionnaires tbody");
+            tbody.empty();
+            let linked = [];
+            let unlinked = [];
+
+            allQuestionnaires.forEach(questionnaire => {
+                const isLinked = linkedQuestionnaires.includes(questionnaire._id);
+                const buttonLabel = isLinked ? "Unlink" : "Link";
+                const rowHtml = `<tr class="${isLinked ? 'draggable' : ''}" data-id="${questionnaire._id}">
+                    <td>${questionnaire.name}</td>
+                    <td>
+                        <button onclick="linkOrUnlinkQuestionnaire('${chatbotId}', '${questionnaire._id}', ${isLinked})">${buttonLabel}</button>
+                    </td>
+                </tr>`;
+
+                if (isLinked) {
+                    linked.push(rowHtml);
                 } else {
-                    alert("No linked questionnaires to send");
+                    unlinked.push(rowHtml);
                 }
             });
 
-            
-            var userId = localStorage.getItem('userId');
+            tbody.html(linked.join('') + unlinked.join(''));
 
-            $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires`, function (data) {
-    
-                $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/chatbots/${chatbotId}/questionnaires`, function (linkedData) {
-    
-                    updateQuestionnaireTable(chatbotId, data, linkedData);
-                })
-                .fail(function (linkedError) {
-                    console.error("Error en la solicitud de cuestionarios vinculados:", linkedError);
-                });
-            })
-            .fail(function (error) {
-                console.error("Error en la solicitud de cuestionarios:", error);
-            });
-        });
-    
-        function updateQuestionnaireTable(chatbotId, allQuestionnaires, linkedQuestionnaires) {
-            const tablaQuestionnairesElement = $("#tablaQuestionnaires tbody");
-    
-            tablaQuestionnairesElement.empty();
-    
-            if (linkedQuestionnaires.length === 0) {
-                allQuestionnaires.forEach((questionnaire, index) => {
-                    const fila = $("<tr>").html(`
-                        <td>${index}</td>
-                        <td>${questionnaire.name}</td>
-                        <td>
-                            <button onclick="linkOrUnlinkQuestionnaire('${chatbotId}','${questionnaire._id}', false)" class="btn btn-primary btn-sm">Link</button>
-                        </td>
-                    `);
-    
-                    tablaQuestionnairesElement.append(fila);
-                });
-            } else {
-                allQuestionnaires.forEach((questionnaire, index) => {
-                    const isLinked = linkedQuestionnaires.some(linked => {
-                        if (typeof linked === 'string') {
-                            return linked === questionnaire._id;
-                        } else if (typeof linked === 'object' && linked !== null) {
-                            return linked._id === questionnaire._id;
-                        }
-                        return false;
-                    });
-                    const linkedStatus = isLinked ? "Linked" : "Unlinked";
-                    const buttonLabel = isLinked ? "Unlink" : "Link";
-                    const fila = $("<tr>").html(`
-                        <td>${index}</td>
-                        <td>${questionnaire.name}</td>
-                        <td>
-                            <button onclick="linkOrUnlinkQuestionnaire('${chatbotId}','${questionnaire._id}', ${isLinked})" class="btn btn-primary btn-sm">${buttonLabel}</button>
-                        </td>
-                    `);
-    
-                    tablaQuestionnairesElement.append(fila);
-                });
-            }
+            makeRowsSortable();
         }
-    
+
+        function makeRowsSortable() {
+            $("#tablaQuestionnaires tbody").sortable({
+                items: "tr.draggable",
+                placeholder: "ui-state-highlight",
+                update: function(event, ui) {
+                    const newOrder = $(this).children().map(function() {
+                        return $(this).data("id");
+                    }).get();
+                    console.log("New order of questionnaires:", newOrder);
+                    // Save the new order to your server here
+                }
+            }).disableSelection();
+        }
+
         function linkOrUnlinkQuestionnaire(chatbotId, questionnaireId, isLinked) {
-            const requestBody = {
-                "questionnaireId": questionnaireId
-            };
-            var userId = localStorage.getItem('userId');
-            if (isLinked) {
-                $.ajax({
-                    type: 'PATCH',
-                    url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/chatbots/${chatbotId}/unlink-questionnaire`,
-                    contentType: 'application/json',
-                    data: JSON.stringify(requestBody),
-                    success: function (response) {
-                        location.reload();
-                    },
-                    error: function (error) {
-                        console.error(error);
-                    }
-                });
-            } else {
-                $.ajax({
-                    type: 'PATCH',
-                    url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/chatbots/${chatbotId}/link-questionnaire`,
-                    contentType: 'application/json',
-                    data: JSON.stringify(requestBody),
-                    success: function (response) {
-                        location.reload();
-                    },
-                    error: function (error) {
-                        console.error(error);
-                    }
-                });
-            }
+            const actionUrl = isLinked ?
+                `https://backend-chatbotevaluator.up.railway.app/users/${userId}/chatbots/${chatbotId}/unlink-questionnaire` :
+                `https://backend-chatbotevaluator.up.railway.app/users/${userId}/chatbots/${chatbotId}/link-questionnaire`;
+
+            $.ajax({
+                type: 'PATCH',
+                url: actionUrl,
+                contentType: 'application/json',
+                data: JSON.stringify({ questionnaireId }),
+                success: function() {
+                    initializeQuestionnaires(); // Recarga la lista para reflejar el cambio
+                },
+                error: function(error) {
+                    console.error('Failed to update questionnaire link status:', error);
+                }
+            });
         }
+
     </script>
 </body>
 
