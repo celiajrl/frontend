@@ -146,12 +146,15 @@
 
             // Convertimos linkedQuestionnaires en un Set para búsquedas más rápidas
             const linkedSet = new Set(linkedQuestionnaires.map(item => item._id));
+            console.log(linkedSet);
 
             let linkedList = [];
             let unlinkedList = [];
 
             allQuestionnaires.forEach((questionnaire, index) => {
                 // Verificamos si el ID del cuestionario actual está en el conjunto de vinculados
+                console.log(questionnaire);
+                console.log(index);
                 const isLinked = linkedSet.has(questionnaire._id);
                 const orderInput = isLinked ? `<input type="number" min="1" max="${linkedSet.size}" class="order-input" value="${index + 1}" data-id="${questionnaire._id}" />` : '';
                 const buttonLabel = isLinked ? "Unlink" : "Link";
@@ -172,10 +175,13 @@
                     unlinkedList.push(fila); // Agregamos los no vinculados a otra lista
                 }
             });
+            console.log(linkedList);
+            console.log(unlinkedList);
 
             // Concatenamos y agregamos primero los cuestionarios vinculados
             const combinedList = linkedList.concat(unlinkedList);
             combinedList.forEach(fila => tablaQuestionnairesElement.append(fila));
+            console.log(combinedList);
         }
 
         // Función para comprobar el orden antes de enviar
