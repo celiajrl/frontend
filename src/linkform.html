@@ -121,9 +121,10 @@
                 const orders = $('.order-input').map(function() { return $(this).val(); }).get();
                 const isComplete = orders.length === new Set(orders).size && !orders.some(num => num.trim() === '');
 
-                console.log('order: '+orders);
+                
                 if (isComplete && orders.length > 0) {
                     var url = 'sendemail.html?id=' + chatbotId;
+                    alert('order: '+orders);
                     window.location.href = url;
                 } else {
                     alert("Please make sure every linked questionnaire has a unique and valid order number.");
