@@ -80,6 +80,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Questionnaire</th>
+                                    <th>Order</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -141,46 +142,52 @@
     
         function updateQuestionnaireTable(chatbotId, allQuestionnaires, linkedQuestionnaires) {
             const tablaQuestionnairesElement = $("#tablaQuestionnaires tbody");
-    
             tablaQuestionnairesElement.empty();
-    
-            if (linkedQuestionnaires.length === 0) {
-                allQuestionnaires.forEach((questionnaire, index) => {
-                    const fila = $("<tr>").html(`
-                        <td>${index}</td>
+
+            // Separar los cuestionarios vinculados y no vinculados
+            let linkedList = [];
+            let unlinkedList = [];
+
+            allQuestionnaires.forEach((questionnaire, index) => {
+                const isLinked = linkedQuestionnaires.some(linked => linked._id === questionnaire._id);
+                const orderInput = isLinked ? `<input type="number" min="1" max="${linkedQuestionnaires.length}" class="order-input" data-id="${questionnaire._id}" />` : '';
+                const buttonLabel = isLinked ? "Unlink" : "Link";
+                const fila = `
+                    <tr>
+                        <td>${index + 1}</td>
                         <td>${questionnaire.name}</td>
+                        <td>${orderInput}</td>
                         <td>
-                            <button onclick="linkOrUnlinkQuestionnaire('${chatbotId}','${questionnaire._id}', false)" class="btn btn-primary btn-sm">Link</button>
+                            <button onclick="linkOrUnlinkQuestionnaire('${chatbotId}', '${questionnaire._id}', ${isLinked})" class="btn btn-primary btn-sm">${buttonLabel}</button>
                         </td>
-                    `);
-    
-                    tablaQuestionnairesElement.append(fila);
-                });
-            } else {
-                allQuestionnaires.forEach((questionnaire, index) => {
-                    const isLinked = linkedQuestionnaires.some(linked => {
-                        if (typeof linked === 'string') {
-                            return linked === questionnaire._id;
-                        } else if (typeof linked === 'object' && linked !== null) {
-                            return linked._id === questionnaire._id;
-                        }
-                        return false;
-                    });
-                    const linkedStatus = isLinked ? "Linked" : "Unlinked";
-                    const buttonLabel = isLinked ? "Unlink" : "Link";
-                    const fila = $("<tr>").html(`
-                        <td>${index}</td>
-                        <td>${questionnaire.name}</td>
-                        <td>
-                            <button onclick="linkOrUnlinkQuestionnaire('${chatbotId}','${questionnaire._id}', ${isLinked})" class="btn btn-primary btn-sm">${buttonLabel}</button>
-                        </td>
-                    `);
-    
-                    tablaQuestionnairesElement.append(fila);
-                });
-            }
+                    </tr>
+                `;
+
+                if (isLinked) {
+                    linkedList.push(fila);
+                } else {
+                    unlinkedList.push(fila);
+                }
+            });
+
+            // Añadir primero los cuestionarios vinculados
+            linkedList.forEach(fila => tablaQuestionnairesElement.append(fila));
+            unlinkedList.forEach(fila => tablaQuestionnairesElement.append(fila));
         }
-    
+
+        // Función para comprobar el orden antes de enviar
+        $('#sendToParticipantsButton').on('click', function() {
+            const orders = $('.order-input').map(function() { return $(this).val(); }).get();
+            const isComplete = orders.length === new Set(orders).size && !orders.some(num => num.trim() === '');
+
+            if (isComplete && orders.length > 0) {
+                var url = 'sendemail.html?id=' + chatbotId;
+                window.location.href = url;
+            } else {
+                alert("Please make sure every linked questionnaire has a unique and valid order number.");
+            }
+        });
+
         function linkOrUnlinkQuestionnaire(chatbotId, questionnaireId, isLinked) {
             const requestBody = {
                 "questionnaireId": questionnaireId
