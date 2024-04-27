@@ -156,13 +156,14 @@
 
             let linkedList = [];
             let unlinkedList = [];
+            let orderCount = 1;
 
             allQuestionnaires.forEach((questionnaire, index) => {
                 // Verificamos si el ID del cuestionario actual está en el conjunto de vinculados
                 console.log(questionnaire);
                 console.log(index);
                 const isLinked = linkedSet.has(questionnaire._id);
-                const orderInput = isLinked ? `<input type="number" min="1" max="${linkedSet.size}" class="order-input" value="${index + 1}" data-id="${questionnaire._id}" />` : '';
+                const orderInput = isLinked ? `<input type="number" min="1" max="${linkedQuestionnaires.length}" class="order-input" value="${orderCount++}" data-id="${questionnaire._id}" />` : '';
                 const buttonLabel = isLinked ? "Unlink" : "Link";
                 const fila = `
                     <tr>
