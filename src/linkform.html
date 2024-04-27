@@ -144,16 +144,16 @@
             const tablaQuestionnairesElement = $("#tablaQuestionnaires tbody");
             tablaQuestionnairesElement.empty();
 
-            console.log(allQuestionnaires);
-            console.log(linkedQuestionnaires);
+            // Convertimos linkedQuestionnaires en un Set para búsquedas más rápidas
+            const linkedSet = new Set(linkedQuestionnaires.map(item => item._id));
 
-            // Separar los cuestionarios vinculados y no vinculados
             let linkedList = [];
             let unlinkedList = [];
 
             allQuestionnaires.forEach((questionnaire, index) => {
-                const isLinked = linkedQuestionnaires.some(linked => linked._id === questionnaire._id);
-                const orderInput = isLinked ? `<input type="number" min="1" max="${linkedQuestionnaires.length}" class="order-input" data-id="${questionnaire._id}" />` : '';
+                // Verificamos si el ID del cuestionario actual está en el conjunto de vinculados
+                const isLinked = linkedSet.has(questionnaire._id);
+                const orderInput = isLinked ? `<input type="number" min="1" max="${linkedSet.size}" class="order-input" value="${index + 1}" data-id="${questionnaire._id}" />` : '';
                 const buttonLabel = isLinked ? "Unlink" : "Link";
                 const fila = `
                     <tr>
@@ -167,15 +167,15 @@
                 `;
 
                 if (isLinked) {
-                    linkedList.push(fila);
+                    linkedList.push(fila);  // Agregamos los vinculados a una lista separada
                 } else {
-                    unlinkedList.push(fila);
+                    unlinkedList.push(fila); // Agregamos los no vinculados a otra lista
                 }
             });
 
-            // Añadir primero los cuestionarios vinculados
-            linkedList.forEach(fila => tablaQuestionnairesElement.append(fila));
-            unlinkedList.forEach(fila => tablaQuestionnairesElement.append(fila));
+            // Concatenamos y agregamos primero los cuestionarios vinculados
+            const combinedList = linkedList.concat(unlinkedList);
+            combinedList.forEach(fila => tablaQuestionnairesElement.append(fila));
         }
 
         // Función para comprobar el orden antes de enviar
