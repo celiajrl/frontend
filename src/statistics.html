@@ -44,14 +44,26 @@
     table {
         width: 100%; /* Ajusta el ancho de la tabla al contenedor */
         margin-top: 20px; /* Espacio antes de la tabla */
-        background-color: #615f5f;
+        background-color: #615f5f; /* Fondo oscuro para la tabla */
+        color: #ffffff; /* Texto en color blanco para mayor contraste */
+        border-collapse: collapse; /* Elimina los espacios entre bordes de celdas */
     }
 
     table th, table td {
         text-align: left; /* Alinear texto a la izquierda */
-        padding: 8px; /* Padding para celdas */
-        border-bottom: 1px solid #ddd; /* Línea divisoria entre filas */
+        padding: 12px; /* Aumenta el padding para mejorar la legibilidad */
+        border-bottom: 1px solid #ddd; /* Línea divisoria entre filas, en color claro */
     }
+
+    table th {
+        background-color: #4a4949; /* Fondo aún más oscuro para los encabezados */
+        color: #e0e0e0; /* Color claro para el texto de los encabezados */
+    }
+
+    table tr:hover {
+        background-color: #757575; /* Cambio de color al pasar el mouse sobre una fila */
+    }
+
 
     </style>
 </head>
