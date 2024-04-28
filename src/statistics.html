@@ -40,6 +40,18 @@
         color: #333;
         text-align: center; /* Centrar el texto del título */
     }
+
+    table {
+        width: 100%; /* Ajusta el ancho de la tabla al contenedor */
+        margin-top: 20px; /* Espacio antes de la tabla */
+    }
+
+    table th, table td {
+        text-align: left; /* Alinear texto a la izquierda */
+        padding: 8px; /* Padding para celdas */
+        border-bottom: 1px solid #ddd; /* Línea divisoria entre filas */
+    }
+
     </style>
 </head>
 
@@ -48,6 +60,7 @@
     <header>
         <div class="header-content">
             <div class="header-content-inner" id="chartContainer">
+                <div id="averageTableContainer"></div>
                 <canvas id="myChart"></canvas>
             </div>
             <button type="button" class="btn btn-primary btn-lg back" onclick="goBack()">Return</button>
@@ -75,6 +88,22 @@
             window.history.back();
         }
 
+        function displayAverageTable(numberQuestions) {
+            // Crear la tabla y los encabezados
+            var table = '<table class="table table-striped"><thead><tr><th>Question</th><th>Average Answer</th></tr></thead><tbody>';
+            
+            // Agregar una fila para cada pregunta de tipo "number"
+            numberQuestions.forEach(function(item) {
+                table += `<tr><td>${item.question.question}</td><td>${item.average.toFixed(2)}</td></tr>`; // .toFixed(2) para limitar a dos decimales
+            });
+
+            table += '</tbody></table>';
+
+            // Insertar la tabla en el contenedor
+            $('#averageTableContainer').html(table);
+        }
+
+
         function loadResults(chatbotId, questionnaireId) {
             $.get(`https://backend-chatbotevaluator.up.railway.app/results?chatbotId=${chatbotId}&questionnaireId=${questionnaireId}`, function (results) {
                 console.log(results);
@@ -100,12 +129,14 @@
                     });
                 } else {
                     var userId = localStorage.getItem('userId');
+                    const values = results.filter(result => result.sus === -1);
                     $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires/${questionnaireId}`, function (questionnaire) {
                         console.log(questionnaire);
                         if (questionnaire && questionnaire.questions) {
                             console.log(questionnaire.questions);
                             const listQuestions = [];
                             const yesNoQuestions = [];
+                            const numberQuestions = [];
                             var index = 0;
                             questionnaire.questions.forEach(function (question, index) {
                                 index += 1;
@@ -117,6 +148,14 @@
                                     console.log(index);
                                     console.log(question);
                                     yesNoQuestions.push({ question, index });
+                                } else if (question.type.toLowerCase() === 'number') {
+                                    console.log(index);
+                                    console.log(question);
+                             
+                                    const responses = results.map(result => Number(result.answers[index] || 0));
+                                    const average = responses.reduce((sum, current) => sum + current, 0) / responses.length;
+                                    console.log(`Average for question ${index}: ${average}`);
+                                    numberQuestions.push({ question, index, average });
                                 }
                             });
 
@@ -138,6 +177,11 @@
                                     generateYesNoGraph(question, results, index); // Pasar el índice como tercer parámetro
                                 });
                             }
+
+                            if (numberQuestions.length > 0) {
+                                displayAverageTable(numberQuestions);
+                            }
+
                         }
                     });
                 }
