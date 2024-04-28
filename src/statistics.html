@@ -9,26 +9,29 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/home.css" rel="stylesheet">
     <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
-    <style>
-        #chartContainer {
-            width: 80%;
-            margin: 0 auto;
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-radius: 8px;
-            overflow: auto;
-            max-height: 400px;
-        }
-        #myChart, #boxPlot {
-            width: 60%; 
-            height: 300px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        #chartContainer h3 {
-            color: #333;
-            text-align: center;
-        }
+     <style>
+    #chartContainer {
+        width: 80%;
+        margin: 0 auto;
+        background-color: #f0f0f0;
+        padding: 10px;
+        padding-top: 10px;
+        border-radius: 8px;
+        overflow: auto;
+        max-height: 400px;
+    }
+
+    #myChart {
+        width: 60%; 
+        height: 200px; /* Altura predefinida para el gráfico doughnut */
+        max-width: 300px; /* Tamaño máximo del gráfico para evitar que se estire demasiado en pantallas grandes */
+        margin: 0 auto; /* Centrar el gráfico horizontalmente dentro del contenedor */
+    }
+
+    #chartContainer h3 {
+        color: #333;
+        text-align: center; /* Centrar el texto del título */
+    }
     </style>
 </head>
 
@@ -38,7 +41,6 @@
         <div class="header-content">
             <div class="header-content-inner" id="chartContainer">
                 <canvas id="myChart"></canvas>
-                <canvas id="boxPlot"></canvas>
             </div>
             <button type="button" class="btn btn-primary btn-lg back" onclick="goBack()">Return</button>
         </div>
@@ -47,7 +49,8 @@
     <script src="js/jquery-1.11.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-and-violin-plot/build/Chart.BoxPlot.min.js"></script>
+ 
     <script>
         $(document).ready(function () {
             $('#navbarContainer').load('navbar.html');
@@ -65,28 +68,89 @@
         function loadResults(chatbotId, questionnaireId) {
             $.get(`https://backend-chatbotevaluator.up.railway.app/results?chatbotId=${chatbotId}&questionnaireId=${questionnaireId}`, function (results) {
                 console.log(results);
-                const susValues = results
-                    .filter(result => result.sus !== -1)
-                    .map(result => result.sus);
-
+                const susValues = results.filter(result => result.sus !== -1);
                 if (susValues.length > 0) {
-                    createChart(susValues);
-                    createBoxPlot(susValues);
+                    createChart(susValues.map(result => result.sus));
+                    generateBoxPlots(susValues);
                 } else {
-                    // Handle other types of questions here...
+                    var userId = localStorage.getItem('userId');
+                    $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires/${questionnaireId}`, function (questionnaire) {
+                        console.log(questionnaire);
+                        if (questionnaire && questionnaire.questions) {
+                            console.log(questionnaire.questions);
+                            const listQuestions = [];
+                            const yesNoQuestions = [];
+                            var index = 0;
+                            questionnaire.questions.forEach(function (question, index) {
+                                index += 1;
+                                if (question.type.toLowerCase() === 'list') {
+                                    console.log(index);
+                                    console.log(question);
+                                    listQuestions.push({ question, index });
+                                } else if (question.type.toLowerCase() === 'yesno') {
+                                    console.log(index);
+                                    console.log(question);
+                                    yesNoQuestions.push({ question, index });
+                                }
+                            });
+
+                            if (listQuestions.length > 0) {
+                                listQuestions.forEach(function (item) {
+                                    const question = item.question;
+                                    const index = item.index;
+                                    console.log(question);
+                                    console.log(results);
+                                    generateListGraph(question, results, index); // Pasar el índice como tercer parámetro
+                                });
+                            }
+                            if (yesNoQuestions.length > 0) {
+                                yesNoQuestions.forEach(function (item) {
+                                    const question = item.question;
+                                    const index = item.index;
+                                    console.log(question);
+                                    console.log(results);
+                                    generateYesNoGraph(question, results, index); // Pasar el índice como tercer parámetro
+                                });
+                            }
+                        }
+                    });
                 }
+
             });
         }
 
-        function createChart(susValues) {
-            const ctx = document.getElementById('myChart').getContext('2d');
-            const myChart = new Chart(ctx, {
+        function generateListGraph(question, results, index) {
+            // Conteo de respuestas para cada opción de la lista
+            const optionCounts = {};
+            question.answerOptions.forEach(function (option) {
+                optionCounts[option] = 0;
+            });
+
+            // Contar respuestas en los resultados
+            results.forEach(function (result) {
+                console.log(result.answers[index]);
+                if (optionCounts.hasOwnProperty(result.answers[index])) {
+                    optionCounts[result.answers[index]]++;
+                    console.log(optionCounts[result.answers[index]]);
+                }
+            });
+
+            // Preparar datos para la gráfica
+            const labels = Object.keys(optionCounts);
+            const data = labels.map(option => optionCounts[option]);
+
+            // Crear el canvas para la gráfica
+            const chartCanvas = $('<canvas>').addClass('list-chart');
+            $('#chartContainer').append($('<h3>').text(question.question)).append(chartCanvas);
+            // Generar la gráfica
+            const ctx = chartCanvas[0].getContext('2d');
+            new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: susValues.map((_, i) => 'Q' + (i + 1)),
+                    labels: labels,
                     datasets: [{
-                        label: 'SUS Scores',
-                        data: susValues,
+                        label: 'Response Count',
+                        data: data,
                         backgroundColor: 'rgba(54, 162, 235, 0.5)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1
@@ -95,19 +159,16 @@
                 options: {
                     scales: {
                         y: {
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.dataset.label || '';
-                                    const value = context.raw;
-                                    const total = this.getTotalValue();
-                                    const percentage = ((value / total) * 100).toFixed(2) + '%';
-                                    return label + ': ' + value + ' (' + percentage + ')';
-                                }
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Response Count'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Options'
                             }
                         }
                     }
@@ -115,33 +176,132 @@
             });
         }
 
-        function createBoxPlot(susValues) {
-            const ctx = document.getElementById('boxPlot').getContext('2d');
-            const boxPlot = new Chart(ctx, {
-                type: 'boxplot',
+        function generateYesNoGraph(question, results, index) {
+            const yesCount = results.filter(result => result.answers[index] === 'Yes').length;
+            const noCount = results.filter(result => result.answers[index] === 'No').length;
+
+            // Crear un nuevo elemento canvas para el gráfico yesno
+            const chartCanvas = $('<canvas>').addClass('doughnut-chart');
+            $('#chartContainer').append($('<h3>').text(question.question)).append(chartCanvas);
+
+            // Obtener el contexto del canvas
+            const ctx = chartCanvas[0].getContext('2d');
+
+            new Chart(ctx, {
+                type: 'doughnut',
                 data: {
-                    labels: ['SUS Scores'],
+                    labels: ['Yes', 'No'],
                     datasets: [{
-                        label: 'Boxplot',
-                        data: [susValues],
-                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
+                        label: 'Yes/No',
+                        data: [yesCount, noCount],
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 99, 132, 0.5)',
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 99, 132, 1)',
+                        ],
                         borderWidth: 1
                     }]
                 },
                 options: {
-                    responsive: true,
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const value = context.raw;
-                                    return 'Median: ' + value.median + ', Q1: ' + value.q1 + ', Q3: ' + value.q3 + ', Min: ' + value.whiskerMin + ', Max: ' + value.whiskerMax;
-                                }
+                    responsive: true, // Hace que el gráfico se ajuste al contenedor
+                    maintainAspectRatio: false, // Evita que el gráfico se estire para mantener la relación de aspecto
+                }
+            });
+        }
+
+        function createChart(susValues) {
+            const roundedSusValues = susValues.map(value => Math.round(value));
+
+            // Encontrar el valor máximo de SUS redondeado en los datos
+            const maxSus = Math.max(...roundedSusValues);
+
+            // Crear un arreglo con todos los valores de SUS posibles, desde 0 hasta el máximo encontrado
+            const allSusValues = Array.from({ length: maxSus + 1 }, (_, i) => i);
+
+            // Conteo de la frecuencia de cada valor SUS redondeado
+            const susCounts = {};
+            allSusValues.forEach(sus => {
+                susCounts[sus] = roundedSusValues.filter(value => value === sus).length;
+            });
+
+            const labels = Object.keys(susCounts);
+            const data = labels.map(sus => susCounts[sus]);
+
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Number of Participants',
+                        data: data,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Participants'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'SUS Score'
+                            },
+                            type: 'category',
+                            ticks: {
+                                stepSize: 1
                             }
                         }
                     }
                 }
+            });
+        }
+
+        function generateBoxPlots(results) {
+            const questionResponses = {};
+            results.forEach(result => {
+                Object.entries(result.answers).forEach(([question, response]) => {
+                    if (!questionResponses[question]) {
+                        questionResponses[question] = [];
+                    }
+                    questionResponses[question].push(response);
+                });
+            });
+
+            Object.entries(questionResponses).forEach(([question, responses], index) => {
+                const canvasId = 'boxPlot' + question;
+                $('#chartContainer').append(`<canvas id="${canvasId}"></canvas>`);
+                const ctx = document.getElementById(canvasId).getContext('2d');
+                new Chart(ctx, {
+                    type: 'boxplot',
+                    data: {
+                        labels: ["Question " + question],
+                        datasets: [{
+                            label: 'Responses for Question ' + question,
+                            data: [responses],
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            borderColor: 'rgba(255, 99, 132, 1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
             });
         }
     </script>
