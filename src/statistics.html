@@ -72,8 +72,15 @@
                 console.log(results);
                 const susValues = results.filter(result => result.sus !== -1);
                 if (susValues.length > 0) {
-                    createChart(susValues.map(result => result.sus));
-                    generateBoxPlots(susValues);
+                    var userId = localStorage.getItem('userId');
+                    $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires/${questionnaireId}`, function (questionnaire) {
+                        console.log(questionnaire);
+                        if (questionnaire && questionnaire.questions) {
+                            console.log(questionnaire.questions);
+                            createChart(susValues.map(result => result.sus));
+                            generateBoxPlots(susValues, questionnaire.questions);
+                        }
+                    });
                 } else {
                     var userId = localStorage.getItem('userId');
                     $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires/${questionnaireId}`, function (questionnaire) {
@@ -269,7 +276,7 @@
             });
         }
 
-        function generateBoxPlots(results) {
+        function generateBoxPlots(results, questions) {
             const questionResponses = {};
             results.forEach(result => {
                 Object.entries(result.answers).forEach(([question, response]) => {
