@@ -235,6 +235,11 @@
                     scales: {
                         y: {
                             beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%'; // Agrega el símbolo de porcentaje a los valores del eje Y
+                                }
+                            },
                             title: {
                                 display: true,
                                 text: 'Percentage'
@@ -249,8 +254,8 @@
                     },
                     tooltips: {
                         callbacks: {
-                            label: function(tooltipItem) {
-                                return tooltipItem.yLabel + '%';
+                            label: function(tooltipItem, data) {
+                                return data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.yLabel + '%';
                             }
                         }
                     }
@@ -298,13 +303,14 @@
                     tooltips: {
                         callbacks: {
                             label: function(tooltipItem, data) {
-                                return data.labels[tooltipItem.index] + ': ' + data.datasets[0].data[tooltipItem.index] + '%';
+                                return data.labels[tooltipItem.index] + ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + '%';
                             }
                         }
                     }
                 }
             });
         }
+
 
 
         function createChart(susValues) {
