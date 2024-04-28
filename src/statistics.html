@@ -45,7 +45,7 @@
         width: 100%; /* Ajusta el ancho de la tabla al contenedor */
         margin-top: 20px; /* Espacio antes de la tabla */
         background-color: #615f5f; /* Fondo oscuro para toda la tabla */
-        color: #615f5f; /* Texto blanco para contraste */
+        color: #f2eaea; /* Texto blanco para contraste */
         border-collapse: collapse; /* Los bordes de las celdas se colapsan en uno solo */
     }
 
@@ -57,6 +57,14 @@
 
     table th {
         background-color: #4a4949; /* Fondo más oscuro para encabezados */
+    }
+
+    table tr:nth-child(even) {
+        background-color: #686868; /* Fondo para filas pares */
+    }
+
+    table tr:nth-child(odd) {
+        background-color: #615f5f; /* Fondo para filas impares */
     }
 
     table tr:hover {
