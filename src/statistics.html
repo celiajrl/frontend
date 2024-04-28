@@ -397,7 +397,7 @@
             });
         }
 
-        window.jsPDF = require('jspdf');
+        window.jsPDF = window.jspdf.jsPDF;
         document.getElementById('savePDF').addEventListener('click', function() {
             html2canvas(document.querySelector("#chartContainer")).then(canvas => {
                 const imgData = canvas.toDataURL('image/png');
