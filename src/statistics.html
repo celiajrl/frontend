@@ -106,7 +106,7 @@
             var table = '<table class="table table-striped"><thead><tr><th>Question</th><th>Average Answer</th></tr></thead><tbody>';
             
             numberQuestions.forEach(function(item) {
-                table += `<tr><td>${item.question.question}</td><td>${item.average.toFixed(2)}</td></tr>`; 
+                table += `<tr><td>${item.question}</td><td>${item.average.toFixed(2)}</td></tr>`; 
             });
 
             table += '</tbody></table>';
@@ -175,8 +175,9 @@
                              
                                     const responses = results.map(result => Number(result.answers[index] || 0));
                                     const average = responses.reduce((sum, current) => sum + current, 0) / responses.length;
+                                    var quest = question.question;
                                     console.log(`Average for question ${index}: ${average}`);
-                                    numberQuestions.push({ question, index, average });
+                                    numberQuestions.push({ quest, index, average });
                                 }
                             });
 
