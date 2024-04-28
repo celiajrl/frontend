@@ -175,10 +175,10 @@
                              
                                     const responses = results.map(result => Number(result.answers[index] || 0));
                                     const average = responses.reduce((sum, current) => sum + current, 0) / responses.length;
-                                    var quest = question.question;
-                                    console.log(quest);
+                                    question = question.question;
+                                    console.log(question);
                                     console.log(`Average for question ${index}: ${average}`);
-                                    numberQuestions.push({ quest, index, average });
+                                    numberQuestions.push({ question, index, average });
                                 }
                             });
 
