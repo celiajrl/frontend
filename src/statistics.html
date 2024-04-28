@@ -399,48 +399,26 @@
 
         window.jsPDF = window.jspdf.jsPDF;
         document.getElementById('savePDF').addEventListener('click', function() {
-            const canvasElements = document.querySelectorAll('canvas'); // Obtiene todos los elementos canvas
-            const dataToPrint = ["Dato 1", "Dato 2", "Dato 3"]; // Ejemplo de datos a imprimir
-            const pdf = new jsPDF({
-                orientation: 'landscape',
-            });
+            // Captura el contenedor que deseas convertir a PDF
+            html2canvas(document.querySelector("#chartContainer"), { scale: 2 }).then(canvas => {
+                // Convierte el canvas a una imagen DataURL
+                const imgData = canvas.toDataURL('image/jpeg', 1.0);
 
-            // Función para agregar texto al PDF
-            const addTextToPDF = (data, pdf) => {
-                let yOffset = 20; // Iniciar a 20 unidades hacia abajo en la página
-                data.forEach(item => {
-                    pdf.text(item, 10, yOffset); // Agregar texto a 10 unidades desde el margen izquierdo
-                    yOffset += 10; // Aumentar el desplazamiento vertical para la próxima línea
+                // Crea una instancia de jsPDF
+                const pdf = new jsPDF({
+                    orientation: 'landscape',
+                    unit: 'px',
+                    format: [canvas.width, canvas.height]
                 });
-                pdf.addPage(); // Añade una nueva página después del texto
-            };
 
-            // Función para procesar cada canvas
-            const processCanvas = (index) => {
-                if (index < canvasElements.length) {
-                    html2canvas(canvasElements[index]).then(canvas => {
-                        const imgData = canvas.toDataURL('image/png');
-                        const imgProps = pdf.getImageProperties(imgData);
-                        const pdfWidth = pdf.internal.pageSize.getWidth();
-                        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                // Añade la imagen al PDF
+                pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
 
-                        // Si no es la primera página, añade una nueva
-                        if (index > 0 || index === 0 && dataToPrint.length > 0) {
-                            pdf.addPage();
-                        }
-
-                        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                        processCanvas(index + 1); // Procesa el siguiente canvas
-                    });
-                } else {
-                    pdf.save("stats.pdf"); // Guarda el PDF cuando todos los canvas han sido procesados
-                }
-            };
-
-            // Añadir texto primero y luego iniciar los gráficos
-            addTextToPDF(dataToPrint, pdf);
-            processCanvas(0); // Inicia el proceso con el primer canvas
+                // Guarda el PDF
+                pdf.save("download.pdf");
+            });
         });
+
 
 
         
