@@ -239,37 +239,22 @@
         }
 
         function createChart(susValues) {
-            const roundedSusValues = susValues.map(value => Math.round(value));
-
-            // Encontrar el valor máximo de SUS redondeado en los datos
-            const maxSus = Math.max(...roundedSusValues);
-
-            // Crear un arreglo con todos los valores de SUS posibles, desde 0 hasta el máximo encontrado
-            const allSusValues = Array.from({ length: maxSus + 1 }, (_, i) => i);
-
-            // Conteo de la frecuencia de cada valor SUS redondeado
-            const susCounts = {};
-            allSusValues.forEach(sus => {
-                susCounts[sus] = roundedSusValues.filter(value => value === sus).length;
-            });
-
-            const labels = Object.keys(susCounts);
-            const data = labels.map(sus => susCounts[sus]);
-
             const ctx = document.getElementById('myChart').getContext('2d');
             const myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: Array.from({length: susValues.length}, (_, i) => `Pregunta ${i+1}`),
                     datasets: [{
                         label: 'Number of Participants',
-                        data: data,
+                        data: susValues,
                         backgroundColor: 'rgba(54, 162, 235, 0.5)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1
                     }]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Importante para mantener la relación de aspecto
                     scales: {
                         y: {
                             beginAtZero: true,
@@ -282,10 +267,6 @@
                             title: {
                                 display: true,
                                 text: 'SUS Score'
-                            },
-                            type: 'category',
-                            ticks: {
-                                stepSize: 1
                             }
                         }
                     }
@@ -293,19 +274,8 @@
             });
         }
 
+
         function generateBoxPlots(results, questions) {
-            const questionResponses = {};
-            results.forEach(result => {
-                Object.entries(result.answers).forEach(([question, response]) => {
-                    if (!questionResponses[question]) {
-                        questionResponses[question] = [];
-                    }
-                    questionResponses[question].push(Number(response)); // Asegurándonos de que las respuestas son números
-                });
-            });
-
-            console.log(questionResponses);
-
             Object.entries(questionResponses).forEach(([question, responses], index) => {
                 const canvasId = 'boxPlot' + question;
                 const canvasElement = `<canvas id="${canvasId}"></canvas>`;
@@ -316,7 +286,7 @@
                     data: {
                         labels: [questions[index]],
                         datasets: [{
-                            label: 'Responses for Question ' + question,
+                            label: 'Answers to question ' + question,
                             data: [responses],
                             backgroundColor: 'rgba(255, 99, 132, 0.5)',
                             borderColor: 'rgba(255, 99, 132, 1)'
@@ -324,6 +294,7 @@
                     },
                     options: {
                         responsive: true,
+                        maintainAspectRatio: false,
                         scales: {
                             y: {
                                 beginAtZero: true
