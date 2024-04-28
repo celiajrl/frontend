@@ -42,45 +42,26 @@
     }
 
     #averageTableContainer {
+        background-color: #ce93d8;
+        border-radius: 8px;
         padding: 20px;
-        margin-top: 20px;
-        background-color: #433e3e; /* Un fondo claro pero ligeramente diferenciado */
-        border: 1px solid #4d4848; /* Borde sutil */
-        border-radius: 8px; /* Esquinas redondeadas */
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra ligera para profundidad */
-        width: 100%; /* Utiliza todo el ancho disponible del contenedor padre */
-        overflow-x: auto; /* Permite desplazamiento horizontal si es necesario */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        color: #fff;
     }
 
-    table {
-        width: 100%;
-        margin-top: 0; /* No es necesario ya que el contenedor ya gestiona el espaciamiento */
-        border-collapse: collapse; /* Para que los bordes de las celdas se unan */
-        background-color: #433e3e; /* Fondo blanco para la tabla para maximizar el contraste */
-    }
-
-    table, th, td {
-        border: 1px solid #9f9c9c; /* Bordes claros para las celdas y la tabla */
-    }
-
-    th, td {
-        text-align: left;
-        padding: 12px; /* Padding generoso para facilidad de lectura */
-        color: #fdfdfd; /* Texto oscuro para contraste con fondo claro */
-    }
-
-    th {
-        background-color: #433e3e; /* Fondo oscuro para los encabezados para destacarlos */
-        color: #fff; /* Texto blanco en encabezados para contraste */
-    }
-
-    tr:nth-child(even) {
-        background-color: #433e3e; /* Alternar colores para filas pares para mejorar la legibilidad */
-    }
-
-    tr:hover {
-        background-color: #ddd; /* Efecto hover para interactividad, resalta la fila sobre la que está el cursor */
-    }
+    table th,
+    table td {
+            border: 1px solid #ddd;
+            padding: 16px;
+            text-align: left;
+            vertical-align: middle;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background-color: #ce93d8;
+            color: white;
+            width: 350px;
+        }
     </style>
 </head>
 
