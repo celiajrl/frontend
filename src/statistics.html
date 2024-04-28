@@ -44,6 +44,7 @@
     table {
         width: 100%; /* Ajusta el ancho de la tabla al contenedor */
         margin-top: 20px; /* Espacio antes de la tabla */
+        background-color: #615f5f;
     }
 
     table th, table td {
@@ -148,7 +149,7 @@
                                     console.log(index);
                                     console.log(question);
                                     yesNoQuestions.push({ question, index });
-                                } else if (question.type.toLowerCase() === 'number') {
+                                } else if (question.type.toLowerCase() === 'number' || question.type.toLowerCase() === 'scale') {
                                     console.log(index);
                                     console.log(question);
                              
