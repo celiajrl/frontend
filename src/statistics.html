@@ -42,26 +42,41 @@
     }
 
     #averageTableContainer {
-        background-color: #ce93d8;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        color: #fff;
-    }
+    background-color: #8d8090; /* Color de fondo más suave para un aspecto moderno */
+    border-radius: 8px; /* Esquinas redondeadas */
+    padding: 20px; /* Padding interno para separar el contenido de los bordes */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave para profundidad visual */
+    color: #fff; /* Color de texto blanco para contraste */
+    overflow-x: auto; /* Permite el desplazamiento horizontal si la tabla es muy ancha */
+    width: 100%; /* Ocupa todo el ancho del contenedor padre */
+    max-width: 960px; /* Máximo ancho para evitar que la tabla sea demasiado grande */
+    margin: auto; /* Centra el contenedor en la página */
+}
 
-    table th,
-    table td {
-            border: 1px solid #ddd;
-            padding: 16px;
-            text-align: left;
-            vertical-align: middle;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            background-color: #ce93d8;
-            color: white;
-            width: 350px;
-        }
+table {
+    width: 100%; /* La tabla utiliza todo el ancho de su contenedor */
+    border-collapse: collapse; /* Colapsa los bordes de las celdas para un diseño limpio */
+    table-layout: fixed; /* Ayuda a mantener un ancho uniforme de las columnas */
+}
+
+table th, table td {
+    border: 1px solid #ddd; /* Bordes claros para definir claramente las celdas */
+    padding: 16px; /* Espacio interno suficiente para la legibilidad */
+    text-align: left; /* Alineación del texto a la izquierda */
+    vertical-align: middle; /* Alinea el contenido de la celda en el centro verticalmente */
+    white-space: nowrap; /* Evita que el texto se envuelva a la línea siguiente */
+    overflow: hidden; /* Oculta cualquier contenido que desborde la celda */
+    text-overflow: ellipsis; /* Añade puntos suspensivos si el contenido desborda */
+    background-color: #8d8090; /* Fondo consistente con el contenedor */
+    color: white; /* Texto en color blanco para alto contraste */
+    width: 350px; /* Ancho fijo para cada celda para uniformidad */
+}
+
+/* Mejora visual al interactuar con las filas de la tabla */
+table tr:hover {
+    background-color: #a290a5; /* Cambia el fondo al pasar el mouse para mejorar la interactividad */
+}
+
     </style>
 </head>
 
