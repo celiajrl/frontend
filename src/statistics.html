@@ -13,7 +13,7 @@
 
      <style>
     #chartContainer {
-        max-height: 500px;
+        max-height: 400px;
         width: 80%; /* Ajusta al ancho que prefieras */
         margin: 20px auto; /* Auto centra el contenedor horizontalmente, y 20px de margen superior */
         background-color: #f0f0f0;
@@ -399,14 +399,24 @@
 
         window.jsPDF = window.jspdf.jsPDF;
         document.getElementById('savePDF').addEventListener('click', function() {
-            // Captura el contenedor que deseas convertir a PDF
-            html2canvas(document.querySelector("#chartContainer"), { scale: 2 }).then(canvas => {
+            const container = document.querySelector("#chartContainer");
+
+            // Guarda el estilo original y elimina cualquier límite de altura
+            const originalStyle = container.style.cssText;
+            container.style.overflow = 'visible';
+            container.style.maxHeight = 'none';
+
+            // Captura el contenedor
+            html2canvas(container, { scale: 2, scrollY: -window.scrollY }).then(canvas => {
+                // Restaura el estilo original después de la captura
+                container.style.cssText = originalStyle;
+
                 // Convierte el canvas a una imagen DataURL
                 const imgData = canvas.toDataURL('image/jpeg', 1.0);
 
                 // Crea una instancia de jsPDF
                 const pdf = new jsPDF({
-                    orientation: 'landscape',
+                    orientation: 'portrait',
                     unit: 'px',
                     format: [canvas.width, canvas.height]
                 });
@@ -415,7 +425,7 @@
                 pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
 
                 // Guarda el PDF
-                pdf.save("download.pdf");
+                pdf.save("full-content.pdf");
             });
         });
 
