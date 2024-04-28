@@ -320,9 +320,9 @@
             const myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: Array.from({length: susValues.length}, (_, i) => `Q ${i+1}`),
+                    labels: Array.from({length: susValues.length}, (_, i) => `P ${i+1}`),
                     datasets: [{
-                        label: '# Participants',
+                        label: 'SUS Score',
                         data: susValues,
                         backgroundColor: 'rgba(54, 162, 235, 0.5)',
                         borderColor: 'rgba(54, 162, 235, 1)',
@@ -343,7 +343,7 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Questionnaires'
+                                text: 'Participants'
                             }
                         }
                     }
