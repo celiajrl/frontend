@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
      <style>
     #chartContainer {
-        width: 90%; /* Ajusta al ancho que prefieras */
+        max-height: 500px;
+        width: 80%; /* Ajusta al ancho que prefieras */
         margin: 20px auto; /* Aumenta el margen superior para más espacio */
         background-color: #f0f0f0;
         padding: 20px;
@@ -24,15 +25,14 @@
     }
 
     canvas {
-        width: 100%; /* Ocupar todo el ancho del contenedor de gráficos */
-        max-width: 800px; /* Máximo ancho del canvas */
-        height: auto; /* Altura auto ajustable */
+        width: 80%; /* Ocupar todo el ancho del contenedor de gráficos */
+        height: 200px; /* Altura auto ajustable */
+        margin: 0 auto; /* Centrar el gráfico horizontalmente dentro del contenedor */
     }
 
     #myChart {
-        width: 60%; 
+        width: 80%; 
         height: 200px; /* Altura predefinida para el gráfico doughnut */
-        max-width: 300px; /* Tamaño máximo del gráfico para evitar que se estire demasiado en pantallas grandes */
         margin: 0 auto; /* Centrar el gráfico horizontalmente dentro del contenedor */
     }
 
