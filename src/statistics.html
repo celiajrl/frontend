@@ -280,6 +280,8 @@
                 });
             });
 
+            console.log(questionResponses);
+
             Object.entries(questionResponses).forEach(([question, responses], index) => {
                 const canvasId = 'boxPlot' + question;
                 const canvasElement = `<canvas id="${canvasId}"></canvas>`;
