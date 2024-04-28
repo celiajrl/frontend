@@ -44,25 +44,33 @@
     table {
         width: 100%; /* Ajusta el ancho de la tabla al contenedor */
         margin-top: 20px; /* Espacio antes de la tabla */
-        background-color: #615f5f; /* Fondo oscuro para la tabla */
-        color: #ffffff; /* Texto en color blanco para mayor contraste */
-        border-collapse: collapse; /* Elimina los espacios entre bordes de celdas */
+        background-color: #615f5f; /* Fondo oscuro para toda la tabla */
+        color: #ffffff; /* Texto blanco para contraste */
+        border-collapse: collapse; /* Los bordes de las celdas se colapsan en uno solo */
     }
 
     table th, table td {
         text-align: left; /* Alinear texto a la izquierda */
-        padding: 12px; /* Aumenta el padding para mejorar la legibilidad */
-        border-bottom: 1px solid #ddd; /* Línea divisoria entre filas, en color claro */
+        padding: 12px; /* Padding adecuado para legibilidad */
+        border-bottom: 1px solid #ddd; /* Línea divisoria entre filas en color más claro */
     }
 
     table th {
-        background-color: #4a4949; /* Fondo aún más oscuro para los encabezados */
-        color: #e0e0e0; /* Color claro para el texto de los encabezados */
+        background-color: #4a4949; /* Fondo más oscuro para encabezados */
+    }
+
+    table tr:nth-child(even) {
+        background-color: #686868; /* Fondo para filas pares */
+    }
+
+    table tr:nth-child(odd) {
+        background-color: #615f5f; /* Fondo para filas impares */
     }
 
     table tr:hover {
-        background-color: #757575; /* Cambio de color al pasar el mouse sobre una fila */
+        background-color: #757575; /* Fondo de fila al pasar el ratón por encima */
     }
+
 
 
     </style>
