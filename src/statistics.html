@@ -53,6 +53,35 @@
         box-sizing: border-box; /* Asegura que el padding y borde no expandan el contenedor más allá del ancho definido */
     }
 
+    table {
+        width: 100%; /* Ajusta el ancho de la tabla al contenedor */
+        margin-top: 20px; /* Espacio antes de la tabla */
+        background-color: #615f5f; /* Fondo oscuro para toda la tabla */
+        color: #ffffff; /* Texto blanco para contraste */
+        border-collapse: collapse; /* Los bordes de las celdas se colapsan en uno solo */
+    }
+
+    table th, table td {
+        text-align: left; /* Alinear texto a la izquierda */
+        padding: 12px; /* Padding adecuado para legibilidad */
+        border-bottom: 1px solid #ddd; /* Línea divisoria entre filas en color más claro */
+    }
+
+    table th {
+        background-color: #4a4949; /* Fondo más oscuro para encabezados */
+    }
+
+    table tr:nth-child(even) {
+        background-color: #686868; /* Fondo para filas pares */
+    }
+
+    table tr:nth-child(odd) {
+        background-color: #615f5f; /* Fondo para filas impares */
+    }
+
+    table tr:hover {
+        background-color: #757575; /* Fondo de fila al pasar el ratón por encima */
+    }
 
 
     </style>
@@ -92,17 +121,14 @@
         }
 
         function displayAverageTable(numberQuestions) {
-            // Crear la tabla y los encabezados
             var table = '<table class="table table-striped"><thead><tr><th>Question</th><th>Average Answer</th></tr></thead><tbody>';
             
-            // Agregar una fila para cada pregunta de tipo "number"
             numberQuestions.forEach(function(item) {
-                table += `<tr><td>${item.question.question}</td><td>${item.average.toFixed(2)}</td></tr>`; // .toFixed(2) para limitar a dos decimales
+                table += `<tr><td>${item.question.question}</td><td>${item.average.toFixed(2)}</td></tr>`; 
             });
 
             table += '</tbody></table>';
 
-            // Insertar la tabla en el contenedor
             $('#averageTableContainer').html(table);
         }
 
