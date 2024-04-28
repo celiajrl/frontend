@@ -127,6 +127,7 @@
                             console.log(questionnaire.questions);
                             let transformedQuestions = {};
                             let index = 0;
+                            const susQuestions = [];
 
                             questionnaire.questions.forEach(question => {
                                 transformedQuestions[index++] = question.positive;
@@ -134,8 +135,16 @@
                             });
 
                             console.log(transformedQuestions);
+                            transformedQuestions.forEach(function (question, index) {
+                                index += 1;
+                                const responses = results.map(result => Number(result.answers[index] || 0));
+                                const average = responses.reduce((sum, current) => sum + current, 0) / responses.length;
+                                console.log(`Average for question ${index}: ${average}`);
+                                susQuestions.push({ question, index, average });
+                            });
                             createChart(susValues.map(result => result.sus));
                             generateBoxPlots(susValues, transformedQuestions);
+                            displayAverageTable(susQuestions);
                         }
                     });
                 } else {
