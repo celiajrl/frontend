@@ -135,7 +135,7 @@
                             });
 
                             console.log(transformedQuestions);
-                            var index = 0;
+                            index = 0;
                             Object.values(transformedQuestions).forEach(question => {
                                 index += 1;
                                 const responses = results.map(result => Number(result.answers[index] || 0));
