@@ -77,8 +77,17 @@
                         console.log(questionnaire);
                         if (questionnaire && questionnaire.questions) {
                             console.log(questionnaire.questions);
+                            let transformedQuestions = {};
+                            let index = 0;
+
+                            questionnaire.questions.forEach(question => {
+                                transformedQuestions[index++] = question.positive;
+                                transformedQuestions[index++] = question.negative;
+                            });
+
+                            console.log(transformedQuestions);
                             createChart(susValues.map(result => result.sus));
-                            generateBoxPlots(susValues, questionnaire.questions);
+                            generateBoxPlots(susValues, transformedQuestions);
                         }
                     });
                 } else {
@@ -297,7 +306,7 @@
                 new Chart(ctx, {
                     type: 'boxplot',
                     data: {
-                        labels: ["Question " + question],
+                        labels: [questions[index]],
                         datasets: [{
                             label: 'Responses for Question ' + question,
                             data: [responses],
