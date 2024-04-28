@@ -205,28 +205,28 @@
 
             // Contar respuestas en los resultados
             results.forEach(function (result) {
-                console.log(result.answers[index]);
                 if (optionCounts.hasOwnProperty(result.answers[index])) {
                     optionCounts[result.answers[index]]++;
-                    console.log(optionCounts[result.answers[index]]);
                 }
             });
 
-            // Preparar datos para la gráfica
+            // Calcula el total de respuestas
+            const totalResponses = Object.values(optionCounts).reduce((sum, count) => sum + count, 0);
+
+            // Preparar datos para la gráfica convirtiendo conteos a porcentajes
             const labels = Object.keys(optionCounts);
-            const data = labels.map(option => optionCounts[option]);
+            const data = labels.map(option => ((optionCounts[option] / totalResponses) * 100).toFixed(2)); // Redondea al segundo decimal
 
             // Crear el canvas para la gráfica
             const chartCanvas = $('<canvas>').addClass('list-chart');
             $('#chartContainer').append($('<h3>').text(question.question)).append(chartCanvas);
-            // Generar la gráfica
             const ctx = chartCanvas[0].getContext('2d');
             new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Response Count',
+                        label: 'Percentage of Responses',
                         data: data,
                         backgroundColor: 'rgba(54, 162, 235, 0.5)',
                         borderColor: 'rgba(54, 162, 235, 1)',
@@ -239,7 +239,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Response Count'
+                                text: 'Percentage'
                             }
                         },
                         x: {
@@ -248,14 +248,26 @@
                                 text: 'Options'
                             }
                         }
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.yLabel + '%';
+                            }
+                        }
                     }
                 }
             });
         }
 
+
         function generateYesNoGraph(question, results, index) {
             const yesCount = results.filter(result => result.answers[index] === 'Yes').length;
             const noCount = results.filter(result => result.answers[index] === 'No').length;
+            const totalCount = yesCount + noCount;
+
+            // Convertir conteos a porcentajes
+            const percentages = [yesCount, noCount].map(count => ((count / totalCount) * 100).toFixed(2));
 
             // Crear un nuevo elemento canvas para el gráfico yesno
             const chartCanvas = $('<canvas>').addClass('doughnut-chart');
@@ -269,25 +281,33 @@
                 data: {
                     labels: ['Yes', 'No'],
                     datasets: [{
-                        label: 'Yes/No',
-                        data: [yesCount, noCount],
+                        label: 'Percentage',
+                        data: percentages,
                         backgroundColor: [
                             'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(255, 99, 132, 0.5)'
                         ],
                         borderColor: [
                             'rgba(54, 162, 235, 1)',
-                            'rgba(255, 99, 132, 1)',
+                            'rgba(255, 99, 132, 1)'
                         ],
                         borderWidth: 1
                     }]
                 },
                 options: {
-                    responsive: true, // Hace que el gráfico se ajuste al contenedor
-                    maintainAspectRatio: false, // Evita que el gráfico se estire para mantener la relación de aspecto
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                return data.labels[tooltipItem.index] + ': ' + data.datasets[0].data[tooltipItem.index] + '%';
+                            }
+                        }
+                    }
                 }
             });
         }
+
 
         function createChart(susValues) {
             const ctx = document.getElementById('myChart').getContext('2d');
