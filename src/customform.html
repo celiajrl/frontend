@@ -34,12 +34,13 @@
         }
 
         .custom-select, .text-input {
+            width: 150px;
             flex: 1; /* Ocupa todo el espacio restante en su contenedor flex */
             margin-left: 10px; /* Espacio a la izquierda del select */
         }
 
         .label, .form-control {
-            width: auto; /* Ancho automático basado en el contenido */
+            width: 200px; 
             margin-right: 10px; /* Espacio a la derecha de cada elemento */
         }
 
@@ -67,6 +68,11 @@
             padding: 8px; /* Padding dentro de los inputs */
             margin-top: 5px; /* Espacio arriba del input */
             width: 100%; /* Aprovecha todo el ancho posible */
+        }
+
+        input[type="number"].number-input {
+            width: 50px; /* Ajusta según sea necesario para la entrada numérica */
+            margin-left: 10px; /* Espacio entre el select y el input numérico */
         }
 
         .add-link {
