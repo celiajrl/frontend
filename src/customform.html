@@ -34,10 +34,17 @@
             width: 90%; 
         }
 
+        .custom-question .form-control {
+            width: 360px;  /* Ancho específico para campos de preguntas */
+        }
 
-        .label, .form-control {
-            width: 250px; 
-            margin-right: 10px; /* Espacio a la derecha de cada elemento */
+
+        .form-control {
+            width: 100px;  /* Ancho por defecto más corto para controles generales */
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
 
         .scale-container {
@@ -84,7 +91,7 @@
             border: 1px solid #ccc; /* Borde sutil */
         }
         .form-control.custom-select {
-            max-width: 80px; 
+            max-width: 120px; 
         }
 
         .add-link {
@@ -116,7 +123,7 @@
                         <div class="form-group custom-question">
                             <label for="question1">Q1:</label>
                             <div style="position: relative;">
-                                <input type="text" class="form-control" id="question1" placeholder="Enter your question">
+                                <input type="text" class="form-control question-input" id="question1" placeholder="Enter your question">
                             </div>
                             <select class="form-control custom-select" id="question1Type" onchange="toggleInputFields(1)">
                                 <option value="scale">Scale</option>
@@ -163,7 +170,7 @@
             newRow.className = 'form-group custom-question';
             newRow.innerHTML = '<label for="question' + (++questionCounter) + '">Q' + questionCounter + ':</label>' +
                 '<div style="position: relative;">' +
-                '<input type="text" class="form-control" id="question' + questionCounter + '" placeholder="Enter your question">' +
+                '<input type="text" class="form-control question-input" id="question' + questionCounter + '" placeholder="Enter your question">' +  // Aplicando clase específica
                 '</div>' +
                 '<select class="form-control custom-select" id="question' + questionCounter + 'Type" onchange="toggleInputFields(' + questionCounter + ')">' +
                 '<option value="scale">Scale</option>' +
@@ -177,6 +184,7 @@
                 '<label for="question' + questionCounter + 'Required" class="small">Not optional</label>' +
                 '<div class="answerInput" id="answerInput' + questionCounter + '"></div>';
             table.appendChild(newRow);
+
         }
 
         function toggleInputFields(questionNumber) {
