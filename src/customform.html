@@ -36,42 +36,41 @@
 
         .custom-select, .text-input {
             width: 20%;
-            flex: 1; /* Ocupa todo el espacio restante en su contenedor flex */
             margin-left: 10px; /* Espacio a la izquierda del select */
         }
 
         .label, .form-control {
-            width: 40%; 
+            width: 60%; 
             margin-right: 10px; /* Espacio a la derecha de cada elemento */
         }
 
         .scale-container {
-    display: flex;  /* Usar flexbox para los círculos */
-    flex-wrap: nowrap;  /* Evitar que los elementos se envuelvan */
-    align-items: center;  /* Alinear verticalmente */
-    overflow-x: auto;  /* Permitir desplazamiento horizontal si hay muchos círculos */
-    margin-top: 5px;  /* Espacio superior para separación visual */
-}
+            display: flex;  /* Usar flexbox para los círculos */
+            flex-wrap: nowrap;  /* Evitar que los elementos se envuelvan */
+            align-items: center;  /* Alinear verticalmente */
+            overflow-x: auto;  /* Permitir desplazamiento horizontal si hay muchos círculos */
+            margin-top: 5px;  /* Espacio superior para separación visual */
+        }
 
         .scale-options {
-        display: flex;
-        flex-wrap: nowrap;  /* Mantiene los elementos en una sola fila */
-        align-items: center;  /* Alinea verticalmente los círculos con otros elementos */
-        overflow-x: auto;  /* Permite desplazamiento horizontal */
-    }
+            display: flex;
+            flex-wrap: nowrap;  /* Mantiene los elementos en una sola fila */
+            align-items: center;  /* Alinea verticalmente los círculos con otros elementos */
+            overflow-x: auto;  /* Permite desplazamiento horizontal */
+        }
 
-    .scale-circle {
-        width: 20px;
-        height: 20px;
-        margin-right: 5px;
-        background-color: #fff;
-        color: #000;
-        border-radius: 50%;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
+        .scale-circle {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            background-color: #fff;
+            color: #000;
+            border-radius: 50%;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
 
         .number-input, .text-input, .list-input input {
             padding: 8px; /* Padding dentro de los inputs */
