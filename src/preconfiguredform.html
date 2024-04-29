@@ -321,19 +321,21 @@
     }
 
     function removeQuestionPair(posIndex, negIndex) {
-        console.log("elimino pregunta ");
-        console.log(posIndex);
-        console.log(negIndex);
-        // Eliminar del arreglo de datos
+        // Eliminar del arreglo de datos, asumiendo que posIndex y negIndex son índices en el arreglo de datos
+        var posQuestion = document.getElementById('question' + posIndex).querySelector('input').value;
+        var negQuestion = document.getElementById('question' + negIndex).querySelector('input').value;
+        console.log(posQuestion);
+        console.log(negQuestion);
         questionsData = questionsData.filter(function(q) {
-            return q.positive !== document.getElementById('question' + posIndex).querySelector('input').value && 
-                q.negative !== document.getElementById('question' + negIndex).querySelector('input').value;
+            return !(q.positive === posQuestion && q.negative === negQuestion);
         });
+        console.log(questionsData);
 
         // Eliminar del DOM
-        document.getElementById('question' + posIndex).remove();
-        document.getElementById('question' + negIndex).remove();
+        document.getElementById('question' + posIndex).parentNode.removeChild(document.getElementById('question' + posIndex));
+        document.getElementById('question' + negIndex).parentNode.removeChild(document.getElementById('question' + negIndex));
     }
+
 
 
     function sendQuestionsToServer() { 
