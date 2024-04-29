@@ -93,10 +93,6 @@
             max-width: 180px; 
         }
 
-        .form-control.answer-list{
-            max-width: 100px; 
-        }
-
         .add-link {
             display: inline-block;
             margin-left: 10px; /* Espacio a la izquierda del enlace de adición */
@@ -105,6 +101,10 @@
             text-decoration: none; /* Sin subrayado */
         }
 
+        .number-input-container input {
+            width: 60px;  /* Ancho fijo para el input numérico */
+            margin-right: 10px;  /* Espacio a la derecha para separar del contenedor de círculos */
+        }
 
     </style>
 </head>
@@ -241,7 +241,7 @@
                 answerInput.innerHTML = '<input type="text" class="form-control text-input" id="answer' + questionNumber + '" placeholder="Enter answer" readonly>';
             } else if (questionType === 'list') {
                 answerInput.innerHTML = '<div class="list-input">' +
-                    '<input type="text" class="form-control text-input" id="listValueInput' + questionNumber + '" placeholder="Enter new value" style="width: 150px;">' +
+                    '<input type="text" class="form-control text-input" id="listValueInput' + questionNumber + '" placeholder="Enter new value" style="width: 100px;">' +
                     '<div class="add-link-container">' +
                         '<a href="#" class="add-link" onclick="addToList(' + questionNumber + ')">+</a>' +
                     '</div>' +
@@ -251,7 +251,7 @@
 
             } else if (questionType === 'multiselect') {
                 answerInput.innerHTML = '<div class="list-input">' +
-                    '<input type="text" class="form-control text-input" id="listValueInput' + questionNumber + '" placeholder="Enter new value">' +
+                    '<input type="text" class="form-control text-input" id="listValueInput' + questionNumber + '" placeholder="Enter new value" style="width: 100px;">' +
                     '<div class="add-link-container">' +
                         '<a href="#" class="add-link" onclick="addToList(' + questionNumber + ')">+</a>' +
                     '</div>' +
