@@ -332,9 +332,42 @@
             posElement.remove();
             negElement.remove();
             questionsData = questionsData.filter(q => !(q.positive === posElement.querySelector('input').value && q.negative === negElement.querySelector('input').value));
+            updateQuestionIndices(posIndex);
         } else {
             console.error("Error: Attempted to remove non-existent elements", posIndex, negIndex);
         }
+    }
+
+    function updateQuestionIndices(startIndex) {
+        let currentIdx = startIndex;
+        let questionRows = document.querySelectorAll('.preconfigured-question');
+
+        // Actualizar el DOM y el questionCounter global
+        questionCounter = startIndex - 1;  // Ajustar el contador global de preguntas
+
+        questionRows.forEach((row, index) => {
+            if (index >= currentIdx - 1) {
+                // Actualizar ID y contenido visual de la pregunta
+                let questionNum = currentIdx;
+                row.id = 'question' + questionNum;
+                let label = row.querySelector('.question-text');
+                label.textContent = questionNum + '. ' + label.textContent.split('. ')[1];
+
+                // Ajustar índices de los botones de eliminación para parejas
+                if (questionNum % 2 !== 0) { // Si es una pregunta impar, ajusta el botón de eliminar para la pareja
+                    let deleteBtn = row.querySelector('.delete-btn');
+                    if (deleteBtn) {
+                        deleteBtn.onclick = function() {
+                            removeQuestionPair(questionNum, questionNum + 1);
+                        };
+                    }
+                }
+                currentIdx += 1; // Incrementar para la próxima pareja
+            }
+        });
+
+        // Ajustar el contador global al último índice usado
+        questionCounter = currentIdx - 1;
     }
 
 
