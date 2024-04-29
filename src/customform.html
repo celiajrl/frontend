@@ -17,11 +17,16 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra ligera */
             color: #fff; /* Color de texto */
             overflow-y: auto; /* Permite desplazamiento vertical si es necesario */
-            max-width: 800px; /* Ancho máximo del formulario */
+            max-width: 1000px; /* Ancho máximo del formulario */
             margin: 20px auto; /* Margin auto para centrar el formulario horizontalmente */
             height: 400px;
         }
 
+        #surveyName {
+            align-items: left;
+            width: 50%; 
+        }
+        
         .custom-question {
             display: flex;
             align-items: center; /* Alinea los elementos internos verticalmente */
@@ -40,15 +45,16 @@
 
         .scale-options, .yes-no-options {
             display: flex;
-            justify-content: flex-start; /* Alinea los elementos al inicio del contenedor */
+            justify-content: flex; /* Alinea los elementos al inicio del contenedor */
             margin-top: 5px; /* Espacio arriba de las opciones */
         }
 
         .scale-circle {
-            width: 30px;
-            height: 30px;
+            width: 20px;
+            height: 20px;
             margin-right: 5px; /* Espacio entre círculos */
-            line-height: 30px; /* Altura de línea para centrar texto verticalmente */
+            overflow-x: auto;
+            line-height: 20px; /* Altura de línea para centrar texto verticalmente */
             text-align: center; /* Centra el texto horizontalmente */
             background-color: #fff; /* Fondo blanco para los círculos */
             color: #000; /* Texto negro */
