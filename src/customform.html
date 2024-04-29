@@ -11,83 +11,91 @@
     <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
      <style>
         form {
-            background-color: #ce93d8; /* Color de fondo del formulario */
-            border-radius: 8px; /* Bordes redondeados */
-            padding: 20px; /* Padding general */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra ligera */
-            color: #fff; /* Color de texto */
-            overflow-y: auto; /* Permite desplazamiento vertical si es necesario */
-            max-width: 1000px; /* Ancho máximo del formulario */
-            margin: 20px auto; /* Margin auto para centrar el formulario horizontalmente */
-            height: 400px;
+            background-color: #ce93d8;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #fff;
+            overflow-y: auto;
+            max-width: 1000px;
+            margin: 20px auto;
+            height: auto;
         }
 
         #surveyName {
-            align-items: left;
-            width: 50%; 
-        }
-        
-        .custom-question {
-            display: flex;
-            align-items: center; /* Alinea los elementos internos verticalmente */
-            margin-bottom: 10px; /* Espacio entre preguntas */
+            width: 100%;
+            margin-bottom: 10px;
         }
 
-        .custom-select, .text-input {
-            flex: 1; /* Ocupa todo el espacio restante en su contenedor flex */
-            margin-left: 10px; /* Espacio a la izquierda del select */
+        .custom-question {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        input[type="text"].question-input, #surveyName {
+            flex: 3;  /* Hace la caja de texto para la pregunta más larga */
+        }
+
+        .custom-select {
+            flex: 1;  /* Menor flex-grow para reducir el tamaño del selector */
+            max-width: 200px;  /* Tamaño fijo para el selector */
         }
 
         .label, .form-control {
-            width: auto; /* Ancho automático basado en el contenido */
-            margin-right: 10px; /* Espacio a la derecha de cada elemento */
+            margin-right: 10px;
         }
 
-        .scale-options, .yes-no-options {
+        .scale-options {
             display: flex;
-            justify-content: flex; /* Alinea los elementos al inicio del contenedor */
-            margin-top: 5px; /* Espacio arriba de las opciones */
+            flex-wrap: nowrap;  /* Mantiene los elementos en una sola fila */
+            align-items: center;  /* Alinea verticalmente los círculos con otros elementos */
+            overflow-x: auto;  /* Permite desplazamiento horizontal */
         }
 
         .scale-circle {
             width: 20px;
             height: 20px;
-            margin-right: 5px; /* Espacio entre círculos */
-            overflow-x: auto;
-            line-height: 20px; /* Altura de línea para centrar texto verticalmente */
-            text-align: center; /* Centra el texto horizontalmente */
-            background-color: #fff; /* Fondo blanco para los círculos */
-            color: #000; /* Texto negro */
-            border-radius: 50%; /* Hace los círculos perfectamente redondos */
-            cursor: pointer; /* Cambia el cursor a una mano al pasar sobre los círculos */
+            margin-right: 5px;
+            background-color: #fff;
+            color: #000;
+            border-radius: 50%;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .number-input, .text-input, .list-input input {
-            padding: 8px; /* Padding dentro de los inputs */
-            margin-top: 5px; /* Espacio arriba del input */
-            width: 100%; /* Aprovecha todo el ancho posible */
+        .number-input, .text-input {
+            width: 100%;  /* Hace que el input ocupe todo el espacio disponible */
+            margin-top: 5px;
+            margin-right: 10px;
         }
 
         .add-link {
-            display: inline-block;
-            margin-left: 10px; /* Espacio a la izquierda del enlace de adición */
-            cursor: pointer; /* Cursor en forma de mano para indicar clickeabilidad */
-            color: #fff; /* Color de texto para el enlace */
-            text-decoration: none; /* Sin subrayado */
+            color: #fff;
+            cursor: pointer;
+            text-decoration: none;
+            margin-left: 10px;
         }
 
-        /* Ajustes para visualización responsiva */
         @media (max-width: 768px) {
             .custom-question {
-                flex-direction: column; /* Cambia la disposición a vertical en pantallas pequeñas */
-                align-items: stretch; /* Estira los elementos para usar todo el ancho disponible */
+                flex-direction: column;
+                align-items: stretch;
             }
 
             .custom-select, .text-input {
-                margin-left: 0; /* Elimina el margen lateral en vistas móviles */
-                margin-top: 5px; /* Añade un margen superior para separar de otros elementos */
+                margin-left: 0;
+                margin-top: 5px;
+            }
+
+            .scale-options {
+                justify-content: center;  /* Centra los círculos de escala en dispositivos móviles */
             }
         }
+
     </style>
 </head>
 
