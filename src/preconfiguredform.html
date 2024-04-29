@@ -222,63 +222,119 @@
     ];
 
     function addAdditionalQuestion() {
-    var table = document.querySelector('.preconfigured-options');
+        var table = document.querySelector('.preconfigured-options');
 
-    // Incrementar el contador de preguntas para las nuevas preguntas positiva y negativa
-    questionCounter += 2;
+        // Almacenar temporalmente las preguntas positiva y negativa
+        var tempQuestions = {};
 
-    var newRowPositive = table.insertRow(-1);
-    var newRowNegative = table.insertRow(-1);
-    newRowPositive.className = newRowNegative.className = 'form-group preconfigured-question';
+        // Añadiendo pregunta positiva
+        questionCounter = ++questionCounter;
+        var newRowPositive = table.insertRow();
+        newRowPositive.className = 'form-group preconfigured-question';
+        newRowPositive.id = 'question' + questionCounter;
 
-    // Asignar identificadores a las nuevas filas
-    newRowPositive.id = 'question' + (questionCounter - 1);
-    newRowNegative.id = 'question' + questionCounter;
+        var labelPositive = document.createElement('label');
+        labelPositive.className = 'question-text';
+        labelPositive.textContent = questionCounter + '. ';
+        var positiveCell = newRowPositive.insertCell(0);
+        positiveCell.appendChild(labelPositive);
 
-    setupQuestionRow(newRowPositive, questionCounter - 1);
-    setupQuestionRow(newRowNegative, questionCounter);
+        var positiveInput = document.createElement('input');
+        positiveInput.type = 'text';
+        positiveInput.className = 'question-input';
+        positiveInput.placeholder = 'Enter positive question';
+        positiveInput.style.color = '#000';
+        positiveInput.onblur = function () {
+            if (this.value.trim() !== "") {
+                markAsReadOnly(this);
+                tempQuestions.positive = this.value;
+            } else {
+                alert('Please enter a valid question.');
+            }
+        };
+        positiveCell.appendChild(positiveInput);
+        positiveCell.className = 'question-text';
+        var scaleOptionsCell = newRowPositive.insertCell(1);
+        scaleOptionsCell.className = 'scale-options';
+        for (var i = 1; i <= 5; i++) {
+            var scaleCircle = document.createElement('div');
+            scaleCircle.className = 'scale-circle';
+            scaleCircle.textContent = i;
+            scaleCircle.onclick = function (event) {
+                selectScale(event.target.textContent, nextQuestionNumber);
+            };
+            scaleOptionsCell.appendChild(scaleCircle);
+        }
 
-    // Agregar preguntas al arreglo de datos
-    questionsData.push({ positive: "New Positive Question", negative: "New Negative Question" });
-}
+        var deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.className = 'btn btn-danger delete-btn';
+        deleteBtn.onclick = function() { removeQuestionPair(questionCounter - 1, questionCounter); };
+        newRowPositive.insertCell(2).appendChild(deleteBtn);
 
-function setupQuestionRow(row, index) {
-    var cellQuestion = row.insertCell(0);
-    var cellOptions = row.insertCell(1);
+        questionCounter = ++questionCounter;
+        // Añadiendo pregunta negativa
+        var newRowNegative = table.insertRow();
+        newRowNegative.className = 'form-group preconfigured-question';
+        newRowNegative.id = 'question' + questionCounter;
 
-    cellQuestion.textContent = index + ". New Question";
-    cellOptions.innerHTML = createScaleOptions(index);
+        var labelNegative = document.createElement('label');
+        labelNegative.className = 'question-text';
+        labelNegative.textContent = questionCounter + '. ';
+        var negativeCell = newRowNegative.insertCell(0);
+        negativeCell.appendChild(labelNegative);
+        negativeCell.className = 'question-text';
 
-    var deleteBtn = document.createElement('button');
-    deleteBtn.textContent = 'Delete';
-    deleteBtn.className = 'btn btn-danger';
-    deleteBtn.onclick = function() {
-        removeQuestionPair(index - (index % 2 == 0 ? 1 : 0), index + (index % 2 == 0 ? 1 : 0));
-    };
-    cellQuestion.appendChild(deleteBtn);
-}
-
-function createScaleOptions(index) {
-    var options = "";
-    for (var i = 1; i <= 5; i++) {
-        options += `<div class="scale-circle" onclick="selectScale(${i}, ${index})">${i}</div>`;
+        var negativeInput = document.createElement('input');
+        negativeInput.className = 'question-input';
+        negativeInput.type = 'text';
+        negativeInput.placeholder = 'Enter negative question';
+        negativeInput.style.color = '#000';
+        negativeInput.onblur = function () {
+            if (this.value.trim() !== "") {
+                markAsReadOnly(this);
+                tempQuestions.negative = this.value;
+                // Solo guarda el par si ambas preguntas están completas
+                if (tempQuestions.positive && tempQuestions.negative) {
+                    questionsData.push({
+                        positive: tempQuestions.positive,
+                        negative: tempQuestions.negative
+                    });
+                    tempQuestions = {}; // Limpiar el almacenamiento temporal
+                }
+            } else {
+                alert('Please enter a valid question.');
+            }
+        };
+        negativeCell.appendChild(negativeInput);
+        var scaleOptionsCellNegative = newRowNegative.insertCell(1);
+        scaleOptionsCellNegative.className = 'scale-options';
+        for (var j = 1; j <= 5; j++) {
+            var scaleCircleNegative = document.createElement('div');
+            scaleCircleNegative.className = 'scale-circle';
+            scaleCircleNegative.textContent = j;
+            scaleCircleNegative.onclick = function (event) {
+                selectScale(event.target.textContent, nextNegativeQuestionNumber);
+            };
+            scaleOptionsCellNegative.appendChild(scaleCircleNegative);
+        }
     }
-    return options;
-}
 
-function removeQuestionPair(posIndex, negIndex) {
-    // Eliminar del DOM
-    var posRow = document.getElementById('question' + posIndex);
-    var negRow = document.getElementById('question' + negIndex);
-    posRow.parentNode.removeChild(posRow);
-    negRow.parentNode.removeChild(negRow);
+    function removeQuestionPair(posIndex, negIndex) {
+        // Eliminar del arreglo de datos, asumiendo que posIndex y negIndex son índices en el arreglo de datos
+        var posQuestion = document.getElementById('question' + posIndex).querySelector('input').value;
+        var negQuestion = document.getElementById('question' + negIndex).querySelector('input').value;
+        console.log(posQuestion);
+        console.log(negQuestion);
+        questionsData = questionsData.filter(function(q) {
+            return !(q.positive === posQuestion && q.negative === negQuestion);
+        });
+        console.log(questionsData);
 
-    // Eliminar del arreglo de datos
-    questionsData = questionsData.filter(function(question, idx) {
-        return idx !== posIndex / 2;  // Asumiendo que cada par está seguido en el arreglo
-    });
-}
-
+        // Eliminar del DOM
+        document.getElementById('question' + posIndex).parentNode.removeChild(document.getElementById('question' + posIndex));
+        document.getElementById('question' + negIndex).parentNode.removeChild(document.getElementById('question' + negIndex));
+    }
 
 
 
