@@ -80,6 +80,24 @@
             margin-right: 5px;
         }
 
+        .required-asterisk {
+            color: red;
+            margin-left: 5px;
+            cursor: help;
+        }
+
+        .required-asterisk:hover::after {
+            content: "Answer is compulsory";
+            color: #fff;
+            background-color: #333;
+            padding: 3px 6px;
+            border-radius: 4px;
+            position: absolute;
+            z-index: 1;
+            right: 20px;
+            white-space: nowrap;
+        }
+
     </style>
 </head>
 
@@ -201,8 +219,9 @@
 
         questions.forEach(function (question, index) {
             const row = $('<tr>');
-            const questionCell = $('<td>').text((index + 1) + '. ' + question.question);
-            const answerCell = $('<td>'); // Celda para la respuesta
+            const questionText = `${index + 1}. ${question.question}${question.isRequired ? '<span class="required-asterisk">*</span>' : ''}`;
+            const questionCell = $('<td>').addClass('question-cell').html(questionText);
+            const answerInputCell = $('<td>').addClass('answer-cell'); // Celda para la entrada de respuesta
 
             // Determinar el tipo de pregunta y generar el widget correspondiente
             switch (question.type.toLowerCase()) {
