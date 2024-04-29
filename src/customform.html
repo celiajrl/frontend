@@ -10,129 +10,77 @@
     <link href="css/home.css" rel="stylesheet">
     <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
      <style>
-        /* Estilos generales para el contenedor del formulario */
-#chartContainer {
-    max-height: 500px;
-    width: 80%; /* Ajusta al ancho que prefieras */
-    margin: 20px auto; /* Aumenta el margen superior para más espacio */
-    background-color: #f0f0f0;
-    padding: 20px;
-    border-radius: 8px;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centrar los elementos horizontalmente */
-    gap: 20px; /* Espacio entre los gráficos */
-}
+        form {
+            background-color: #ce93d8; /* Color de fondo del formulario */
+            border-radius: 8px; /* Bordes redondeados */
+            padding: 20px; /* Padding general */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+            color: #fff; /* Color de texto */
+            overflow-y: auto; /* Permite desplazamiento vertical si es necesario */
+            max-width: 600px; /* Ancho máximo del formulario */
+            margin: 20px auto; /* Margin auto para centrar el formulario horizontalmente */
+        }
 
-canvas {
-    width: 80%; /* Ocupar todo el ancho del contenedor de gráficos */
-    height: 150px; /* Altura auto ajustable */
-    margin: 0 auto; /* Centrar el gráfico horizontalmente dentro del contenedor */
-}
+        .custom-question {
+            display: flex;
+            align-items: center; /* Alinea los elementos internos verticalmente */
+            margin-bottom: 10px; /* Espacio entre preguntas */
+        }
 
-#myChart {
-    width: 80%;
-    height: 150px; /* Altura predefinida para el gráfico doughnut */
-    margin: 0 auto; /* Centrar el gráfico horizontalmente dentro del contenedor */
-}
+        .custom-select, .text-input {
+            flex: 1; /* Ocupa todo el espacio restante en su contenedor flex */
+            margin-left: 10px; /* Espacio a la izquierda del select */
+        }
 
-#chartContainer h3 {
-    color: #333;
-    text-align: center; /* Centrar el texto del título */
-}
+        .label, .form-control {
+            width: auto; /* Ancho automático basado en el contenido */
+            margin-right: 10px; /* Espacio a la derecha de cada elemento */
+        }
 
-#averageTableContainer {
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    color: rgb(47, 44, 44);
-    margin-bottom: 10px; /* Ajusta el margen superior para reducir el espacio con el elemento anterior */
-}
+        .scale-options, .yes-no-options {
+            display: flex;
+            justify-content: flex-start; /* Alinea los elementos al inicio del contenedor */
+            margin-top: 5px; /* Espacio arriba de las opciones */
+        }
 
-table th,
-table td {
-    border: 1px solid #ddd;
-    padding: 16px;
-    text-align: left;
-    vertical-align: middle;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: rgb(47, 44, 44);
-    width: 350px;
-}
+        .scale-circle {
+            width: 30px;
+            height: 30px;
+            margin-right: 5px; /* Espacio entre círculos */
+            line-height: 30px; /* Altura de línea para centrar texto verticalmente */
+            text-align: center; /* Centra el texto horizontalmente */
+            background-color: #fff; /* Fondo blanco para los círculos */
+            color: #000; /* Texto negro */
+            border-radius: 50%; /* Hace los círculos perfectamente redondos */
+            cursor: pointer; /* Cambia el cursor a una mano al pasar sobre los círculos */
+        }
 
-/* Estilos para el formulario y elementos interactivos */
-form {
-    background-color: #ce93d8;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    color: #fff;
-    overflow-y: auto;
-}
+        .number-input, .text-input, .list-input input {
+            padding: 8px; /* Padding dentro de los inputs */
+            margin-top: 5px; /* Espacio arriba del input */
+            width: 100%; /* Aprovecha todo el ancho posible */
+        }
 
-.custom-question {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px; /* Espacio entre preguntas */
-    gap: 10px; /* Espacio entre elementos dentro de la misma línea */
-}
+        .add-link {
+            display: inline-block;
+            margin-left: 10px; /* Espacio a la izquierda del enlace de adición */
+            cursor: pointer; /* Cursor en forma de mano para indicar clickeabilidad */
+            color: #fff; /* Color de texto para el enlace */
+            text-decoration: none; /* Sin subrayado */
+        }
 
-.form-control, .form-control.custom-select {
-    height: 38px; /* Estándar para todos los input y select para alinearlos correctamente */
-    flex-grow: 1;
-}
+        /* Ajustes para visualización responsiva */
+        @media (max-width: 768px) {
+            .custom-question {
+                flex-direction: column; /* Cambia la disposición a vertical en pantallas pequeñas */
+                align-items: stretch; /* Estira los elementos para usar todo el ancho disponible */
+            }
 
-.custom-select {
-    flex-shrink: 0; /* Evita que el select cambie de tamaño de forma inesperada */
-}
-
-.label, .required-checkbox {
-    margin-bottom: 0; /* Asegura que no haya espacio extra debajo de los labels y checkboxes */
-}
-
-.scale-container, .yes-no-options, .list-input, .number-input-container, .text-input {
-    display: flex;
-    align-items: center; /* Centra los elementos de manera vertical */
-    gap: 5px; /* Espacio uniforme entre los elementos internos */
-}
-
-.scale-circle {
-    margin: 0 5px; /* Ajusta el margen para los círculos de escala */
-    width: 30px; /* Tamaño fijo para evitar inconsistencias */
-    height: 30px; /* Altura igual al ancho para mantenerlos circulares */
-}
-
-.number-input-container, .text-input, .answerInput {
-    flex-grow: 1; /* Permite que estos elementos tomen el espacio disponible */
-}
-
-/* Estilos adicionales para mejorar la visualización general */
-.add-link-container, .add-link {
-    display: flex;
-    alignItems: center;
-    justifyContent: center;
-}
-
-/* Asegurando que los input de tipo texto y número tengan un tamaño adecuado */
-input[type="text"], input[type="number"] {
-    flex-grow: 1;
-}
-
-/* Mejorando la presentación de la tabla de respuesta de la lista */
-.answer-list {
-    width: auto; /* Permite que el select crezca con su contenido */
-    flex-grow: 1;
-}
-
-/* Ajustes para los botones */
-.btn {
-    margin-top: 10px; /* Espacio sobre los botones */
-    margin-right: 5px; /* Espacio entre botones */
-}
-
+            .custom-select, .text-input {
+                margin-left: 0; /* Elimina el margen lateral en vistas móviles */
+                margin-top: 5px; /* Añade un margen superior para separar de otros elementos */
+            }
+        }
     </style>
 </head>
 
