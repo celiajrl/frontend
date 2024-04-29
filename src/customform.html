@@ -19,6 +19,7 @@
             height: 400px;
             max-height: 400px;
             overflow-y: auto;
+            margin-right: 5px;
         }
 
         .scale-options {
@@ -216,7 +217,7 @@
             newRow.innerHTML = '<label for="question' + (++questionCounter) + '">Q' + questionCounter + ':</label>' +
                 '<div style="position: relative;">' +
                 '<input type="text" class="form-control" id="question' + questionCounter + '" placeholder="Enter your question">' +
-                '</div>' +
+                '<div style="position: relative;">' +
                 '<select class="form-control custom-select" id="question' + questionCounter + 'Type" onchange="toggleInputFields(' + questionCounter + ')">' +
                 '<option value="scale">Scale</option>' +
                 '<option value="yesno">Yes/No</option>' +
