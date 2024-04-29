@@ -221,7 +221,9 @@
             const row = $('<tr>');
             const questionText = `${index + 1}. ${question.question}${question.isRequired ? '<span class="required-asterisk">*</span>' : ''}`;
             const questionCell = $('<td>').addClass('question-cell').html(questionText);
-            const answerInputCell = $('<td>').addClass('answer-cell'); // Celda para la entrada de respuesta
+            const answerCell = $('<td>').addClass('answer-cell'); // Celda para la entrada de respuesta
+
+            
 
             // Determinar el tipo de pregunta y generar el widget correspondiente
             switch (question.type.toLowerCase()) {
