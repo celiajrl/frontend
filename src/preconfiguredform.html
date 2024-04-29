@@ -324,6 +324,18 @@
         newRowPositive.insertCell(2).appendChild(deleteBtn);
     }
 
+    function removeQuestionPair(posIndex, negIndex) {
+        var posElement = document.getElementById('question' + posIndex);
+        var negElement = document.getElementById('question' + negIndex);
+
+        if (posElement && negElement) {
+            posElement.remove();
+            negElement.remove();
+            questionsData = questionsData.filter(q => !(q.positive === posElement.querySelector('input').value && q.negative === negElement.querySelector('input').value));
+        } else {
+            console.error("Error: Attempted to remove non-existent elements", posIndex, negIndex);
+        }
+    }
 
 
     function sendQuestionsToServer() { 
