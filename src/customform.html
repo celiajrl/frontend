@@ -241,7 +241,7 @@
                 answerInput.innerHTML = '<input type="text" class="form-control text-input" id="answer' + questionNumber + '" placeholder="Enter answer" readonly>';
             } else if (questionType === 'list') {
                 answerInput.innerHTML = '<div class="list-input">' +
-                    '<input type="text" class="form-control text-input" id="listValueInput' + questionNumber + '" placeholder="Enter new value">' +
+                    '<input type="text" class="form-control text-input" id="listValueInput' + questionNumber + '" placeholder="Enter new value" style="width: 150px;">' +
                     '<div class="add-link-container">' +
                         '<a href="#" class="add-link" onclick="addToList(' + questionNumber + ')">+</a>' +
                     '</div>' +
