@@ -266,6 +266,12 @@
             scaleOptionsCell.appendChild(scaleCircle);
         }
 
+        var deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.className = 'btn btn-danger delete-btn';
+        deleteBtn.onclick = function() { removeQuestionPair(questionCounter - 1, questionCounter); };
+        newRowPositive.insertCell(2).appendChild(deleteBtn);
+
         questionCounter = ++questionCounter;
         // Añadiendo pregunta negativa
         var newRowNegative = table.insertRow();
@@ -313,6 +319,22 @@
             scaleOptionsCellNegative.appendChild(scaleCircleNegative);
         }
     }
+
+    function removeQuestionPair(posIndex, negIndex) {
+        console.log("elimino pregunta ");
+        console.log(posIndex);
+        console.log(negIndex);
+        // Eliminar del arreglo de datos
+        questionsData = questionsData.filter(function(q) {
+            return q.positive !== document.getElementById('question' + posIndex).querySelector('input').value && 
+                q.negative !== document.getElementById('question' + negIndex).querySelector('input').value;
+        });
+
+        // Eliminar del DOM
+        document.getElementById('question' + posIndex).remove();
+        document.getElementById('question' + negIndex).remove();
+    }
+
 
     function sendQuestionsToServer() { 
             var userId = localStorage.getItem('userId');
