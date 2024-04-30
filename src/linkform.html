@@ -141,7 +141,6 @@
                         contentType: 'application/json',
                         data: JSON.stringify({ orderData: orderData }),
                         success: function(response) {
-                            alert(orderData);
                             window.location.href = 'sendemail.html?id=' + chatbotId;
                         },
                         error: function(error) {
