@@ -9,6 +9,24 @@
     <title>Chatbot evaluator</title>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        #resetPasswordModal {
+            display: none; /* Inicialmente oculto */
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: white;
+            z-index: 1000; /* Asegúrate de que esté por encima de otros contenidos */
+        }
+
+    </style>
 </head>
 <body>
     
@@ -105,129 +123,62 @@
 
     <script>
         $(document).ready(function () {
-            function switchTab(tabName) {
-                $('.tab-content').removeClass('active');
-                $('#' + tabName).addClass('active');
-                $('.contenedor-tabs li').removeClass('active');
-                $('.contenedor-tabs li[data-tab="' + tabName + '"]').addClass('active');
+    // Cambia de pestaña
+    function switchTab(tabName) {
+        $('.contenido-tab > div').addClass('hidden'); // Oculta todos los divs dentro de contenido-tab
+        $('#' + tabName).removeClass('hidden');
+        $('.contenedor-tabs li').removeClass('active');
+        $('.contenedor-tabs li[data-tab="' + tabName + '"]').addClass('active');
+    }
+    
+    $('.contenedor-tabs li').on('click', function (event) {
+        event.preventDefault();
+        var tabName = $(this).data('tab');
+        switchTab(tabName);
+    });
+
+    // Gestiona el clic en "Forgot your password?"
+    $('.forgot a').on('click', function (e) {
+        e.preventDefault();
+        $('.contenido-tab > div').addClass('hidden'); // Oculta los formularios de inicio de sesión y registro
+        $('#resetPasswordModal').removeClass('hidden').show(); // Muestra el formulario de restablecimiento
+    });
+
+    // Manejar el envío del formulario de restablecimiento de contraseña
+    $('#resetPasswordForm').submit(function (e) {
+        e.preventDefault();
+        var email = $('#resetEmail').val();
+        resetPassword(email);
+    });
+
+    // Función para enviar la petición de restablecimiento de contraseña
+    function resetPassword(email) {
+        $.ajax({
+            url: 'https://backend-chatbotevaluator.up.railway.app/forgot-password',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ email: email }),
+            success: function (response) {
+                alert('If your email is registered, you will receive a password reset email.');
+                $('#resetPasswordModal').hide();
+                switchTab('iniciar-sesion'); // Vuelve a la pestaña de inicio de sesión
+            },
+            error: function () {
+                alert('There was an error processing your request. Please try again later.');
             }
-            $('.contenedor-tabs li').on('click', function (event) {
-                event.preventDefault();
-                var tabName = $(this).data('tab');
-                console.log('Clicked tab:', tabName);
-                switchTab(tabName);
-            });
-
-            switchTab($('.contenedor-tabs li:first-child').data('tab'));
-        
-            $('#form-login').submit(function (event) {
-                event.preventDefault();
-                var username = $('#form-login input[name="username"]').val();
-                var password = $('#form-login input[name="password"]').val();
-
-                $.ajax({
-                    url: 'https://backend-chatbotevaluator.up.railway.app/login',
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ username: username, password: password }),
-                    success: function (response) {
-                        if (response.message === 'Login successful') {
-                            localStorage.setItem('userId', response.user._id); 
-                            localStorage.setItem('username', response.user.username);
-                            alert(response.message);
-                            window.location.href = 'src/home.html';
-                        } else {
-                            alert('Error: ' + response.message);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        handleError(xhr);
-                    }
-                });
-            });
-
-            $('#form-registro').submit(function (event) {
-                event.preventDefault();
-                var name = $('#form-registro input[name="name"]').val();
-                var surname = $('#form-registro input[name="surname"]').val();
-                var regUsername = $('#form-registro input[name="reg-username"]').val();
-                var email = $('#form-registro input[name="email"]').val();
-                var regPassword = $('#form-registro input[name="reg-password"]').val();
-                var repeatPassword = $('#form-registro input[name="repeat-password"]').val();
-
-                $.ajax({
-                    url: 'https://backend-chatbotevaluator.up.railway.app/register',
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        name: name,
-                        surname: surname,
-                        username: regUsername,
-                        email: email,
-                        password: regPassword,
-                        repeat: repeatPassword
-                    }),
-                    success: function (response) {
-                        if (response.message === 'Registration successful') {
-                            const insertedId = response.insertedId;
-
-                            localStorage.setItem('userId', insertedId); 
-                        
-                            window.location.href = 'src/home.html';
-                        } else if (response.message === 'Passwords do not match') {
-                            alert('Error: Las contraseñas no coinciden. Por favor, inténtalo de nuevo.');
-                        } else if (response.message === 'Username or email already in use') {
-                            alert('Error: Nombre de usuario o correo electrónico ya en uso. Por favor, elige otros.');
-                        } else {
-                            alert('Error desconocido en el registro. Por favor, intenta de nuevo.');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        handleError(xhr);
-                    }
-                });
-            });
-
-            function handleError(xhr) {
-                console.error(xhr);
-                if (xhr.status === 401) {
-                    alert('Credenciales incorrectas. Por favor, verifica tu nombre de usuario y contraseña.');
-                } else if (xhr.status === 500) {
-                    alert('Ocurrió un error interno en el servidor. Por favor, intenta de nuevo más tarde.');
-                } else {
-                    alert('Error desconocido. Por favor, verifica tus credenciales o intenta de nuevo.');
-                }
-            }
-
-            // Mostrar el formulario de restablecimiento de contraseña
-            $('.forgot a').on('click', function(e) {
-                e.preventDefault();
-                $('#resetPasswordModal').show();
-            });
-
-            // Manejar el envío del formulario de restablecimiento
-            $('#resetPasswordForm').submit(function(e) {
-                e.preventDefault();
-                var email = $('#resetEmail').val();
-                resetPassword(email);
-            });
         });
+    }
 
-        function resetPassword(email) {
-            $.ajax({
-                url: 'https://backend-chatbotevaluator.up.railway.app/forgot-password',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({email: email}),
-                success: function(response) {
-                    alert('If your email is registered, you will receive a password reset email.');
-                    $('#resetPasswordModal').hide();
-                },
-                error: function() {
-                    alert('There was an error processing your request. Please try again later.');
-                }
-            });
-        }
+    // Cancelar restablecimiento y volver
+    $('#resetPasswordModal button[type="button"]').on('click', function() {
+        $('#resetPasswordModal').hide();
+        switchTab('iniciar-sesion'); // Vuelve a la pestaña de inicio de sesión
+    });
+
+    // Inicializar la vista predeterminada
+    switchTab('iniciar-sesion');
+});
+
         
     </script>
 </body>
