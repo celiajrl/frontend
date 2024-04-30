@@ -134,20 +134,7 @@
         }
 
         function editQuestionnaire(questionnaireId) {
-            var userId = localStorage.getItem('userId');
-            event.preventDefault();
-            $.ajax({
-                type: 'PATCH',
-                url: 'https://backend-chatbotevaluator.up.railway.app/users/' + userId + '/questionnaires/' + questionnaireId,
-                success: function (response) {
-                    console.log(response.message);
-                    window.location.href = 'editform.html?id=' + questionnaireId;
-                },
-                error: function (error) {
-                    console.error(error);
-                }
-            });
-            
+            window.location.href = 'editform.html?id=' + questionnaireId;
         }
 
         function removeQuestionnaire(questionnaireId) {
