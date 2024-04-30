@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Raleway|Ubuntu" rel="stylesheet">
     <link rel="stylesheet" href="src/css/styles.css">
-
     <title>Chatbot evaluator</title>
-
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <style>
         .hidden {
@@ -23,9 +21,34 @@
             padding: 20px;
             border: 1px solid #ccc;
             background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            width: 300px; /* Ancho fijo */
             z-index: 1000; /* Asegúrate de que esté por encima de otros contenidos */
         }
 
+        #resetPasswordModal form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #resetPasswordModal input,
+        #resetPasswordModal button {
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #resetPasswordModal button {
+            background-color: #5cb85c; /* Botón verde */
+            color: white;
+            cursor: pointer;
+        }
+
+        #resetPasswordModal button[type="button"] {
+            background-color: #f44336; /* Botón rojo para cancelar */
+        }
     </style>
 </head>
 <body>
@@ -37,77 +60,56 @@
         </ul>
 
         <div class="contenido-tab">
-            <div id="iniciar-sesion">
+            <div id="iniciar-sesion" class="tab-content active">
                 <h1>Log in</h1>
                 <form id="form-login" action="#" method="post">
                     <div class="contenedor-input">
-                        <label for="username">
-                            Username <span class="req">*</span>
-                        </label>
+                        <label for="username">Username <span class="req">*</span></label>
                         <input type="text" id="username" name="username" autocomplete="username" required>
                     </div>
-
                     <div class="contenedor-input">
-                        <label for="password">
-                            Password <span class="req">*</span>
-                        </label>
+                        <label for="password">Password <span class="req">*</span></label>
                         <input type="password" id="password" name="password" autocomplete="current-password" required>
                     </div>
                     <p class="forgot"><a href="#">Forgot your password?</a></p>
-                    <input type="submit" class="button button-block" value="Iniciar Sesión">
+                    <input type="submit" class="button button-block" value="Log In">
                 </form>
             </div>
-
-            <div id="registrarse">
+            <div id="registrarse" class="tab-content">
                 <h1>Register</h1>
                 <form id="form-registro" action="#" method="post">
                     <div class="fila-arriba">
                         <div class="contenedor-input">
-                            <label for="name">
-                                Name <span class="req">*</span>
-                            </label>
+                            <label for="name">Name <span class="req">*</span></label>
                             <input type="text" id="name" name="name" autocomplete="given-name" required>
                         </div>
-
                         <div class="contenedor-input">
-                            <label for="surname">
-                                Surname <span class="req">*</span>
-                            </label>
+                            <label for="surname">Surname <span class="req">*</span></label>
                             <input type="text" id="surname" name="surname" autocomplete="family-name" required>
                         </div>
                     </div>
                     <div class="contenedor-input">
-                        <label for="reg-username">
-                            Username <span class="req">*</span>
-                        </label>
+                        <label for="reg-username">Username <span class="req">*</span></label>
                         <input type="text" id="reg-username" name="reg-username" autocomplete="username" required>
                     </div>
                     <div class="contenedor-input">
-                        <label for="email">
-                            Email <span class="req">*</span>
-                        </label>
+                        <label for="email">Email <span class="req">*</span></label>
                         <input type="email" id="email" name="email" autocomplete="email" required>
                     </div>
                     <div class="contenedor-input">
-                        <label for="reg-password">
-                            Password <span class="req">*</span>
-                        </label>
+                        <label for="reg-password">Password <span class="req">*</span></label>
                         <input type="password" id="reg-password" name="reg-password" autocomplete="new-password" required>
                     </div>
-
                     <div class="contenedor-input">
-                        <label for="repeat-password">
-                            Repeat password <span class="req">*</span>
-                        </label>
+                        <label for="repeat-password">Repeat password <span class="req">*</span></label>
                         <input type="password" id="repeat-password" name="repeat-password" autocomplete="new-password" required>
                     </div>
-
-                    <input type="submit" class="button button-block" value="Registrarse">
+                    <input type="submit" class="button button-block" value="Register">
                 </form>
             </div>
         </div>
 
-        <div id="resetPasswordModal" style="display:none;">
+        <div id="resetPasswordModal">
             <form id="resetPasswordForm">
                 <h2>Reset Your Password</h2>
                 <p>Please enter your email address:</p>
@@ -120,66 +122,57 @@
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="src/js/script.js"></script>
-
     <script>
         $(document).ready(function () {
-    // Cambia de pestaña
-    function switchTab(tabName) {
-        $('.contenido-tab > div').addClass('hidden'); // Oculta todos los divs dentro de contenido-tab
-        $('#' + tabName).removeClass('hidden');
-        $('.contenedor-tabs li').removeClass('active');
-        $('.contenedor-tabs li[data-tab="' + tabName + '"]').addClass('active');
-    }
-    
-    $('.contenedor-tabs li').on('click', function (event) {
-        event.preventDefault();
-        var tabName = $(this).data('tab');
-        switchTab(tabName);
-    });
-
-    // Gestiona el clic en "Forgot your password?"
-    $('.forgot a').on('click', function (e) {
-        e.preventDefault();
-        $('.contenido-tab > div').addClass('hidden'); // Oculta los formularios de inicio de sesión y registro
-        $('#resetPasswordModal').removeClass('hidden').show(); // Muestra el formulario de restablecimiento
-    });
-
-    // Manejar el envío del formulario de restablecimiento de contraseña
-    $('#resetPasswordForm').submit(function (e) {
-        e.preventDefault();
-        var email = $('#resetEmail').val();
-        resetPassword(email);
-    });
-
-    // Función para enviar la petición de restablecimiento de contraseña
-    function resetPassword(email) {
-        $.ajax({
-            url: 'https://backend-chatbotevaluator.up.railway.app/forgot-password',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ email: email }),
-            success: function (response) {
-                alert('If your email is registered, you will receive a password reset email.');
-                $('#resetPasswordModal').hide();
-                switchTab('iniciar-sesion'); // Vuelve a la pestaña de inicio de sesión
-            },
-            error: function () {
-                alert('There was an error processing your request. Please try again later.');
+            function switchTab(tabName) {
+                $('.contenido-tab > div').addClass('hidden');
+                $('#' + tabName).removeClass('hidden');
+                $('.contenedor-tabs li').removeClass('active');
+                $('.contenedor-tabs li[data-tab="' + tabName + '"]').addClass('active');
             }
+            
+            $('.contenedor-tabs li').on('click', function (event) {
+                event.preventDefault();
+                var tabName = $(this).data('tab');
+                switchTab(tabName);
+            });
+
+            $('.forgot a').on('click', function (e) {
+                e.preventDefault();
+                $('.contenido-tab > div').addClass('hidden');
+                $('#resetPasswordModal').removeClass('hidden').show();
+            });
+
+            $('#resetPasswordForm').submit(function (e) {
+                e.preventDefault();
+                var email = $('#resetEmail').val();
+                resetPassword(email);
+            });
+
+            function resetPassword(email) {
+                $.ajax({
+                    url: 'https://backend-chatbotevaluator.up.railway.app/forgot-password',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ email: email }),
+                    success: function (response) {
+                        alert('If your email is registered, you will receive a password reset email.');
+                        $('#resetPasswordModal').hide();
+                        switchTab('iniciar-sesion');
+                    },
+                    error: function () {
+                        alert('There was an error processing your request. Please try again later.');
+                    }
+                });
+            }
+
+            $('#resetPasswordModal button[type="button"]').on('click', function() {
+                $('#resetPasswordModal').hide();
+                switchTab('iniciar-sesion');
+            });
+
+            switchTab('iniciar-sesion');
         });
-    }
-
-    // Cancelar restablecimiento y volver
-    $('#resetPasswordModal button[type="button"]').on('click', function() {
-        $('#resetPasswordModal').hide();
-        switchTab('iniciar-sesion'); // Vuelve a la pestaña de inicio de sesión
-    });
-
-    // Inicializar la vista predeterminada
-    switchTab('iniciar-sesion');
-});
-
-        
     </script>
 </body>
 </html>
