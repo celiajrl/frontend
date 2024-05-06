@@ -235,11 +235,15 @@
         }
 
         async function fetchCompleteData(chatbotId, questionnaireId) {
+            console.log('descargo csv para:');
+            console.log(chatbotId);
+            console.log(questionnaireId);
             try {
                 const response = await fetch(`/chatbot/${chatbotId}/questionnaire/${questionnaireId}/complete-data`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
+                console.log(response.json());
                 generateCSV(response.json());
             } catch (error) {
                 console.error('Error fetching complete data:', error);
