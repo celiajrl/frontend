@@ -105,6 +105,15 @@
             $('#navbarContainer').load('navbar.html');
             fetchActiveTests();
             fetchCompletedTests();
+            function downloadCSV(chatbotId) {
+                const url = `https://backend-chatbotevaluator.up.railway.app/export-csv/${chatbotId}`;
+                const downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                downloadLink.setAttribute('download', `chatbot_${chatbotId}_results.csv`); // Esto sugiere un nombre de archivo para guardar
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            }
         });
         
         var activeQuestionnairesByChatbot = {};
@@ -220,18 +229,6 @@
                 $('#participantsTableBody').append(newRow);
             }
         }
-
-
-        function downloadCSV(chatbotId) {
-            const url = `https://backend-chatbotevaluator.up.railway.app/export-csv/${chatbotId}`;
-            const downloadLink = document.createElement('a');
-            downloadLink.href = url;
-            downloadLink.setAttribute('download', `chatbot_${chatbotId}_results.csv`); // Esto sugiere un nombre de archivo para guardar
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-        }
-
 
     </script>
 </body>
