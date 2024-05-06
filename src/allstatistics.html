@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,8 +9,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/home.css" rel="stylesheet">
     <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
-    <style>
-        /* Tus estilos aquí */
+     <style>
         form {
             max-height: 440px;
             background-color: #ce93d8;
@@ -48,6 +48,14 @@
             text-align: center;
         }
 
+        .add-participant-input {
+            width: calc(33.33% - 50px);
+            margin-right: 30px;
+            margin-left: 10px;
+            margin-bottom: 12px;
+            color: #000;
+        }
+
         .add-participant-button {
             background-color: transparent;
             color: white;
@@ -65,6 +73,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="navbarContainer"></div>
     <header>
@@ -78,10 +87,10 @@
                                     <th>Chatbot Name</th>
                                     <th>Questionnaires</th>
                                     <th>Completed questionnaires</th>
-                                    <th>Download CSV</th>
                                 </tr>
                             </thead>
-                            <tbody id="participantsTableBody"></tbody>
+                            <tbody id="participantsTableBody">
+                            </tbody>
                         </table>
                     </div>
                 </form>
@@ -96,18 +105,8 @@
             fetchActiveTests();
             fetchCompletedTests();
         });
-
+        
         var activeQuestionnairesByChatbot = {};
-
-        function downloadCSV(chatbotId) {
-            const url = `https://backend-chatbotevaluator.up.railway.app/export-csv/${chatbotId}`;
-            const downloadLink = document.createElement('a');
-            downloadLink.href = url;
-            downloadLink.setAttribute('download', `chatbot_${chatbotId}_results.csv`);
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-        }
 
         function fetchActiveTests() {
             var userId = localStorage.getItem('userId');
@@ -182,44 +181,59 @@
                     };
                 }
 
+                // Verificamos si el cuestionario ya está en el objeto de cuestionarios
                 if (!(test.questionnaireId in groupedByChatbot[test.chatbotId].questionnaires)) {
                     groupedByChatbot[test.chatbotId].questionnaires[test.questionnaireId] = {
                         name: test.questionnaireName,
                         completed: 0 // Inicializamos el contador de cuestionarios completados para este cuestionario
                     };
                 }
+
+                // Incrementamos el contador de cuestionarios completados para este cuestionario y chatbot
                 groupedByChatbot[test.chatbotId].questionnaires[test.questionnaireId].completed++;
+                // Incrementamos el contador total de cuestionarios completados para este chatbot
                 groupedByChatbot[test.chatbotId].totalCompleted++;
             });
 
+            console.log(groupedByChatbot);
+
             $('#participantsTableBody').empty();
 
+            // Recorremos los chatbots agrupados
             for (var chatbotId in groupedByChatbot) {
                 var chatbotData = groupedByChatbot[chatbotId];
                 var questionnairesHtml = '<ul>';
 
+                if (!(chatbotId in activeQuestionnairesByChatbot)) {
+                    activeQuestionnairesByChatbot[chatbotId] = {
+                        total: 0, // Inicializar el total de cuestionarios activos en 0
+                        questionnaires: {} // Inicializar un objeto para almacenar el recuento de cada cuestionario
+                    };
+                }
+                    
+                console.log(chatbotId);
+                console.log(chatbotData);
+                console.log(activeQuestionnairesByChatbot[chatbotId]);
+                // Iteramos sobre los cuestionarios de este chatbot
                 for (var questionnaireId in chatbotData.questionnaires) {
                     var questionnaire = chatbotData.questionnaires[questionnaireId];
-                    var percentageCompleted = (questionnaire.completed / (questionnaire.completed + (activeQuestionnairesByChatbot[chatbotId] && activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaireId] || 0))) * 100;
+                    if (!(questionnaireId in activeQuestionnairesByChatbot[chatbotId].questionnaires)) {
+                        activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaireId] = 0;
+                    }
+                    var percentageCompleted = (questionnaire.completed / (questionnaire.completed + activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaireId])) * 100;
                     percentageCompleted = percentageCompleted.toFixed(2);
-                    questionnairesHtml += `<li>${questionnaire.name}: ${percentageCompleted}%</li>`;
+                    questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaireId + '">' + questionnaire.name + '</a>' + ': ' + percentageCompleted + '%</li>';
                 }
                 questionnairesHtml += '</ul>';
 
-                var chatbotPercentage = (chatbotData.totalCompleted / (chatbotData.totalCompleted + (activeQuestionnairesByChatbot[chatbotId] ? activeQuestionnairesByChatbot[chatbotId].total : 0))) * 100;
+                var chatbotPercentage = (chatbotData.totalCompleted / (chatbotData.totalCompleted + activeQuestionnairesByChatbot[chatbotId].total))*100;
                 chatbotPercentage = chatbotPercentage.toFixed(2);
 
-                var downloadButtonHtml = `<button onclick="downloadCSV('${chatbotId}')" class="btn btn-info">Download CSV</button>`;
-
-                var newRow = `<tr>
-                    <td>${chatbotData.chatbotName}</td>
-                    <td>${questionnairesHtml}</td>
-                    <td>${chatbotPercentage}%</td>
-                    <td>${downloadButtonHtml}</td>
-                </tr>`;
+                var newRow = '<tr><td>' + chatbotData.chatbotName + '</td><td>' + questionnairesHtml + '</td><td>' + chatbotPercentage + '%</td></tr>';
                 $('#participantsTableBody').append(newRow);
             }
         }
+
 
 
     </script>
