@@ -222,7 +222,7 @@
                     }
                     var percentageCompleted = (questionnaire.completed / (questionnaire.completed + activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaireId])) * 100;
                     percentageCompleted = percentageCompleted.toFixed(2);
-                    questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaireId + '">' + questionnaire.name + '</a>' + ': ' + percentageCompleted + '%' + '<button onclick="fetchCompleteData('+chatbotId+','+questionnaireId+')" class="btn btn-info">CSV</button></li>';
+                    questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaireId + '">' + questionnaire.name + '</a>' + ': ' + percentageCompleted + '%' + '<button onclick="fetchCompleteData('+chatbotId+','+questionnaire+')" class="btn btn-info">CSV</button></li>';
                 }
                 questionnairesHtml += '</ul>';
 
