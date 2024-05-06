@@ -222,7 +222,7 @@
                     }
                     var percentageCompleted = (questionnaire.completed / (questionnaire.completed + activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaireId])) * 100;
                     percentageCompleted = percentageCompleted.toFixed(2);
-                    questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaireId + '">' + questionnaire.name + '</a>' + ': ' + percentageCompleted + '%' + `<button onclick="fetchCompleteData('${chatbotId}', '${questionnaireId}')" class="btn btn-info">CSV</button>`+'</li>';
+                    questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaireId + '">' + questionnaire.name + '</a>' + ': ' + percentageCompleted + '%' + `<button onclick="fetchCompleteData(event, '${chatbotId}', '${questionnaireId}')" class="btn btn-info">CSV</button>`+'</li>';
                 }
                 questionnairesHtml += '</ul>';
 
@@ -234,7 +234,8 @@
             }
         }
 
-        function fetchCompleteData(chatbotId, questionnaireId) {
+        function fetchCompleteData(event, chatbotId, questionnaireId) {
+            event.preventDefault();
             console.log('Fetching CSV for:');
             console.log('Chatbot ID:', chatbotId);
             console.log('Questionnaire ID:', questionnaireId);
