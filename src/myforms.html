@@ -147,8 +147,10 @@
                         console.log(response.message);
                         window.location.reload();
                     },
-                    error: function (error) {
-                        alert(response.error);
+                    error: function (xhr, status, error) {
+                        // Utilizar el objeto xhr para acceder a la respuesta del servidor
+                        var errorMessage = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : "Unknown error";
+                        alert(errorMessage);
                     }
                 });
             }

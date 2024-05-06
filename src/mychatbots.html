@@ -120,14 +120,22 @@
                 if (confirm('Delete chatbot?')) {
                     $.ajax({
                         type: 'DELETE',
-                        url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/chatbots/' + chatbotId,
+                        url: 'https://backend-chatbotevaluator.up.railway.app/users/' + userId + '/chatbots/' + chatbotId,
                         success: function (response) {
-                            window.location.reload();
+                            console.log('Chatbot deleted successfully:', response);
+                            window.location.reload(); // Recarga la página para reflejar los cambios
                         },
-                        error: function (error) {
-                            alert(response.error);
+                        error: function (xhr) { // xhr es el objeto XMLHttpRequest estándar
+                            let errorMessage = "An error occurred";
+                            if(xhr.responseJSON && xhr.responseJSON.error) {
+                                errorMessage = xhr.responseJSON.error; // Si el servidor responde con un JSON que incluye la clave 'error'
+                            } else if (xhr.responseText) {
+                                errorMessage = xhr.responseText; // Respuesta cruda como texto
+                            }
+                            alert(errorMessage); // Muestra el mensaje de error
                         }
                     });
+
                 }
                             
                 });
