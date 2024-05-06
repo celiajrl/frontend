@@ -56,7 +56,7 @@
             color: #000;
         }
 
-        .add-participant-button {
+        .csv-button {
             background-color: transparent;
             color: white;
             border: 1px solid white;
@@ -67,7 +67,7 @@
             margin-top: 12px;
         }
 
-        .add-participant-button:hover {
+        .csv-button:hover {
             background-color: rgba(0, 0, 0, 0.1);
             border-color: rgba(255, 255, 255, 0.5);
         }
@@ -222,7 +222,7 @@
                     }
                     var percentageCompleted = (questionnaire.completed / (questionnaire.completed + activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaireId])) * 100;
                     percentageCompleted = percentageCompleted.toFixed(2);
-                    questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaireId + '">' + questionnaire.name + '</a>' + ': ' + percentageCompleted + '%' + `<button onclick="fetchCompleteData(event, '${chatbotId}', '${questionnaireId}')" class="btn btn-info">CSV</button>`+'</li>';
+                    questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaireId + '">' + questionnaire.name + '</a>' + ': ' + percentageCompleted + '%' + `<button onclick="fetchCompleteData(event, '${chatbotId}', '${questionnaireId}')" class="btn csv-button">CSV</button>`+'</li>';
                 }
                 questionnairesHtml += '</ul>';
 
