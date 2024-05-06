@@ -18,12 +18,15 @@
             color: #fff;
         }
 
-        .preconfigured-options {
-            display: none;
-            max-height: 300px;  
+        .questionnaires-table-container {
+            max-height: 450px;  
             margin-bottom: 10px;          
             overflow-y: auto;
             margin-top: 10px;
+        }
+
+        .preconfigured-options {
+            display: none;     
         }
 
         .scale-options {
@@ -116,9 +119,11 @@
         <div class="header-content">
             <div class="header-content-inner">
                 <form id="formoptions">
+                    <div class="form-group questionnaires-table-container"></div>
                     <table class="preconfigured-options" id="questionTableBody">
                         
                     </table>
+                    <div class="form-group questionnaires-table-container"></div>
                 </form>
             </div>
             <button type="button" class="btn btn-primary btn-lg back" onclick="goBack()">Return</button>
