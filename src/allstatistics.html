@@ -222,7 +222,7 @@
                     }
                     var percentageCompleted = (questionnaire.completed / (questionnaire.completed + activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaireId])) * 100;
                     percentageCompleted = percentageCompleted.toFixed(2);
-                    questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaireId + '">' + questionnaire.name + '</a>' + ': ' + percentageCompleted + '%</li>';
+                    questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaireId + '">' + questionnaire.name + '</a>' + ': ' + percentageCompleted + '%' + '<td><button onclick="downloadChatbotCSV('+chatbotId+')" class="btn btn-info">CSV</button></td></li>';
                 }
                 questionnairesHtml += '</ul>';
 
@@ -233,6 +233,47 @@
                 $('#participantsTableBody').append(newRow);
             }
         }
+
+        async function fetchCompleteData(chatbotId, questionnaireId) {
+            try {
+                const response = await fetch(`/chatbot/${chatbotId}/questionnaire/${questionnaireId}/complete-data`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                generateCSV(response.json());
+            } catch (error) {
+                console.error('Error fetching complete data:', error);
+                return [];
+            }
+        }
+
+        function generateCSV(data) {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            // Agregar la primera fila con los correos de los participantes
+            csvContent += "Question," + data.map(info => info.participant).join(",") + "\n";
+
+            // Suponemos que todas las respuestas tienen la misma cantidad y orden de preguntas
+            const questions = Object.keys(data[0].responses);
+
+            // Agregar una fila por cada pregunta
+            questions.forEach(question => {
+                const row = [question];
+                data.forEach(info => {
+                    row.push(info.responses[question]);  // Agregar la respuesta de cada participante a esta pregunta
+                });
+                csvContent += row.join(",") + "\n";
+            });
+
+            // Crear un enlace para descargar el CSV
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "chatbot_data.csv");
+            document.body.appendChild(link); // Requerido para Firefox
+
+            link.click(); // Esto descargará el archivo
+        }
+
 
 
 
