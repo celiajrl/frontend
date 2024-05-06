@@ -254,24 +254,30 @@
         }
 
 
-        function generateCSV(data) {
-            if (!data || !data.length) {
-                alert('No data available to download.');
-                return;
+        function escapeCsvField(field) {
+            if (field.includes(',') || field.includes('"') || field.includes('\n')) {
+                // Escapar todas las comillas dobles dentro del campo
+                field = field.replace(/"/g, '""');
+                // Encerrar el campo entre comillas dobles
+                field = `"${field}"`;
             }
+            return field;
+        }
 
+        function generateCSV(data) {
             let csvContent = "data:text/csv;charset=utf-8,";
-            // Agregar la primera fila con los correos de los participantes
-            csvContent += "Question," + data.map(info => info.participant).join(",") + "\n";
+
+            // Primera fila con los correos de los participantes, asegurándose de escapar correctamente
+            csvContent += "Question," + data.map(info => escapeCsvField(info.participant)).join(",") + "\n";
 
             // Suponemos que todas las respuestas tienen la misma cantidad y orden de preguntas
             const questions = Object.keys(data[0].responses);
 
             // Agregar una fila por cada pregunta
             questions.forEach(question => {
-                const row = [question];
+                const row = [escapeCsvField(question)]; // Asegurarse de que la pregunta esté correctamente escapada
                 data.forEach(info => {
-                    row.push(info.responses[question] || 'N/A');  // Agregar la respuesta de cada participante a esta pregunta
+                    row.push(escapeCsvField(info.responses[question].toString()));  // Convertir a string y escapar
                 });
                 csvContent += row.join(",") + "\n";
             });
@@ -285,6 +291,7 @@
 
             link.click(); // Esto descargará el archivo
         }
+
     </script>
 </body>
 </html>
