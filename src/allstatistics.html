@@ -255,6 +255,9 @@
 
 
         function escapeCsvField(field) {
+            if (!field) return "";  // Devuelve un campo vacío si el valor es undefined o null
+            field = field.toString(); // Convertir el valor a string, seguro porque no es null/undefined
+
             if (field.includes(',') || field.includes('"') || field.includes('\n')) {
                 // Escapar todas las comillas dobles dentro del campo
                 field = field.replace(/"/g, '""');
@@ -262,7 +265,7 @@
                 field = `"${field}"`;
             }
             return field;
-        }
+}
 
         function generateCSV(data) {
             let csvContent = "data:text/csv;charset=utf-8,";
@@ -277,7 +280,7 @@
             questions.forEach(question => {
                 const row = [escapeCsvField(question)]; // Asegurarse de que la pregunta esté correctamente escapada
                 data.forEach(info => {
-                    row.push(escapeCsvField(info.responses[question].toString()));  // Convertir a string y escapar
+                    row.push(escapeCsvField(info.responses && info.responses[question]));  // Verifica que responses existe y accede a la pregunta
                 });
                 csvContent += row.join(",") + "\n";
             });
@@ -291,6 +294,9 @@
 
             link.click(); // Esto descargará el archivo
         }
+
+
+      
 
     </script>
 </body>
