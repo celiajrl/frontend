@@ -339,10 +339,12 @@
                         cellValue = escapeCsvField(inputField.value.trim());
                     } else if (cell.querySelector('select')) {
                         cellValue = escapeCsvField(cell.querySelector('select').value);
-                    } else if (cell.querySelector('ul')) {
-                        // Captura todas las opciones seleccionadas en un multiselect (ul > li.selected)
-                        let selectedOptions = Array.from(cell.querySelectorAll('li.selected')).map(option => option.textContent.trim());
-                        cellValue = escapeCsvField(selectedOptions.join(", "));
+                    }   else if (cell.querySelector('ul')) {
+                        let selectedOptions = [];
+                        cell.querySelectorAll('li').forEach(function(option) {
+                            selectedOptions.push(option.textContent.trim());
+                        });
+                        rowData.push(escapeCsvField(selectedOptions.join(", ")));
                     } else {
                         cellValue = escapeCsvField(cell.innerText);
                     }
