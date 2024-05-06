@@ -304,6 +304,19 @@
         });
     }
 
+    function escapeCsvField(field) {
+        if (!field) return "";  // Devuelve un campo vacío si el valor es undefined o null
+        field = field.toString(); // Convertir el valor a string, seguro porque no es null/undefined
+
+        if (field.includes(',') || field.includes('"') || field.includes('\n')) {
+            // Escapar todas las comillas dobles dentro del campo
+            field = field.replace(/"/g, '""');
+            // Encerrar el campo entre comillas dobles
+            field = `"${field}"`;
+        }
+        return field;
+    }
+
     function exportToCsv() {
         const table = document.getElementById("questionsTableBody");
         const rows = table.querySelectorAll("tr");
@@ -313,35 +326,29 @@
         rows.forEach(function(row) {
             const rowData = [];
             row.querySelectorAll("td").forEach(function(cell, index) {
-                // Si la celda contiene opciones de respuesta
-                if (index % 2 !== 0) {
+                // Preparar cada celda para CSV
+                let cellValue = ''; // Inicializar la variable cellValue
+                if (index % 2 !== 0) { // Considerar sólo columnas de respuestas
                     if (cell.querySelector('.selected')) {
-                        rowData.push(cell.querySelector('.selected').innerText);
+                        cellValue = escapeCsvField(cell.querySelector('.selected').innerText);
                     } else if (cell.querySelector('input[type="checkbox"]')) {
                         const checkbox = cell.querySelector('input[type="checkbox"]');
-                        rowData.push(checkbox.checked ? 'Yes' : 'No');
-                    } else if (cell.querySelector('input[type="text"]')) {
-                        // Asegurar que se captura correctamente el valor de los campos de texto
-                        const textField = cell.querySelector('input[type="text"]');
-                        rowData.push(textField ? textField.value.trim() : '');
-                    } else if (cell.querySelector('input[type="number"]')) {
-                        // Asegurar que se captura correctamente el valor de los campos numéricos
-                        const numberField = cell.querySelector('input[type="number"]');
-                        rowData.push(numberField ? numberField.value.trim() : '');
+                        cellValue = escapeCsvField(checkbox.checked ? 'Yes' : 'No');
+                    } else if (cell.querySelector('input[type="text"]') || cell.querySelector('input[type="number"]')) {
+                        const inputField = cell.querySelector('input[type="text"]') || cell.querySelector('input[type="number"]');
+                        cellValue = escapeCsvField(inputField.value.trim());
                     } else if (cell.querySelector('select')) {
-                        rowData.push(cell.querySelector('select').value);
+                        cellValue = escapeCsvField(cell.querySelector('select').value);
                     } else if (cell.querySelector('ul')) {
-                        let selectedOptions = [];
-                        cell.querySelectorAll('li').forEach(function(option) {
-                            selectedOptions.push(option.textContent.trim());
-                        });
-                        rowData.push(selectedOptions.join(", "));
+                        let selectedOptions = Array.from(cell.querySelectorAll('li.selected')).map(option => option.textContent.trim());
+                        cellValue = escapeCsvField(selectedOptions.join(", "));
                     } else {
-                        rowData.push('');
+                        cellValue = escapeCsvField(cell.innerText);
                     }
-                } else {
-                    rowData.push(cell.innerText);
+                } else { // Para columnas de preguntas
+                    cellValue = escapeCsvField(cell.innerText);
                 }
+                rowData.push(cellValue);
             });
             csvContent += rowData.join(",") + "\n";
         });
@@ -352,8 +359,9 @@
         link.setAttribute("download", "results.csv");
         document.body.appendChild(link);
 
-        link.click();
+        link.click(); // Disparar descarga
     }
+
     </script>
 
 </body>
