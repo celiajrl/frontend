@@ -87,6 +87,7 @@
                                     <th>Chatbot Name</th>
                                     <th>Questionnaires</th>
                                     <th>Completed questionnaires</th>
+                                    <th>Download CSV</th>
                                 </tr>
                             </thead>
                             <tbody id="participantsTableBody">
@@ -181,59 +182,55 @@
                     };
                 }
 
-                // Verificamos si el cuestionario ya está en el objeto de cuestionarios
                 if (!(test.questionnaireId in groupedByChatbot[test.chatbotId].questionnaires)) {
                     groupedByChatbot[test.chatbotId].questionnaires[test.questionnaireId] = {
                         name: test.questionnaireName,
                         completed: 0 // Inicializamos el contador de cuestionarios completados para este cuestionario
                     };
                 }
-
-                // Incrementamos el contador de cuestionarios completados para este cuestionario y chatbot
                 groupedByChatbot[test.chatbotId].questionnaires[test.questionnaireId].completed++;
-                // Incrementamos el contador total de cuestionarios completados para este chatbot
                 groupedByChatbot[test.chatbotId].totalCompleted++;
             });
 
-            console.log(groupedByChatbot);
-
             $('#participantsTableBody').empty();
 
-            // Recorremos los chatbots agrupados
             for (var chatbotId in groupedByChatbot) {
                 var chatbotData = groupedByChatbot[chatbotId];
                 var questionnairesHtml = '<ul>';
 
-                if (!(chatbotId in activeQuestionnairesByChatbot)) {
-                    activeQuestionnairesByChatbot[chatbotId] = {
-                        total: 0, // Inicializar el total de cuestionarios activos en 0
-                        questionnaires: {} // Inicializar un objeto para almacenar el recuento de cada cuestionario
-                    };
-                }
-                    
-                console.log(chatbotId);
-                console.log(chatbotData);
-                console.log(activeQuestionnairesByChatbot[chatbotId]);
-                // Iteramos sobre los cuestionarios de este chatbot
                 for (var questionnaireId in chatbotData.questionnaires) {
                     var questionnaire = chatbotData.questionnaires[questionnaireId];
-                    if (!(questionnaireId in activeQuestionnairesByChatbot[chatbotId].questionnaires)) {
-                        activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaireId] = 0;
-                    }
-                    var percentageCompleted = (questionnaire.completed / (questionnaire.completed + activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaireId])) * 100;
+                    var percentageCompleted = (questionnaire.completed / (questionnaire.completed + (activeQuestionnairesByChatbot[chatbotId] && activeQuestionnairesByChatbot[chatbotId].questionnaires[questionnaireId] || 0))) * 100;
                     percentageCompleted = percentageCompleted.toFixed(2);
-                    questionnairesHtml += '<li><a href="statistics.html?chatbotId=' + chatbotId + '&questionnaireId=' + questionnaireId + '">' + questionnaire.name + '</a>' + ': ' + percentageCompleted + '%</li>';
+                    questionnairesHtml += `<li>${questionnaire.name}: ${percentageCompleted}%</li>`;
                 }
                 questionnairesHtml += '</ul>';
 
-                var chatbotPercentage = (chatbotData.totalCompleted / (chatbotData.totalCompleted + activeQuestionnairesByChatbot[chatbotId].total))*100;
+                var chatbotPercentage = (chatbotData.totalCompleted / (chatbotData.totalCompleted + (activeQuestionnairesByChatbot[chatbotId] ? activeQuestionnairesByChatbot[chatbotId].total : 0))) * 100;
                 chatbotPercentage = chatbotPercentage.toFixed(2);
 
-                var newRow = '<tr><td>' + chatbotData.chatbotName + '</td><td>' + questionnairesHtml + '</td><td>' + chatbotPercentage + '%</td></tr>';
+                var downloadButtonHtml = `<button onclick="downloadCSV('${chatbotId}')" class="btn btn-info">Download CSV</button>`;
+
+                var newRow = `<tr>
+                    <td>${chatbotData.chatbotName}</td>
+                    <td>${questionnairesHtml}</td>
+                    <td>${chatbotPercentage}%</td>
+                    <td>${downloadButtonHtml}</td>
+                </tr>`;
                 $('#participantsTableBody').append(newRow);
             }
         }
 
+
+        function downloadCSV(chatbotId) {
+            const url = `https://backend-chatbotevaluator.up.railway.app/export-csv/${chatbotId}`;
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.setAttribute('download', `chatbot_${chatbotId}_results.csv`); // Esto sugiere un nombre de archivo para guardar
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
 
 
     </script>
