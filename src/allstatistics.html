@@ -239,7 +239,7 @@
             console.log(chatbotId);
             console.log(questionnaireId);
             try {
-                const response = await fetch(`/chatbot/${chatbotId}/questionnaire/${questionnaireId}/complete-data`);
+                const response = await fetch(`/chatbot/${chatbotId}/questionnaire/${questionnaireId}/complete`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
