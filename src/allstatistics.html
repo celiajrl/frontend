@@ -235,21 +235,23 @@
         }
 
         function fetchCompleteData(chatbotId, questionnaireId) {
-            console.log('descargo csv para:');
-            console.log(chatbotId);
-            console.log(questionnaireId);
+            console.log('Fetching CSV for:');
+            console.log('Chatbot ID:', chatbotId);
+            console.log('Questionnaire ID:', questionnaireId);
             $.ajax({
                 type: 'GET',
-                url: `https://backend-chatbotevaluator.up.railway.app/chatbot/${chatbotId}/questionnaire/${questionnaireId}/complete`, 
+                url: 'https://backend-chatbotevaluator.up.railway.app/chatbot/'+chatbotId+'/questionnaire/'+questionnaireId+'/complete', 
                 success: function (data) {
-                    console.log('data:', data);
+                    console.log('Data received:', data);
                     generateCSV(data);
                 },
-                error: function (error) {
-                    console.error('Error fetching results:', error.responseText);
+                error: function (xhr, status, error) {
+                    console.error('Error fetching results:', xhr.responseText);
+                    alert('Error fetching data: ' + xhr.responseText);
                 }
             });
         }
+
 
         function generateCSV(data) {
             if (!data || !data.length) {
