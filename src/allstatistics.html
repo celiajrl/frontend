@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,7 +8,8 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/home.css" rel="stylesheet">
     <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
-     <style>
+    <style>
+        /* Tus estilos aquí */
         form {
             max-height: 440px;
             background-color: #ce93d8;
@@ -48,14 +48,6 @@
             text-align: center;
         }
 
-        .add-participant-input {
-            width: calc(33.33% - 50px);
-            margin-right: 30px;
-            margin-left: 10px;
-            margin-bottom: 12px;
-            color: #000;
-        }
-
         .add-participant-button {
             background-color: transparent;
             color: white;
@@ -73,7 +65,6 @@
         }
     </style>
 </head>
-
 <body>
     <div id="navbarContainer"></div>
     <header>
@@ -90,8 +81,7 @@
                                     <th>Download CSV</th>
                                 </tr>
                             </thead>
-                            <tbody id="participantsTableBody">
-                            </tbody>
+                            <tbody id="participantsTableBody"></tbody>
                         </table>
                     </div>
                 </form>
@@ -105,18 +95,19 @@
             $('#navbarContainer').load('navbar.html');
             fetchActiveTests();
             fetchCompletedTests();
-            function downloadCSV(chatbotId) {
-                const url = `https://backend-chatbotevaluator.up.railway.app/export-csv/${chatbotId}`;
-                const downloadLink = document.createElement('a');
-                downloadLink.href = url;
-                downloadLink.setAttribute('download', `chatbot_${chatbotId}_results.csv`); // Esto sugiere un nombre de archivo para guardar
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
-            }
         });
-        
+
         var activeQuestionnairesByChatbot = {};
+
+        function downloadCSV(chatbotId) {
+            const url = `https://backend-chatbotevaluator.up.railway.app/export-csv/${chatbotId}`;
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.setAttribute('download', `chatbot_${chatbotId}_results.csv`);
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
 
         function fetchActiveTests() {
             var userId = localStorage.getItem('userId');
@@ -229,6 +220,7 @@
                 $('#participantsTableBody').append(newRow);
             }
         }
+
 
     </script>
 </body>
