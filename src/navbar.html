@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/home.css" rel="stylesheet">
     <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
-
 </head>
-
 <body>
     <nav id="siteNav" class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
@@ -26,22 +21,13 @@
                 <a class="navbar-brand" href="./home.html">
                     <i class="fas fa-robot"></i>
                 </a>
-                
             </div>
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="active">
-                        <a href="./home.html">Home</a>
-                    </li>
-                    <li>
-                        <a href="./mychatbots.html">My Chatbots</a>
-                    </li>
-                    <li>
-                        <a href="./myforms.html">My Forms</a>
-                    </li>
-                    <li>
-                        <a href="./agenda.html">Participants</a>
-                    </li>
+                    <li><a href="./home.html">Home</a></li>
+                    <li><a href="./mychatbots.html">My Chatbots</a></li>
+                    <li><a href="./myforms.html">My Forms</a></li>
+                    <li><a href="./agenda.html">Participants</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Results <b class="caret"></b></a>
                         <ul class="dropdown-menu">
@@ -50,15 +36,25 @@
                             <li><a href="./allstatistics.html">Statistics</a></li>
                         </ul>
                     </li>
-                    <li>
-                        <a href="/">Log out</a>
-                    </li>
+                    <li><a href="/">Log out</a></li>
                 </ul>
-                
             </div>
         </div>
     </nav>
-
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Eliminar la clase 'active' de cualquier elemento activo previo
+            $('.navbar-nav li').removeClass('active');
+            // Añadir la clase 'active' basándose en la URL
+            $('.navbar-nav a').each(function() {
+                if (this.href === window.location.href) {
+                    $(this).parent().addClass('active');
+                    // Si es un elemento dentro de un dropdown, añadir 'active' al padre también
+                    $(this).closest('.dropdown').addClass('active');
+                }
+            });
+        });
+    </script>
 </body>
-
 </html>
