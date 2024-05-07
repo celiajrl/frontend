@@ -36,20 +36,29 @@
 
         #resetPasswordModal input,
         #resetPasswordModal button {
-            padding: 10px;
-            margin-top: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: none;
+            padding: 10px 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         #resetPasswordModal button {
-            background-color: #765183; /* Botón verde */
+            background-color: #765183; 
             color: white;
             cursor: pointer;
         }
 
+        #resetPasswordModal button:hover {
+            background-color: #352533; 
+        }
+
+        #resetPasswordModal button:focus {
+            outline: none;
+        }
+
         #resetPasswordModal button[type="button"] {
-            background-color: #665a73; /* Botón rojo para cancelar */
+            background-color: #352533; /* Botón rojo para cancelar */
         }
     </style>
 </head>
