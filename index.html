@@ -57,23 +57,20 @@
         }
 
         #resetPasswordModal {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            display: none; /* Inicialmente oculto */
+            position: fixed; /* Posicionamiento fijo */
+            left: 50%; /* Centrado horizontal */
+            top: 50%; /* Centrado vertical */
+            transform: translate(-50%, -50%); /* Ajuste para centrar exactamente */
             padding: 20px;
             border: 1px solid #ccc;
             background-color: #a48caf;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
             border-radius: 10px;
-            width: auto; /* Ancho auto ajustable */
-            min-width: 300px; /* Mínimo ancho del modal */
-            max-width: 95%; /* Máximo ancho para asegurar que no se vea mal en pantallas pequeñas */
+            width: auto; /* Ancho ajustable según el contenido */
+            max-width: 400px; /* Máximo ancho del modal */
+            z-index: 1000; /* Asegúrate de que esté por encima de otros contenidos */
         }
-
-        
-
-        
     </style>
 </head>
 <body>
