@@ -178,25 +178,22 @@ input {
 }
 
 .button {
-    border: 0;
-    outline: none;
-    border-radius: 5px;
+    background-color: #765183; 
+    color: white;
+    border: none;
+    padding: 10px 16px;
     cursor: pointer;
-    padding: 15px 0;
-    font-size: 2rem;
-    background: var(--color-principal);
-    color: var(--blanco);
-    transition: all .5s ease;
-    -webkit-appearance: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.button:hover, .button:focus {
-    background: var(--color-principal-dark);
+
+.button:hover {
+    background-color: #352533; 
 }
 
-.button-block {
-    display: block;
-    width: 100%;
+.button:focus {
+    outline: none; 
 }
 
 .forgot {
