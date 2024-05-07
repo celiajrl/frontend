@@ -6,7 +6,7 @@ body {
 }
 
 a {
-    color: #6b409b;
+    color: #765183;
     -webkit-transition: all .35s;
     -moz-transition: all .35s;
     transition: all .35s;
@@ -14,7 +14,7 @@ a {
 
 a:hover,
 a:focus {
-    color: #4d2172;
+    color: #352533;
 }
 
 p {
@@ -138,7 +138,7 @@ header .header-content .header-content-inner p {
 
 .page-footer .contact {
 	padding: 100px 0;
-	background-color: #6b409b;
+	background-color: #765183;
 	color: #fff;
 	}
 
@@ -171,7 +171,7 @@ header .header-content .header-content-inner p {
 }
 
 .navbar-default .navbar-header .navbar-brand {
-    color: #6b409b;
+    color: #765183;
 }
 
 .navbar-default .navbar-header .navbar-brand:hover,
@@ -186,12 +186,12 @@ header .header-content .header-content-inner p {
 
 .navbar-default .nav > li>a:hover,
 .navbar-default .nav>li>a:focus:hover {
-    color: #6b409b;
+    color: #765183;
 }
 
 .navbar-default .nav > li.active>a,
 .navbar-default .nav>li.active>a:focus {
-    color: #6b409b!important;
+    color: #765183!important;
     background-color: transparent;
 }
 
@@ -234,7 +234,7 @@ header .header-content .header-content-inner p {
 
     .navbar-default.affix .navbar-header .navbar-brand {
         letter-spacing: 0;
-        color: #6b409b;
+        color: #765183;
     }
 
     .navbar-default.affix .navbar-header .navbar-brand:hover,
@@ -249,7 +249,7 @@ header .header-content .header-content-inner p {
 
     .navbar-default.affix .nav > li>a:hover,
     .navbar-default.affix .nav>li>a:focus:hover {
-        color: #6b409b;
+        color: #765183;
     }
 }
 
@@ -307,9 +307,9 @@ fieldset[disabled] .btn-default.active {
 }
 
 .btn-primary {
-    border-color: #6b409b;
+    border-color: #765183;
     color: #fff;
-    background-color: #6b409b;
+    background-color: #765183;
     -webkit-transition: all .35s;
     -moz-transition: all .35s;
     transition: all .35s;
@@ -321,9 +321,9 @@ fieldset[disabled] .btn-default.active {
 .btn-primary:active,
 .btn-primary.active,
 .open > .dropdown-toggle.btn-primary {
-    border-color: rgb(140, 64, 155);
+    border-color: #765183;
     color: #fff;
-    background-color: rgb(140, 64, 155);
+    background-color: #765183;
 }
 
 .btn-primary:active,
@@ -350,12 +350,12 @@ fieldset[disabled] .btn-primary:active,
 .btn-primary.disabled.active,
 .btn-primary[disabled].active,
 fieldset[disabled] .btn-primary.active {
-    border-color: #6b409b;
-    background-color: #6b409b;
+    border-color: #765183;
+    background-color: #765183;
 }
 
 .btn-primary .badge {
-    color: #6b409b;
+    color: #765183;
     background-color: #fff;
 }
 
@@ -392,15 +392,15 @@ img::-moz-selection {
 }
 
 .text-primary {
-    color: #6b409b;
+    color: #765183;
 }
 
 .bg-primary {
-    background-color: #6b409b;
+    background-color: #765183;
 }
 
 #chatbotList {
-    background-color: #9c27b0; /* Color lila, puedes cambiarlo a tu preferencia */
+    background-color: #765183; /* Color lila, puedes cambiarlo a tu preferencia */
     padding: 20px; /* Espaciado interno */
     border-radius: 10px; /* Bordes redondeados */
     color: #fff; /* Color del texto */
