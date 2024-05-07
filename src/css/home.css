@@ -307,12 +307,13 @@ fieldset[disabled] .btn-default.active {
 }
 
 .btn-primary {
-    border-color: #765183;
-    color: #fff;
-    background-color: #765183;
-    -webkit-transition: all .35s;
-    -moz-transition: all .35s;
-    transition: all .35s;
+    background-color: #765183; 
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary:hover,
@@ -321,9 +322,7 @@ fieldset[disabled] .btn-default.active {
 .btn-primary:active,
 .btn-primary.active,
 .open > .dropdown-toggle.btn-primary {
-    border-color: #765183;
-    color: #fff;
-    background-color: #765183;
+    background-color: #352533; 
 }
 
 .btn-primary:active,
