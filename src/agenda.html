@@ -111,7 +111,7 @@
                         <input type="text" class="add-participant-input" placeholder="Enter Name" id="participantName">
                         <input type="text" class="add-participant-input" placeholder="Enter Surname" id="participantSurname">
                         <input type="text" class="add-participant-input" placeholder="Enter Email" id="participantEmail">
-                        <button type="button" class="btn add-participant-button" onclick="addParticipant()">Add Participant</button>
+                        <button type="button" class="add-participant-button" onclick="addParticipant()">Add Participant</button>
                     </div>
                 </form>
             </div>
@@ -183,8 +183,8 @@
                     <td class="name" data-old-value="${participant.name}">${participant.name}</td>
                     <td class="surname" data-old-value="${participant.surname}">${participant.surname}</td>
                     <td class="email" data-old-value="${participant.email}">${participant.email}</td>
-                    <td><button class="btn edit-button" onclick="editParticipant(${index})">Edit</button></td>
-                    <td><button class="btn delete-button" onclick="deleteParticipant(${index})">Delete</button></td>
+                    <td><button class="edit-button" onclick="editParticipant(${index})">Edit</button></td>
+                    <td><button class="delete-button" onclick="deleteParticipant(${index})">Delete</button></td>
                 </tr>`;
                 $('#participantsTableBody').append(newRow);
             });
@@ -214,7 +214,7 @@
             row.find('.name').html(`<input type="text" class="edit-input" value="${name}">`);
             row.find('.surname').html(`<input type="text" class="edit-input" value="${surname}">`);
             row.find('.email').html(`<input type="text" class="edit-input" value="${email}">`);
-            row.find('td:nth-child(4)').html(`<button class="btn edit-button" onclick="saveParticipant(${index})">Save</button>`);
+            row.find('td:nth-child(4)').html(`<button class="edit-button" onclick="saveParticipant(${index})">Save</button>`);
         }
 
         function saveParticipant(index) {
@@ -245,7 +245,7 @@
                             row.find('.name').text(newName).attr('data-old-value', newName);
                             row.find('.surname').text(newSurname).attr('data-old-value', newSurname);
                             row.find('.email').text(newEmail).attr('data-old-value', newEmail);
-                            row.find('td:nth-child(4)').html(`<button class="btn edit-button" onclick="editParticipant(${index})">Edit</button>`);
+                            row.find('td:nth-child(4)').html(`<button class="edit-button" onclick="editParticipant(${index})">Edit</button>`);
                             window.location.reload();
                         },
                         error: function (error) {
