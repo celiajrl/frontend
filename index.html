@@ -14,60 +14,66 @@
             display: none;
         }
 
-        .contenedor-tabs li a {
-            color: #765183 !important; /* Aplica un color morado específico */
+        .contenedor-tabs li.tab {
+            background-color: #765183; /* Color morado para el fondo */
         }
 
-        .contenedor-tabs li a:hover {
-            color: #543357 !important; /* Un tono morado más oscuro para el efecto hover */
+        .contenedor-tabs li.tab:hover, .contenedor-tabs li.tab.active {
+            background-color: #543357; /* Un tono de morado más oscuro para cuando se pasa el mouse o está activo */
         }
 
-        #resetPasswordModal {
-            display: none; /* Inicialmente oculto */
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px;
-            border: 1px solid #ccc;
-            background-color: #a48caf;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
-            border-radius: 10px;
-            width: 400px; /* Ancho fijo */
-            z-index: 1000; /* Asegúrate de que esté por encima de otros contenidos */
+        .contenedor-tabs li.tab a {
+            color: white; /* Cambiar el color del texto a blanco para mejor contraste */
+            text-decoration: none; /* Elimina el subrayado de los enlaces */
+        }
+        #resetPasswordModal button {
+            background-color: #765183; /* Color morado para el fondo del botón */
+            color: white; /* Color blanco para el texto */
+            padding: 10px 20px; /* Ajusta el padding para que no sean tan grandes */
+            margin-top: 10px; /* Espacio arriba de cada botón */
+            width: auto; /* Auto ajusta el ancho al contenido */
+            min-width: 120px; /* Mínimo ancho del botón */
+            cursor: pointer; /* Cursor tipo pointer para indicar que es clickeable */
+            text-align: center; /* Centrar el texto dentro del botón */
+            border: none; /* Sin borde */
+            display: inline-block; /* Hacer que los botones sean en línea para que puedan estar uno al lado del otro */
         }
 
         #resetPasswordModal form {
             display: flex;
             flex-direction: column;
+            align-items: center; /* Alinea los elementos al centro */
         }
 
-        #resetPasswordModal input,
-        #resetPasswordModal button {
-            border: none;
-            padding: 10px 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        #resetPasswordModal button {
-            background-color: #765183; 
-            color: white;
-            cursor: pointer;
-        }
-
-        #resetPasswordModal button:hover {
-            background-color: #352533; 
-        }
-
-        #resetPasswordModal button:focus {
-            outline: none;
+        #resetPasswordModal input[type="email"] {
+            width: 100%; /* Ajusta el ancho del input al 100% del espacio disponible */
+            max-width: 300px; /* Máximo ancho del input */
+            margin-bottom: 20px; /* Espacio debajo del input */
         }
 
         #resetPasswordModal button[type="button"] {
-            background-color: #352533; /* Botón rojo para cancelar */
+            background-color: #352533; /* Color para el botón de cancelar */
+            margin-left: 10px; /* Espacio a la izquierda del botón cancelar */
         }
+
+        #resetPasswordModal {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #a48caf;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            width: auto; /* Ancho auto ajustable */
+            min-width: 300px; /* Mínimo ancho del modal */
+            max-width: 95%; /* Máximo ancho para asegurar que no se vea mal en pantallas pequeñas */
+        }
+
+        
+
+        
     </style>
 </head>
 <body>
