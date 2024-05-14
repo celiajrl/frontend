@@ -1,6 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- 
+    preconfiguredform.html
 
+    Descripción: Página encargada de la creación de un cuestionario preconfigurado.
+    El usuario podrá, a partir de un cuestionario SUS básico, agregar pares de preguntas.
+
+    Año: 2024
+
+    Autora: Celia Jiménez
+-->
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,25 +25,24 @@
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             color: #fff;
-            height: 400px; /* Altura fija */
-            overflow-y: auto; /* Añade una barra de desplazamiento vertical si el contenido es demasiado largo */
+            height: 400px; 
+            overflow-y: auto; 
             margin: 20px auto;
         }
 
-
         .preconfigured-options td:first-child {
-            text-align: left; /* Alinea el texto a la derecha */
-            padding-left: 10px; /* Añade un poco de espacio a la derecha para no pegar el texto al borde */
+            text-align: left; 
+            padding-left: 10px; 
         }
 
         .scale-options {
             display: flex;
-            justify-content: flex-end; /* Alinea los círculos a la derecha del contenedor */
-            width: 100%; /* Ocupa todo el ancho disponible del td padre */
+            justify-content: flex-end; 
+            width: 100%;
         }
 
         .scale-circle {
-            margin-left: 5px; /* Espaciado entre círculos */
+            margin-left: 5px;
             width: 20px;
             height: 20px;
             background-color: #fff;
@@ -47,32 +55,30 @@
         }
 
         .readonly-input {
-            background-color: #ccc; /* Cambio visual para campos bloqueados */
+            background-color: #ccc; 
         }
         #surveyName {
             align-items: left;
             width: 50%; 
         }
         input.form-control {
-            width: 100%;  /* Hacer que el input ocupe todo el ancho de su contenedor */
-            padding: 8px; /* Añadir algo de relleno para hacerlo más fácil de escribir */
-            margin-bottom: 10px; /* Espacio debajo del campo */
-            border: 1px solid #ccc; /* Borde sutil */
-            border-radius: 4px; /* Bordes redondeados */
+            width: 100%;  
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px; 
         }
 
         input[type="text"].question-input {
-            width: 75%; /* Aumenta el ancho al 80% del contenedor */
-            border: 1px solid #ccc; /* Borde sutil */
+            width: 75%; 
+            border: 1px solid #ccc; 
         }
 
         .question-text {
-            text-align: left; /* Alinea el texto a la derecha */
+            text-align: left;
         }
     </style>
-
 </head>
-
 
 <body>
     <div id="navbarContainer"></div>
@@ -195,160 +201,107 @@
             </div>
         </div>
     </header>
-
     <script src="js/jquery-1.11.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.easing.min.js"></script>
     <script src="js/custom.js"></script>
-
-
     <script>
+        // Carga inicial de la barra de navegación y muestra las opciones preconfiguradas.
         $(document).ready(function () {
             $('#navbarContainer').load('navbar.html');
             $('.preconfigured-options').show();
         });
-
+    
+        // Función para regresar a la página anterior en el historial del navegador.
         function goBack() {
             window.history.back();
         }
-
+    
+        // Contador de preguntas y estructura inicial de datos de las preguntas.
         var questionCounter = 10;
         var questionsData = [
-    { positive: "I think that I would like to use this system frequently.", negative: "I found the system unnecessarily complex." },
-    { positive: "I thought the system was easy to use.", negative: "I think that I would need the support of a technical person to be able to use this system." },
-    { positive: "I found the various functions in this system were well integrated.", negative: "I thought there was too much inconsistency in this system." },
-    { positive: "I would imagine that most people would learn to use this system very quickly.", negative: "I found the system very cumbersome to use." },
-    { positive: "I felt very confident using the system.", negative: "I needed to learn a lot of things before I could get going with this system." }
-    ];
-
-    function addAdditionalQuestion() {
-        var table = document.querySelector('.preconfigured-options');
-
-        // Almacenar temporalmente las preguntas positiva y negativa
-        var tempQuestions = {};
-
-        // Añadiendo pregunta positiva
-        questionCounter += 1;
-        var posIndex = questionCounter;
-        var newRowPositive = table.insertRow();
-        newRowPositive.className = 'form-group preconfigured-question';
-        newRowPositive.id = 'question' + posIndex;
-
-        var labelPositive = document.createElement('label');
-        labelPositive.className = 'question-text';
-        labelPositive.textContent = posIndex + '. ';
-        var positiveCell = newRowPositive.insertCell(0);
-        positiveCell.appendChild(labelPositive);
-
-        var positiveInput = document.createElement('input');
-        positiveInput.type = 'text';
-        positiveInput.className = 'question-input';
-        positiveInput.placeholder = 'Enter positive question';
-        positiveInput.style.color = '#000';
-        positiveInput.onblur = function () {
-            if (this.value.trim() !== "") {
-                markAsReadOnly(this);
-                tempQuestions.positive = this.value;
-            } else {
-                alert('Please enter a valid question.');
-            }
-        };
-        positiveCell.appendChild(positiveInput);
-        positiveCell.className = 'question-text';
-        var scaleOptionsCell = newRowPositive.insertCell(1);
-        scaleOptionsCell.className = 'scale-options';
-        for (var i = 1; i <= 5; i++) {
-            var scaleCircle = document.createElement('div');
-            scaleCircle.className = 'scale-circle';
-            scaleCircle.textContent = i;
-            scaleCircle.onclick = function (event) {
-                selectScale(event.target.textContent, nextQuestionNumber);
-            };
-            scaleOptionsCell.appendChild(scaleCircle);
-        }
-
-        questionCounter += 1;
-        var negIndex = questionCounter;
-        // Añadiendo pregunta negativa
-        var newRowNegative = table.insertRow();
-        newRowNegative.className = 'form-group preconfigured-question';
-        newRowNegative.id = 'question' + negIndex;
-
-        var labelNegative = document.createElement('label');
-        labelNegative.className = 'question-text';
-        labelNegative.textContent = negIndex + '. ';
-        var negativeCell = newRowNegative.insertCell(0);
-        negativeCell.appendChild(labelNegative);
-        negativeCell.className = 'question-text';
-
-        var negativeInput = document.createElement('input');
-        negativeInput.className = 'question-input';
-        negativeInput.type = 'text';
-        negativeInput.placeholder = 'Enter negative question';
-        negativeInput.style.color = '#000';
-        negativeInput.onblur = function () {
-            if (this.value.trim() !== "") {
-                markAsReadOnly(this);
-                tempQuestions.negative = this.value;
-                // Solo guarda el par si ambas preguntas están completas
-                if (tempQuestions.positive && tempQuestions.negative) {
-                    questionsData.push({
-                        positive: tempQuestions.positive,
-                        negative: tempQuestions.negative
-                    });
-                    tempQuestions = {}; // Limpiar el almacenamiento temporal
-                }
-            } else {
-                alert('Please enter a valid question.');
-            }
-        };
-        negativeCell.appendChild(negativeInput);
-        var scaleOptionsCellNegative = newRowNegative.insertCell(1);
-        scaleOptionsCellNegative.className = 'scale-options';
-        for (var j = 1; j <= 5; j++) {
-            var scaleCircleNegative = document.createElement('div');
-            scaleCircleNegative.className = 'scale-circle';
-            scaleCircleNegative.textContent = j;
-            scaleCircleNegative.onclick = function (event) {
-                selectScale(event.target.textContent, nextNegativeQuestionNumber);
-            };
-            scaleOptionsCellNegative.appendChild(scaleCircleNegative);
-        }
-
-        var deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Delete';
-        deleteBtn.className = 'btn btn-danger delete-btn';
-        deleteBtn.onclick = function() {
-            removeQuestionPair(posIndex, negIndex);
-        };
-        newRowPositive.insertCell(2).appendChild(deleteBtn);
-    }
-
-    function removeQuestionPair(posIndex, negIndex) {
-        var posElement = document.getElementById('question' + posIndex);
-        var negElement = document.getElementById('question' + negIndex);
-
-        if (posElement && negElement) {
-            posElement.remove();
-            negElement.remove();
-            questionsData = questionsData.filter(q => !(q.positive === posElement.querySelector('input').value && q.negative === negElement.querySelector('input').value));
-  
-        } else {
-            console.error("Error: Attempted to remove non-existent elements", posIndex, negIndex);
-        }
-    }
-
+                            { positive: "I think that I would like to use this system frequently.", negative: "I found the system unnecessarily complex." },
+                            { positive: "I thought the system was easy to use.", negative: "I think that I would need the support of a technical person to be able to use this system." },
+                            { positive: "I found the various functions in this system were well integrated.", negative: "I thought there was too much inconsistency in this system." },
+                            { positive: "I would imagine that most people would learn to use this system very quickly.", negative: "I found the system very cumbersome to use." },
+                            { positive: "I felt very confident using the system.", negative: "I needed to learn a lot of things before I could get going with this system." }
+                            ];
     
-
-
-    function sendQuestionsToServer() { 
+        // Función para añadir nuevas preguntas, tanto positivas como negativas, a la interfaz de usuario.
+        function addAdditionalQuestion() {
+            var table = document.querySelector('.preconfigured-options');
+    
+            // Incrementa el contador y añade la pregunta positiva
+            questionCounter += 1;
+            var posIndex = questionCounter;
+            var newRowPositive = table.insertRow();
+            newRowPositive.className = 'form-group preconfigured-question';
+            newRowPositive.id = 'question' + posIndex;
+    
+            // Configuración del campo de entrada y etiqueta para la pregunta positiva
+            var labelPositive = document.createElement('label');
+            labelPositive.className = 'question-text';
+            labelPositive.textContent = posIndex + '. ';
+            var positiveCell = newRowPositive.insertCell(0);
+            positiveCell.appendChild(labelPositive);
+    
+            var positiveInput = document.createElement('input');
+            positiveInput.type = 'text';
+            positiveInput.className = 'question-input';
+            positiveInput.placeholder = 'Enter positive question';
+            positiveInput.style.color = '#000';
+            positiveInput.onblur = function () {
+                if (this.value.trim() !== "") {
+                    markAsReadOnly(this);
+                    questionsData.push({
+                        positive: this.value
+                    });
+                } else {
+                    alert('Please enter a valid question.');
+                }
+            };
+            positiveCell.appendChild(positiveInput);
+            
+            // Se repite un proceso similar para la pregunta negativa.
+            questionCounter += 1;
+            var negIndex = questionCounter;
+            var newRowNegative = table.insertRow();
+            newRowNegative.className = 'form-group preconfigured-question';
+            newRowNegative.id = 'question' + negIndex;
+    
+            var labelNegative = document.createElement('label');
+            labelNegative.className = 'question-text';
+            labelNegative.textContent = negIndex + '. ';
+            var negativeCell = newRowNegative.insertCell(0);
+            negativeCell.appendChild(labelNegative);
+    
+            var negativeInput = document.createElement('input');
+            negativeInput.className = 'question-input';
+            negativeInput.type = 'text';
+            negativeInput.placeholder = 'Enter negative question';
+            negativeInput.style.color = '#000';
+            negativeInput.onblur = function () {
+                if (this.value.trim() !== "") {
+                    markAsReadOnly(this);
+                    questionsData.push({
+                        negative: this.value
+                    });
+                } else {
+                    alert('Please enter a valid question.');
+                }
+            };
+            negativeCell.appendChild(negativeInput);
+        }
+    
+        // Función para enviar las preguntas configuradas al servidor.
+        function sendQuestionsToServer() { 
             var userId = localStorage.getItem('userId');
             var surveyName = document.getElementById('surveyName').value.trim();
             if (surveyName === "") {
                 alert('Please enter a name for the questionnaire.');
                 return;
             }
-
+    
             $.ajax({
                 type: 'POST',
                 url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/questionnaires',
@@ -366,15 +319,13 @@
                 }
             });
         }
-
+    
+        // Función para marcar un campo de entrada como solo lectura.
         function markAsReadOnly(inputElement) {
             inputElement.readOnly = true;
             inputElement.classList.add('readonly-input');
         }
-      
-    </script>
-
+    </script>    
 </body>
-
 </html>
 

@@ -1,6 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- 
+    allstatistics.html
 
+    Descripción: Página encargada de mostrar cada chatbot que ha sido utilizado para alguna prueba junto
+    con los cuestionarios que han sido respondidos para ese chatbot. Se muestran los porcentajes de participación
+    y se accede a las estadísticas específicas de cada chatbot - cuestionario.
+
+    Año: 2024
+
+    Autora: Celia Jiménez
+-->
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -105,12 +115,15 @@
     <script>
         $(document).ready(function () {
             $('#navbarContainer').load('navbar.html');
+            // Ejecuta funciones para recuperar y procesar pruebas activas y completadas.
             fetchActiveTests();
             fetchCompletedTests();
         });
         
+        // Objeto para mantener el seguimiento de los cuestionarios activos por chatbot.
         var activeQuestionnairesByChatbot = {};
 
+        // Solicita pruebas activas para el usuario actual y las procesa.
         function fetchActiveTests() {
             var userId = localStorage.getItem('userId');
             $.ajax({
@@ -125,6 +138,7 @@
             });
         }
 
+        // Procesa las pruebas activas, organizando la información por chatbot y cuestionarios.
         function processActiveTests(activeTests) {
             // Iterar sobre cada elemento de activeTests
             activeTests.forEach(function (test) {
@@ -157,7 +171,8 @@
             // Ahora activeQuestionnairesByChatbot contiene el número de cuestionarios activos por chatbot
             console.log(activeQuestionnairesByChatbot);
         }
-
+        
+        // Solicita pruebas completadas para el usuario y las muestra.
         function fetchCompletedTests() {
             var userId = localStorage.getItem('userId');
             $.ajax({
@@ -172,6 +187,7 @@
             });
         }
 
+        // Muestra las pruebas completadas, organizando la información por chatbot.
         function displayCompletedTests(completedTests) {
             var groupedByChatbot = {};
 
@@ -198,8 +214,6 @@
                 groupedByChatbot[test.chatbotId].totalCompleted++;
             });
 
-            console.log(groupedByChatbot);
-
             $('#participantsTableBody').empty();
 
             // Recorremos los chatbots agrupados
@@ -213,10 +227,6 @@
                         questionnaires: {} // Inicializar un objeto para almacenar el recuento de cada cuestionario
                     };
                 }
-                    
-                console.log(chatbotId);
-                console.log(chatbotData);
-                console.log(activeQuestionnairesByChatbot[chatbotId]);
                 // Iteramos sobre los cuestionarios de este chatbot
                 for (var questionnaireId in chatbotData.questionnaires) {
                     var questionnaire = chatbotData.questionnaires[questionnaireId];
@@ -237,16 +247,13 @@
             }
         }
 
+        // Obtención de datos completos para la creación del CSV (respuestas de todos los participantes).
         function fetchCompleteData(event, chatbotId, questionnaireId) {
             event.preventDefault();
-            console.log('Fetching CSV for:');
-            console.log('Chatbot ID:', chatbotId);
-            console.log('Questionnaire ID:', questionnaireId);
             $.ajax({
                 type: 'GET',
                 url: 'https://backend-chatbotevaluator.up.railway.app/chatbot/'+chatbotId+'/questionnaire/'+questionnaireId+'/complete', 
                 success: function (data) {
-                    console.log('Data received:', data);
                     generateCSV(data);
                 },
                 error: function (xhr, status, error) {
@@ -256,7 +263,7 @@
             });
         }
 
-
+        // Función auxiliar para escapar campos específicos de CSV.
         function escapeCsvField(field) {
             if (!field) return "";  // Devuelve un campo vacío si el valor es undefined o null
             field = field.toString(); // Convertir el valor a string, seguro porque no es null/undefined
@@ -269,7 +276,7 @@
             }
             return field;
 }
-
+         // Genera un archivo CSV basado en datos proporcionados.
         function generateCSV(data) {
             let csvContent = "data:text/csv;charset=utf-8,";
 
@@ -293,14 +300,10 @@
             var link = document.createElement("a");
             link.setAttribute("href", encodedUri);
             link.setAttribute("download", "chatbot_data.csv");
-            document.body.appendChild(link); // Requerido para Firefox
+            document.body.appendChild(link); 
 
-            link.click(); // Esto descargará el archivo
+            link.click(); // Descargar el archivo
         }
-
-
-      
-
     </script>
 </body>
 </html>

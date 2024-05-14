@@ -1,6 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- 
+    completedtests.html
 
+    Descripción: Página encargada de mostrar todas las pruebas completadas asociadas al usuario. Esto se refiere
+    a las pruebas activas que ya han sido realizadas por el participante (ha utilizado el chatbot y ha completado los cuestionarios).
+
+    Año: 2024
+
+    Autora: Celia Jiménez
+-->
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -73,9 +82,7 @@
 
         .add-participant-button:focus {
             outline: none; 
-        }
-
-        
+        }   
     </style>
 </head>
 
@@ -113,33 +120,44 @@
     <script>
         $(document).ready(function () {
             $('#navbarContainer').load('navbar.html');
+            // Llama a la función que recupera las pruebas completadas del usuario actual.
             fetchCompletedTests(); 
         });
-
+    
+        // Función para solicitar al servidor las pruebas completadas del usuario actual.
         function fetchCompletedTests() {
-            var userId = localStorage.getItem('userId');
+            var userId = localStorage.getItem('userId'); // Obtiene el ID del usuario del almacenamiento local.
             $.ajax({
-                type: 'GET',
-                url: 'https://backend-chatbotevaluator.up.railway.app/users/' + userId + '/completed-tests',
+                type: 'GET', // Tipo de solicitud HTTP.
+                url: 'https://backend-chatbotevaluator.up.railway.app/users/' + userId + '/completed-tests', // URL del API donde se solicitan las pruebas completadas.
                 success: function (data) {
-                    displayCompletedTests(data);
+                    displayCompletedTests(data); // Llama a la función para mostrar las pruebas completadas en la interfaz.
                 },
                 error: function (error) {
-                    console.error('Error fetching completed tests:', error);
+                    // Función que se ejecuta si hay un error en la solicitud.
+                    console.error('Error fetching completed tests:', error); // Muestra el error en la consola.
                 }
             });
         }
-
+    
+        // Función para mostrar las pruebas completadas en la interfaz del usuario.
         function displayCompletedTests(completedTests) {
-            $('#participantsTableBody').empty();
-
+            $('#participantsTableBody').empty(); // Limpia el contenido anterior de la tabla.
+    
+            // Itera sobre cada prueba completada recibida del servidor.
             completedTests.forEach(function (test) {
-                var newRow = '<tr><td>' + test.chatbotName + '</td><td>' + test.participantName + '</td><td>' + test.questionnaireName + '</td><td>' + test.type + '</td><td>' + test.date + '</td><td><a href="results.html?resultId=' + test.resultId + '">View</a></td></tr>';
-                $('#participantsTableBody').append(newRow);
+                // Construye una fila de tabla para cada prueba completada.
+                var newRow = '<tr>' +
+                    '<td>' + test.chatbotName + '</td>' + // Nombre del chatbot.
+                    '<td>' + test.participantName + '</td>' + // Nombre del participante.
+                    '<td>' + test.questionnaireName + '</td>' + // Nombre del cuestionario.
+                    '<td>' + test.type + '</td>' + // Tipo de prueba.
+                    '<td>' + test.date + '</td>' + // Fecha de finalización.
+                    '<td><a href="results.html?resultId=' + test.resultId + '">View</a></td>' + // Enlace para ver más detalles.
+                    '</tr>';
+                $('#participantsTableBody').append(newRow); // Añade la nueva fila a la tabla en el documento HTML.
             });
         }
-    </script>
-
+    </script>    
 </body>
-
 </html>
