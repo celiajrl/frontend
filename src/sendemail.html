@@ -1,6 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- 
+    sendemail.html
 
+    Descripción: Página encargada de mostrar la agenda del usuario y cajas de texto para que el usuario especifique
+    a qué participantes quiere enviarles la prueba, el asunto y texto del correo electronico que se le enviará a dichos participantes 
+    y la descripción que se mostrará a la hora de utilizar el chatbot. Finalmente, envía el correo electrónico.
+
+    Año: 2024
+
+    Autora: Celia Jiménez
+-->
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -131,6 +141,7 @@
             fetchAgenda();
         });
 
+        // Función que obtiene agenda de contactos del usuario
         function fetchAgenda() {
             var userId = localStorage.getItem('userId');
             $.ajax({
@@ -144,7 +155,7 @@
                 }
             });
         }
-
+        // Función que muestra la agenda de contactos con la posibilidad de seleccionar 1/varios participantes
         function displayAgenda(agenda) {
             $('#participantsTableBody').empty();
 
@@ -159,6 +170,7 @@
             });
         }
 
+        // Función que obtiene información de los campos para enviarlas al servidor y que envíe el correo electrónico
         function sendEmail() {
             var selectedParticipants = [];
             $('.select-checkbox:checked').each(function () {

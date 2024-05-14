@@ -1,6 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- 
+    viewform.html
 
+    Descripción: Página encargada de mostrar cómo se verá un cuestionario según su tipo y según las preguntas creadas.
+
+    Año: 2024
+
+    Autora: Celia Jiménez
+-->
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -83,12 +91,12 @@
 
         .question-cell,
         .answer-cell {
-            padding-bottom: 20px; /* Ajusta el valor según sea necesario para aumentar el espacio entre filas */
+            padding-bottom: 20px; 
         }
 
         .text-input {
-            width: 200px; /* Ajusta el ancho según sea necesario */
-            max-width: 100%; /* Permite que el ancho máximo sea igual al ancho del contenedor */
+            width: 200px; 
+            max-width: 100%; 
         }
 
         .required-asterisk {
@@ -107,13 +115,9 @@
             z-index: 1;
             right: 20px;
             white-space: nowrap;
-        }
-
-        
+        }    
     </style>
 </head>
-
-
 <body>
     <div id="navbarContainer"></div>
     <header>
@@ -135,7 +139,6 @@
     <script src="js/jquery.easing.min.js"></script>
     <script src="js/custom.js"></script>
 
-
     <script>
         $(document).ready(function () {
             $('#navbarContainer').load('navbar.html');
@@ -149,12 +152,13 @@
             window.history.back();
         }
 
+        // Obtiene los datos asociados al cuestionario por ID (preguntas y tipo de respuestas)
         function loadQuestionnaire(id) {
             var userId = localStorage.getItem('userId');
             $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires/${id}`, function(data) {
                 const questionnaire = data;
                 if (questionnaire && questionnaire.questions) {
-                    const formType = questionnaire.type.toLowerCase(); // Convertimos a minúsculas para manejarlo de manera uniforme
+                    const formType = questionnaire.type.toLowerCase(); 
                     if (formType === 'preconfigured') {
                         // Si es preconfigurado, muestra las preguntas predefinidas
                         displayPreconfiguredQuestions(questionnaire.questions);
@@ -168,6 +172,7 @@
             });
         }
 
+        // En caso de preconfigurado procesa las preguntas de una manera (porque van en pares)
         function displayPreconfiguredQuestions(questions) {
             const tbody = $('#questionTableBody');
             tbody.empty();
@@ -197,6 +202,7 @@
             });
         }
 
+        // En caso de customizado coge las preguntas tal cual y muestra según el tipo de respuesta aceptado
         function displayCustomQuestions(questions) {
             const tbody = $('#questionTableBody');
             tbody.empty();
@@ -261,10 +267,6 @@
                 tbody.append(row);
             });
         }
-
-
     </script>
-
 </body>
-
 </html>

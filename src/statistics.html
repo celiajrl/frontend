@@ -1,6 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- 
+    statistics.html
 
+    Descripción: Página encargada de mostrar las estadísticas asociadas a un par chatbot - cuestionario.
+    Dichas estadísticas están generadas en función del tipo de respuesta aceptada (y de las respuestas guardadas).
+    Se da la posibilidad de descargar dichas estadísticas en PDF.
+
+    Año: 2024
+
+    Autora: Celia Jiménez
+-->
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,33 +24,33 @@
      <style>
     #chartContainer {
         max-height: 460px;
-        width: 80%; /* Ajusta al ancho que prefieras */
-        margin: 20px auto; /* Auto centra el contenedor horizontalmente, y 20px de margen superior */
+        width: 80%; 
+        margin: 20px auto; 
         background-color: #f0f0f0;
         padding: 20px;
         border-radius: 8px;
         overflow: auto;
         display: flex;
         flex-direction: column;
-        align-items: center; /* Centrar los elementos horizontalmente */
-        gap: 20px; /* Espacio entre los gráficos */
+        align-items: center; 
+        gap: 20px; 
     }
 
     canvas {
-        width: 80%; /* Ocupar todo el ancho del contenedor de gráficos */
-        height: 150px; /* Altura auto ajustable */
-        margin: 0 auto; /* Centrar el gráfico horizontalmente dentro del contenedor */
+        width: 80%; 
+        height: 150px; 
+        margin: 0 auto;
     }
 
     #myChart {
         width: 80%; 
-        height: 150px; /* Altura predefinida para el gráfico doughnut */
-        margin: 0 auto; /* Centrar el gráfico horizontalmente dentro del contenedor */
+        height: 150px; 
+        margin: 0 auto; 
     }
 
     #chartContainer h3 {
         color: #333;
-        text-align: center; /* Centrar el texto del título */
+        text-align: center; 
     }
 
     #averageTableContainer {
@@ -48,7 +58,7 @@
         padding: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         color: rgb(47, 44, 44);
-        margin-top: 40px; /* Ajusta el margen superior para reducir el espacio con el elemento anterior */
+        margin-top: 40px; 
 
     }
 
@@ -84,7 +94,7 @@
     <script src="js/bootstrap.min.js"></script>
     <!-- Cargar Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
-    <!-- Cargar el plugin de boxplot, asegurándote de que la versión es compatible -->
+    <!-- Cargar el plugin de boxplot-->
     <script src="https://cdn.jsdelivr.net/npm/@sgratzl/chartjs-chart-boxplot"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script> 
@@ -102,6 +112,7 @@
             window.history.back();
         }
 
+        // Tabla para mostrar las medias en respuestas numéricas / de escala
         function displayAverageTable(numberQuestions) {
             var table = '<table class="table table-striped"><thead><tr><th>Question</th><th>Average Answer</th></tr></thead><tbody>';
             
@@ -114,17 +125,14 @@
             $('#averageTableContainer').html(table);
         }
 
-
+        // Función encargada de cargar los resultados asociados al chatbot y al cuestionario
         function loadResults(chatbotId, questionnaireId) {
             $.get(`https://backend-chatbotevaluator.up.railway.app/results?chatbotId=${chatbotId}&questionnaireId=${questionnaireId}`, function (results) {
-                console.log(results);
                 const susValues = results.filter(result => result.sus !== -1);
                 if (susValues.length > 0) {
                     var userId = localStorage.getItem('userId');
                     $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires/${questionnaireId}`, function (questionnaire) {
-                        console.log(questionnaire);
                         if (questionnaire && questionnaire.questions) {
-                            console.log(questionnaire.questions);
                             let transformedQuestions = {};
                             let index = 0;
                             const susQuestions = [];
@@ -134,13 +142,11 @@
                                 transformedQuestions[index++] = question.negative;
                             });
 
-                            console.log(transformedQuestions);
                             index = 0;
                             Object.values(transformedQuestions).forEach(question => {
                                 index += 1;
                                 const responses = results.map(result => Number(result.answers[index] || 0));
                                 const average = responses.reduce((sum, current) => sum + current, 0) / responses.length;
-                                console.log(`Average for question ${index}: ${average}`);
                                 susQuestions.push({ question, index, average });
                             });
                             createChart(susValues.map(result => result.sus));
@@ -152,9 +158,7 @@
                     var userId = localStorage.getItem('userId');
                     const values = results.filter(result => result.sus === -1);
                     $.get(`https://backend-chatbotevaluator.up.railway.app/users/${userId}/questionnaires/${questionnaireId}`, function (questionnaire) {
-                        console.log(questionnaire);
                         if (questionnaire && questionnaire.questions) {
-                            console.log(questionnaire.questions);
                             const listQuestions = [];
                             const yesNoQuestions = [];
                             const numberQuestions = [];
@@ -162,22 +166,14 @@
                             questionnaire.questions.forEach(function (question, index) {
                                 index += 1;
                                 if (question.type.toLowerCase() === 'list') {
-                                    console.log(index);
-                                    console.log(question);
                                     listQuestions.push({ question, index });
                                 } else if (question.type.toLowerCase() === 'yesno') {
-                                    console.log(index);
-                                    console.log(question);
                                     yesNoQuestions.push({ question, index });
                                 } else if (question.type.toLowerCase() === 'number' || question.type.toLowerCase() === 'scale') {
-                                    console.log(index);
-                                    console.log(question);
                              
                                     const responses = results.map(result => Number(result.answers[index] || 0));
                                     const average = responses.reduce((sum, current) => sum + current, 0) / responses.length;
                                     question = question.question;
-                                    console.log(question);
-                                    console.log(`Average for question ${index}: ${average}`);
                                     numberQuestions.push({ question, index, average });
                                 }
                             });
@@ -186,8 +182,6 @@
                                 listQuestions.forEach(function (item) {
                                     const question = item.question;
                                     const index = item.index;
-                                    console.log(question);
-                                    console.log(results);
                                     generateListGraph(question, results, index); // Pasar el índice como tercer parámetro
                                 });
                             }
@@ -195,8 +189,6 @@
                                 yesNoQuestions.forEach(function (item) {
                                     const question = item.question;
                                     const index = item.index;
-                                    console.log(question);
-                                    console.log(results);
                                     generateYesNoGraph(question, results, index); // Pasar el índice como tercer parámetro
                                 });
                             }
@@ -212,6 +204,7 @@
             });
         }
 
+        // Función encargada de la creación del diagrama de barras (respuestas de tipo lista)
         function generateListGraph(question, results, index) {
             // Conteo de respuestas para cada opción de la lista
             const optionCounts = {};
@@ -281,7 +274,7 @@
             });
         }
 
-
+        // Función encargada de generar el grafo doghnut asociado a respuestas de tipo yes/no (radio)
         function generateYesNoGraph(question, results, index) {
             const yesCount = results.filter(result => result.answers[index] === 'Yes').length;
             const noCount = results.filter(result => result.answers[index] === 'No').length;
@@ -329,8 +322,7 @@
             });
         }
 
-
-
+        // Función para crear diagrama de barras para puntuajes SUS
         function createChart(susValues) {
             const ctx = document.getElementById('myChart').getContext('2d');
             const myChart = new Chart(ctx, {
@@ -340,14 +332,14 @@
                     datasets: [{
                         label: 'SUS Score',
                         data: susValues,
-                        backgroundColor: 'rgba(153, 102, 255, 0.5)', // Morado claro semi-transparente
-                        borderColor: 'rgba(153, 102, 255, 1)', // Morado oscuro sólido
+                        backgroundColor: 'rgba(153, 102, 255, 0.5)', 
+                        borderColor: 'rgba(153, 102, 255, 1)', 
                         borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false, // Importante para mantener la relación de aspecto
+                    maintainAspectRatio: false, 
                     scales: {
                         y: {
                             beginAtZero: true,
@@ -367,7 +359,7 @@
             });
         }
 
-
+        // Función para generar boxplots por cada pregunta en caso de cuestionario preconfigurado
         function generateBoxPlots(results, questions) {
             const questionResponses = {};
             results.forEach(result => {
@@ -378,8 +370,6 @@
                     questionResponses[question].push(Number(response)); // Asegurándonos de que las respuestas son números
                 });
             });
-
-            console.log(questionResponses);
 
             Object.entries(questionResponses).forEach(([question, responses], index) => {
                 const canvasId = 'boxPlot' + question;
@@ -440,12 +430,6 @@
                 pdf.save("full-content.pdf");
             });
         });
-
-
-
-        
     </script>
-
 </body>
-
 </html>

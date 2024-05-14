@@ -1,6 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- 
+    mychatbots.html
 
+    Descripción: Página encargada de mostrar todos los chatbots subidos por el usuario
+    y contiene la posibilidad de subir nuevo chatbot. Además desde esta página se pueden editar y eliminar
+    chatbots y acceder a la página de vincular cuestionarios.
+
+    Año: 2024
+
+    Autora: Celia Jiménez
+-->
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,18 +23,17 @@
     <style>
         #chatbotContainer {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Ajustar el ancho para mostrar 5 chatbots por fila */
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
             grid-gap: 10px;
             justify-content: center;
             align-items: center;
             max-height: calc(100vh - 170px);
             padding: 10px;
-            overflow-y: auto; /* Mantenemos la barra de desplazamiento vertical */
-            max-width: 900px; /* Limitar el ancho de la fila */
-            margin: 0 auto; /* Centrar el contenedor en la página */
+            overflow-y: auto; 
+            max-width: 900px; 
+            margin: 0 auto; 
             margin-bottom: 10px;
         }
-
     
         .chatbot-card {
             background-color: #a48caf;
@@ -78,7 +87,6 @@
 
 <body>
     <div id="navbarContainer"></div>
-
     <header>
         <div class="header-content">
             <div class="header-content-inner">
@@ -106,13 +114,14 @@
                 console.error("Error en la solicitud:", error);
             });
 
+            // Edición de chatbot al pulsar opción
             $(document).on('click', '.chatbot-options a.edit-chatbot', function (event) {
                 event.preventDefault();
                 var chatbotId = $(this).data('id'); 
                 window.location.href = 'editchatbot.html?id=' + encodeURIComponent(chatbotId);
             });
 
-
+            // Eliminación de chatbot al pulsar opción
             $(document).on('click', '.chatbot-options a.delete-chatbot', function (event) {
                 event.preventDefault();
                 var chatbotId = $(this).data('id');
@@ -122,17 +131,16 @@
                         type: 'DELETE',
                         url: 'https://backend-chatbotevaluator.up.railway.app/users/' + userId + '/chatbots/' + chatbotId,
                         success: function (response) {
-                            console.log('Chatbot deleted successfully:', response);
                             window.location.reload(); // Recarga la página para reflejar los cambios
                         },
-                        error: function (xhr) { // xhr es el objeto XMLHttpRequest estándar
+                        error: function (xhr) { 
                             let errorMessage = "An error occurred";
                             if(xhr.responseJSON && xhr.responseJSON.error) {
                                 errorMessage = xhr.responseJSON.error; // Si el servidor responde con un JSON que incluye la clave 'error'
                             } else if (xhr.responseText) {
                                 errorMessage = xhr.responseText; // Respuesta cruda como texto
                             }
-                            alert(errorMessage); // Muestra el mensaje de error
+                            alert(errorMessage); 
                         }
                     });
 
@@ -140,7 +148,8 @@
                             
                 });
             });
-
+        
+        // Crea cartas por chatbot
         function updateChatbotContainer(chatbots) {
             var chatbotContainer = $('#chatbotContainer');
             chatbotContainer.empty();

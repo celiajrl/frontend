@@ -1,4 +1,14 @@
 <!DOCTYPE html>
+<!-- 
+    results.html
+
+    Descripción: Página encargada de mostrar las respuestas de un cuestionario (lo muestra el cuestionario completo
+    con las respuestas del participante seleccionadas). Da la posibilidad de descargarlas en CSV.
+
+    Año: 2024
+
+    Autora: Celia Jiménez
+-->
 <html lang="en">
 
 <head>
@@ -35,9 +45,9 @@
         .scale-options {
             display: flex;
             align-items: center;
-            flex-wrap: nowrap; /* Evita que los elementos se envuelvan en varias líneas */
-            overflow-x: auto; /* Agrega desplazamiento horizontal si los elementos se desbordan */
-            max-width: 100%; /* Ajusta el ancho máximo para evitar el desbordamiento horizontal */
+            flex-wrap: nowrap; 
+            overflow-x: auto; 
+            max-width: 100%;
         }
 
         .scale-circle {
@@ -51,26 +61,26 @@
             justify-content: center;
             color: #000;
             cursor: pointer;
-            transition: background-color 0.3s ease; /* Agregar transición para un cambio suave de color de fondo */
+            transition: background-color 0.3s ease; 
         }
 
         .scale-circle.selected {
-            background-color: #6a1b9a; /* Cambiar el color de fondo del círculo seleccionado */
-            color: #fff; /* Cambiar el color del texto para que sea visible en el círculo seleccionado */
+            background-color: #6a1b9a;
+            color: #fff; 
         }
 
         .scale-circle:hover {
-            background-color: #f0f0f0; /* Cambiar el color de fondo al pasar el mouse */
+            background-color: #f0f0f0;
         }
 
         .text-input {
-            background-color: #e0e0e0; /* Cambiar el color de fondo del campo de texto */
-            color: #000; /* Cambiar el color del texto para que sea visible */
+            background-color: #e0e0e0; 
+            color: #000; 
         }
 
         .number-input {
-            background-color: #e0e0e0; /* Cambiar el color de fondo del campo de texto */
-            color: #000; /* Cambiar el color del texto para que sea visible */
+            background-color: #e0e0e0;
+            color: #000;
         }
 
         .yes-no-options {
@@ -133,6 +143,7 @@
             window.history.back();
         }
 
+        // Obtiene resultados de pruebas completadas (respuestas a cuestionarios)
         function loadResults(id) {
             var userId = localStorage.getItem('userId');
             $.get(`https://backend-chatbotevaluator.up.railway.app/results/${id}`, function(rdata) {
@@ -153,6 +164,7 @@
             });
         }
 
+        // Función encargada de mostar las respuestas a cuestionario preconfigurado
         function displayPreconfiguredQuestions(answers, questions) {
             const tbody = $('#questionsTableBody');
             tbody.empty();
@@ -172,7 +184,6 @@
 
                 // Obtener el valor de la respuesta positiva para la escala del 1 al 5
                 const positiveAnswerValue = answers[positiveIndex + 1];
-                console.log('Positive answer for question', positiveIndex + 1, ':', positiveAnswerValue);
                 
                 // Crear la escala de 1 al 5 con la respuesta seleccionada para la respuesta positiva
                 const positiveScaleWidget = $('<div>').addClass('scale-options');
@@ -194,7 +205,6 @@
 
                 // Obtener el valor de la respuesta negativa para la escala del 1 al 5
                 const negativeAnswerValue = answers[negativeIndex + 1];
-                console.log('Negative answer for question', negativeIndex + 1, ':', negativeAnswerValue);
                 
                 // Crear la escala de 1 al 5 con la respuesta seleccionada para la respuesta negativa
                 const negativeScaleWidget = $('<div>').addClass('scale-options');
@@ -211,10 +221,7 @@
             });
         }
 
-
-
-
-
+    // Función encargada de mostrar resultados de cuestionario customizable
     function displayCustomQuestions(answers, questions) {
         const tbody = $('#questionsTableBody');
         tbody.empty();
@@ -304,6 +311,7 @@
         });
     }
 
+    // Función que procesa campos para que evite caracteres que afectan en CSV
     function escapeCsvField(field) {
         if (!field) return "";  // Devuelve un campo vacío si el valor es undefined o null
         field = field.toString(); // Convertir el valor a string, seguro porque no es null/undefined
@@ -317,6 +325,7 @@
         return field;
     }
 
+    // Función que exporta los datos del cuestionario a CSV
     function exportToCsv() {
         const table = document.getElementById("questionsTableBody");
         const rows = table.querySelectorAll("tr");
@@ -364,10 +373,6 @@
 
         link.click(); // Disparar descarga
     }
-
-
     </script>
-
 </body>
-
 </html>

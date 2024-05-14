@@ -1,6 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- 
+    uploadchatbot.html
 
+    Descripción: Página encargada de la subida de un chatbot en función de nombre, versión
+    y la selección de un fichero ZIP del ordenador del usuario.
+
+    Año: 2024
+
+    Autora: Celia Jiménez
+-->
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -77,6 +86,7 @@
             $('#navbarContainer').load('navbar.html');
         });
 
+        // Función encargada de obtener el fichero ZIP y enviarlo al servidor
         function uploadChatbot() {
             var chatbotTitle = document.getElementById("chatbotTitle").value;
             var chatbotVersion = document.getElementById("chatbotVersion").value;
@@ -110,7 +120,6 @@
                             contentType: false,
                             processData: false,
                             success: function (data) {
-                                console.log("Chatbot creado con éxito:", data);
                                 window.location.href = "mychatbots.html";
                             },
                             error: function (error) {

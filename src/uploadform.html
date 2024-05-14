@@ -1,6 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- 
+    uploadform.html
 
+    Descripción: Página encargada de mostrar la posibilidad de crear un cuestionario tipo custom o tipo
+    preconfigured y redirigir en consecuencia.
+    Año: 2024
+
+    Autora: Celia Jiménez
+-->
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -66,8 +74,6 @@
         }
     </style>
 </head>
-
-
 <body>
     <div id="navbarContainer"></div>
     <header>
@@ -102,7 +108,7 @@
             window.history.back();
         }
 
-
+        // Función encargada de redirigir a la pagina de creacion segun el tipo
         function toggleOptions() {
             var formType = document.getElementById("formType").value;
             if (formType === 'custom') {
@@ -110,11 +116,7 @@
             } else if (formType === 'preconfigured') {
                 window.location.href = "preconfiguredform.html";
             }
-        }
-
-        
+        } 
     </script>
-
 </body>
-
 </html>

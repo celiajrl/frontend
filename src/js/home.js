@@ -13,7 +13,6 @@ $(document).ready(function () {
     function loadContent(sectionId) {
         // Logic to load the content here
         // For example, you can use AJAX to load content from the server
-        console.log('Loading content of section: ' + sectionId);
         // You can use a switch to handle different sections and load the corresponding content
     }
 });
