@@ -1,6 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- 
+    linkform.html
 
+    Descripción: Página encargada de la vinculación / desvinculación de cuestionarios a chatbots
+    y en la que es posible seleccionar el órden en el que aparecerán los cuestinarios.
+
+    Año: 2024
+
+    Autora: Celia Jiménez
+-->
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -69,20 +78,17 @@
         }
 
         #tablaQuestionnaires .order-input {
-            color: black; /* Cambia el color del texto a negro */
-            background-color: white; /* Fondo blanco para los inputs */
-            border: 1px solid #ccc; /* Borde gris claro para definir los bordes del input */
-            text-align: center; /* Centra el texto dentro del input */
-            width: 50px; /* Establece un ancho fijo para los inputs */
+            color: black;
+            background-color: white; 
+            border: 1px solid #ccc; 
+            text-align: center; 
+            width: 50px; 
         }
-
-
     </style>
 </head>
 
 <body>
     <div id="navbarContainer"></div>
-
     <header>
         <div class="header-content">
             <div class="header-content-inner">
@@ -179,7 +185,6 @@
 
             // Convertimos linkedQuestionnaires en un Set para búsquedas más rápidas
             const linkedSet = new Set(linkedQuestionnaires.map(item => item));
-            console.log(linkedSet);
 
             let linkedList = [];
             let unlinkedList = [];
@@ -187,8 +192,6 @@
 
             allQuestionnaires.forEach((questionnaire, index) => {
                 // Verificamos si el ID del cuestionario actual está en el conjunto de vinculados
-                console.log(questionnaire);
-                console.log(index);
                 const isLinked = linkedSet.has(questionnaire._id);
                 const orderInput = isLinked ? `<input type="number" min="1" max="${linkedQuestionnaires.length}" class="order-input" value="${orderCount++}" data-id="${questionnaire._id}" />` : '';
                 const buttonLabel = isLinked ? "Unlink" : "Link";
@@ -209,15 +212,13 @@
                     unlinkedList.push(fila); // Agregamos los no vinculados a otra lista
                 }
             });
-            console.log(linkedList);
-            console.log(unlinkedList);
 
             // Concatenamos y agregamos primero los cuestionarios vinculados
             const combinedList = linkedList.concat(unlinkedList);
             combinedList.forEach(fila => tablaQuestionnairesElement.append(fila));
-            console.log(combinedList);
         }
 
+        //Función que vincula / desvincula cuestionario a chatbot
         function linkOrUnlinkQuestionnaire(chatbotId, questionnaireId, isLinked) {
             const requestBody = {
                 "questionnaireId": questionnaireId

@@ -230,21 +230,23 @@
         // Función para añadir nuevas preguntas, tanto positivas como negativas, a la interfaz de usuario.
         function addAdditionalQuestion() {
             var table = document.querySelector('.preconfigured-options');
-    
-            // Incrementa el contador y añade la pregunta positiva
+
+            // Almacenar temporalmente las preguntas positiva y negativa
+            var tempQuestions = {};
+
+            // Añadiendo pregunta positiva
             questionCounter += 1;
             var posIndex = questionCounter;
             var newRowPositive = table.insertRow();
             newRowPositive.className = 'form-group preconfigured-question';
             newRowPositive.id = 'question' + posIndex;
-    
-            // Configuración del campo de entrada y etiqueta para la pregunta positiva
+
             var labelPositive = document.createElement('label');
             labelPositive.className = 'question-text';
             labelPositive.textContent = posIndex + '. ';
             var positiveCell = newRowPositive.insertCell(0);
             positiveCell.appendChild(labelPositive);
-    
+
             var positiveInput = document.createElement('input');
             positiveInput.type = 'text';
             positiveInput.className = 'question-input';
@@ -253,28 +255,39 @@
             positiveInput.onblur = function () {
                 if (this.value.trim() !== "") {
                     markAsReadOnly(this);
-                    questionsData.push({
-                        positive: this.value
-                    });
+                    tempQuestions.positive = this.value;
                 } else {
                     alert('Please enter a valid question.');
                 }
             };
             positiveCell.appendChild(positiveInput);
-            
-            // Se repite un proceso similar para la pregunta negativa.
+            positiveCell.className = 'question-text';
+            var scaleOptionsCell = newRowPositive.insertCell(1);
+            scaleOptionsCell.className = 'scale-options';
+            for (var i = 1; i <= 5; i++) {
+                var scaleCircle = document.createElement('div');
+                scaleCircle.className = 'scale-circle';
+                scaleCircle.textContent = i;
+                scaleCircle.onclick = function (event) {
+                    selectScale(event.target.textContent, nextQuestionNumber);
+                };
+                scaleOptionsCell.appendChild(scaleCircle);
+            }
+
             questionCounter += 1;
             var negIndex = questionCounter;
+            // Añadiendo pregunta negativa
             var newRowNegative = table.insertRow();
             newRowNegative.className = 'form-group preconfigured-question';
             newRowNegative.id = 'question' + negIndex;
-    
+
             var labelNegative = document.createElement('label');
             labelNegative.className = 'question-text';
             labelNegative.textContent = negIndex + '. ';
             var negativeCell = newRowNegative.insertCell(0);
             negativeCell.appendChild(labelNegative);
-    
+            negativeCell.className = 'question-text';
+
             var negativeInput = document.createElement('input');
             negativeInput.className = 'question-input';
             negativeInput.type = 'text';
@@ -283,14 +296,53 @@
             negativeInput.onblur = function () {
                 if (this.value.trim() !== "") {
                     markAsReadOnly(this);
-                    questionsData.push({
-                        negative: this.value
-                    });
+                    tempQuestions.negative = this.value;
+                    // Solo guarda el par si ambas preguntas están completas
+                    if (tempQuestions.positive && tempQuestions.negative) {
+                        questionsData.push({
+                            positive: tempQuestions.positive,
+                            negative: tempQuestions.negative
+                        });
+                        tempQuestions = {}; // Limpiar el almacenamiento temporal
+                    }
                 } else {
                     alert('Please enter a valid question.');
                 }
             };
             negativeCell.appendChild(negativeInput);
+            var scaleOptionsCellNegative = newRowNegative.insertCell(1);
+            scaleOptionsCellNegative.className = 'scale-options';
+            for (var j = 1; j <= 5; j++) {
+                var scaleCircleNegative = document.createElement('div');
+                scaleCircleNegative.className = 'scale-circle';
+                scaleCircleNegative.textContent = j;
+                scaleCircleNegative.onclick = function (event) {
+                    selectScale(event.target.textContent, nextNegativeQuestionNumber);
+                };
+                scaleOptionsCellNegative.appendChild(scaleCircleNegative);
+            }
+
+            var deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.className = 'btn btn-danger delete-btn';
+            deleteBtn.onclick = function() {
+                removeQuestionPair(posIndex, negIndex);
+            };
+            newRowPositive.insertCell(2).appendChild(deleteBtn);
+        }
+        // Función encargada de eliminar un par positivo-negativo de preguntas
+        function removeQuestionPair(posIndex, negIndex) {
+            var posElement = document.getElementById('question' + posIndex);
+            var negElement = document.getElementById('question' + negIndex);
+
+            if (posElement && negElement) {
+                posElement.remove();
+                negElement.remove();
+                questionsData = questionsData.filter(q => !(q.positive === posElement.querySelector('input').value && q.negative === negElement.querySelector('input').value));
+    
+            } else {
+                console.error("Error: Attempted to remove non-existent elements", posIndex, negIndex);
+            }
         }
     
         // Función para enviar las preguntas configuradas al servidor.

@@ -1,6 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- 
+    editchatbot.html
 
+    Descripción: Página encargada de la edición de un chatbot (nombre y versión).
+
+    Año: 2024
+
+    Autora: Celia Jiménez
+-->
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -77,7 +85,6 @@
             var chatbotId = urlParams.get('id');
             var userId = localStorage.getItem('userId');
             $.get('https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/chatbots/' + chatbotId, function (data) {
-                console.log("Datos del Chatbot:", data);
                 fillFormWithData(data);
             })
             .fail(function (error) {
@@ -106,7 +113,6 @@
                     version: chatbotVersion
                 }),
                 success: function (data) {
-                    console.log("Chatbot actualizado con éxito:", data);
                     window.location.href = "mychatbots.html";
                 },
                 error: function (error) {
