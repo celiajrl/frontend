@@ -1,4 +1,14 @@
 <!DOCTYPE html>
+<!-- 
+    index.html
+
+    Descripción: Página inicial para la aplicación Chatbot Evaluator. Incluye formularios para iniciar sesión, registrarse y reenvío de 
+    contraseña en caso de olvido.
+
+    Año: 2024
+
+    Autora: Celia Jiménez
+-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,66 +25,65 @@
         }
 
         .contenedor-tabs li.tab {
-            background-color: #765183; /* Color morado para el fondo */
+            background-color: #765183; 
         }
 
         .contenedor-tabs li.tab:hover, .contenedor-tabs li.tab.active {
-            background-color: #543357; /* Un tono de morado más oscuro para cuando se pasa el mouse o está activo */
+            background-color: #543357; 
         }
 
         .contenedor-tabs li.tab a {
-            color: white; /* Cambiar el color del texto a blanco para mejor contraste */
-            text-decoration: none; /* Elimina el subrayado de los enlaces */
+            color: white;
+            text-decoration: none; 
         }
         #resetPasswordModal button {
-            background-color: #765183; /* Color morado para el fondo del botón */
-            color: white; /* Color blanco para el texto */
-            padding: 10px 20px; /* Ajusta el padding para que no sean tan grandes */
-            margin-top: 10px; /* Espacio arriba de cada botón */
-            width: auto; /* Auto ajusta el ancho al contenido */
-            min-width: 120px; /* Mínimo ancho del botón */
-            cursor: pointer; /* Cursor tipo pointer para indicar que es clickeable */
-            text-align: center; /* Centrar el texto dentro del botón */
-            border: none; /* Sin borde */
-            display: inline-block; /* Hacer que los botones sean en línea para que puedan estar uno al lado del otro */
+            background-color: #765183; 
+            color: white; 
+            padding: 10px 20px; 
+            margin-top: 10px; 
+            width: auto; 
+            min-width: 120px; 
+            cursor: pointer; 
+            text-align: center; 
+            border: none;
+            display: inline-block; 
         }
 
         #resetPasswordModal form {
             display: flex;
             flex-direction: column;
-            align-items: center; /* Alinea los elementos al centro */
+            align-items: center; 
         }
 
         #resetPasswordModal input[type="email"] {
-            width: 100%; /* Ajusta el ancho del input al 100% del espacio disponible */
-            max-width: 300px; /* Máximo ancho del input */
-            margin-bottom: 20px; /* Espacio debajo del input */
+            width: 100%; 
+            max-width: 300px; 
+            margin-bottom: 20px; 
         }
 
         #resetPasswordModal button[type="button"] {
-            background-color: #352533; /* Color para el botón de cancelar */
-            margin-left: 10px; /* Espacio a la izquierda del botón cancelar */
+            background-color: #352533; 
+            margin-left: 10px; 
         }
 
         #resetPasswordModal {
-            display: none; /* Inicialmente oculto */
-            position: fixed; /* Posicionamiento fijo */
-            left: 50%; /* Centrado horizontal */
-            top: 50%; /* Centrado vertical */
-            transform: translate(-50%, -50%); /* Ajuste para centrar exactamente */
+            display: none; 
+            position: fixed;
+            left: 50%; 
+            top: 50%; 
+            transform: translate(-50%, -50%); 
             padding: 20px;
             border: 1px solid #ccc;
             background-color: #a48caf;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
             border-radius: 10px;
-            width: auto; /* Ancho ajustable según el contenido */
-            max-width: 400px; /* Máximo ancho del modal */
-            z-index: 1000; /* Asegúrate de que esté por encima de otros contenidos */
+            width: auto;
+            max-width: 400px;
+            z-index: 1000; 
         }
     </style>
 </head>
 <body>
-    
     <div class="contenedor-Questionnaires">
         <ul class="contenedor-tabs">
             <li class="tab tab-segunda active" data-tab="iniciar-sesion"><a href="#iniciar-sesion">Log in</a></li>
@@ -82,6 +91,7 @@
         </ul>
 
         <div class="contenido-tab">
+            <!-- Contenido de la pestaña Log in -->
             <div id="iniciar-sesion">
                 <h1>Log In</h1>
                 <form id="form-login" action="#" method="post">
@@ -102,7 +112,7 @@
                     <input type="submit" class="button button-block" value="Log In">
                 </form>
             </div>
-
+            <!-- Contenido de la pestaña Register -->
             <div id="registrarse">
                 <h1>Register</h1>
                 <form id="form-registro" action="#" method="post">
@@ -152,6 +162,7 @@
             </div>
         </div>
 
+        <!-- Contenido del modal de reenvío de contraseña -->
         <div id="resetPasswordModal" style="display:none;">
             <form id="resetPasswordForm">
                 <h2>Reset Your Password</h2>
@@ -168,6 +179,7 @@
 
     <script>
         $(document).ready(function () {
+            // Funcionalidad de navegación entre pestañas
             function switchTab(tabName) {
                 $('.tab-content').removeClass('active');
                 $('#' + tabName).addClass('active');
