@@ -1,6 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- 
+    activetests.html
 
+    Descripción: Página encargada de mostrar todas las pruebas activas asociadas al usuario.
+    Incluye, para cada prueba activa, su información relevante y un botón de envío de recordatorio
+    de compleción para los participantes asociados a la prueba.
+
+    Año: 2024
+
+    Autora: Celia Jiménez
+-->
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -128,17 +138,21 @@
     <script src="js/custom.js"></script>
 
     <script>
+        // Esperar a que el documento esté completamente cargado antes de ejecutar funciones.
         $(document).ready(function () {
             $('#navbarContainer').load('navbar.html');
+            // Llamada a la función que obtiene los tests activos del usuario.
             fetchActiveTests();
         });
-
+    
+        // Función que solicita al servidor los tests activos del usuario autenticado.
         function fetchActiveTests() {
-            var userId = localStorage.getItem('userId');
+            var userId = localStorage.getItem('userId'); // Obtiene el ID del usuario guardado en el almacenamiento local.
             $.ajax({
                 type: 'GET',
                 url: 'https://backend-chatbotevaluator.up.railway.app/users/' + userId + '/active-tests',
                 success: function (data) {
+                    // En caso de éxito, procesa los datos recibidos.
                     displayActiveTests(data);
                 },
                 error: function (error) {
@@ -146,24 +160,26 @@
                 }
             });
         }
-
+    
+        // Función para mostrar los tests activos en una tabla.
         function displayActiveTests(activeTests) {
-            $('#participantsTableBody').empty();
-
+            $('#participantsTableBody').empty(); // Limpia el cuerpo de la tabla para evitar duplicados.
+    
+            // Itera sobre cada test activo recibido.
             activeTests.forEach(function (test) {
-                var rowCount = Math.max(test.questionnaires.length, 1); // Para asegurar al menos una fila
-
+                var rowCount = Math.max(test.questionnaires.length, 1); // Asegura al menos una fila por test.
+    
                 for (var i = 0; i < rowCount; i++) {
+                    // Distribuye información sobre múltiples filas si hay varios cuestionarios.
                     var chatbotName = i === 0 ? test.chatbotName : '';
                     var participantName = i === 0 ? test.participantName : '';
                     var date = i === 0 ? test.date : '';
-
+    
                     var questionnaire = i < test.questionnaires.length ? test.questionnaires[i] : '';
-
                     var questionnaireLink = questionnaire ? '<a href="viewform.html?id=' + questionnaire + '">' + test.questionnairesName[questionnaire] + '</a>' : '';
-
                     var reminderButton = i === 0 ? '<button class="reminder-button" onclick="sendReminder(\'' + test._id + '\', \'' + test.participantId + '\')">Resend email</button>' : '';
-
+    
+                    // Construye cada fila de la tabla con la información del test.
                     var newRow = '<tr>' +
                         '<td>' + chatbotName + '</td>' +
                         '<td>' + participantName + '</td>' +
@@ -171,29 +187,30 @@
                         '<td>' + date + '</td>' +
                         '<td>' + reminderButton + '</td>' +
                         '</tr>';
-
-                    $('#participantsTableBody').append(newRow);
+    
+                    $('#participantsTableBody').append(newRow); // Añade la nueva fila al cuerpo de la tabla.
                 }
             });
         }
-
+    
+        // Función para enviar un recordatorio por correo electrónico a un participante.
         function sendReminder(testId, participantId) {
-
             $.ajax({
-                    type: 'POST',
-                    url: 'https://backend-chatbotevaluator.up.railway.app/send-reminder',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ testId, participantId }),
-                    success: function (response) {
-                        alert(response.message);   
-                        window.location.href = "activetests.html";    
-                    },
-                    error: function (error) {
-                        alert('Error sending email:', error);
-                    }
+                type: 'POST',
+                url: 'https://backend-chatbotevaluator.up.railway.app/send-reminder',
+                contentType: 'application/json',
+                data: JSON.stringify({ testId, participantId }), // Envía los IDs como JSON.
+                success: function (response) {
+                    // Alerta al usuario del resultado y recarga la página para mostrar cambios.
+                    alert(response.message);   
+                    window.location.href = "activetests.html";    
+                },
+                error: function (error) {
+                    // Alerta al usuario de un error en el envío del correo.
+                    alert('Error sending email:', error);
+                }
             });
         }
-    </script>
+    </script>    
 </body>
-
 </html>
