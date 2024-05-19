@@ -212,18 +212,36 @@
         // Obtiene el ID de un participante en función de su nombre, apellido y email
         function getParticipantId(name, surname, email, callback) {
             var userId = localStorage.getItem('userId');
+            if (!userId) {
+                return callback("Error: userId not found in localStorage", null);
+            }
+
             $.ajax({
                 type: 'GET',
-                url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/find-participant?name=${encodeURIComponent(name)}&surname=${encodeURIComponent(surname)}&email=${encodeURIComponent(email)}`,
+                url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/find-participant`,
+                data: {
+                    name: encodeURIComponent(name),
+                    surname: encodeURIComponent(surname),
+                    email: encodeURIComponent(email)
+                },
                 success: function (response) {
-                    console.log(response._id);
-                    callback(null, response._id);
+                    if (response && response._id) {
+                        console.log(response._id);
+                        callback(null, response._id);
+                    } else {
+                        callback("Error: Invalid response format", null);
+                    }
                 },
                 error: function (error) {
-                    callback("Error fetching participant ID: " + error.responseText, null);
+                    let errorMessage = "Error fetching participant ID";
+                    if (error && error.responseText) {
+                        errorMessage += `: ${error.responseText}`;
+                    }
+                    callback(errorMessage, null);
                 }
             });
         }
+
     
         // Edita un participante existente en la agenda.
         function editParticipant(index) {
