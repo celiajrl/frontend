@@ -11,6 +11,126 @@
 
     Autora: Celia Jiménez
 -->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Agenda</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/home.css" rel="stylesheet">
+    <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
+    <style>
+        form {
+            background-color: #a48caf;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #fff;
+        }
+
+        .participants-table-container {
+            max-height: 450px;
+            overflow-y: auto;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .participants-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .participants-table th,
+        .participants-table td {
+            border: 1px solid #ddd;
+            padding: 16px;
+            text-align: left;
+            vertical-align: middle;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background-color: #a48caf;
+            color: white;
+        }
+
+        .participants-table th {
+            background-color: #a48caf;
+            color: white;
+        }
+
+        .add-participant-input{
+            padding: 8px;
+            width: calc(25%);
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            color: #333;
+            background-color: #fff;
+        }
+
+        .edit-input {
+            padding: 8px;
+            width: calc(85%);
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            color: #333;
+            background-color: #fff;
+        }
+
+        .add-participant-button, .edit-button, .delete-button {
+            background-color: #765183; 
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+
+        .add-participant-button:hover, .edit-button:hover, .delete-button:hover {
+            background-color: #352533; 
+        }
+
+        .add-participant-button:focus, .edit-button:focus, .delete-button:focus {
+            outline: none; 
+        }
+    </style>
+</head>
+<body>
+    <div id="navbarContainer"></div>
+    <header>
+        <div class="header-content">
+            <div class="header-content-inner">
+                <form id="createForm">
+                    <div class="form-group participants-table-container">
+                        <table class="participants-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Surname</th>
+                                    <th>Email</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody id="participantsTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="add-participant-input" placeholder="Enter Name" id="participantName">
+                        <input type="text" class="add-participant-input" placeholder="Enter Surname" id="participantSurname">
+                        <input type="text" class="add-participant-input" placeholder="Enter Email" id="participantEmail">
+                        <button type="button" class="add-participant-button" onclick="addParticipant()">Add Participant</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </header>
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/custom.js"></script>
     <script>
         // Prepara la página una vez que el DOM esté listo.
         $(document).ready(function () {
@@ -92,34 +212,19 @@
         // Obtiene el ID de un participante en función de su nombre, apellido y email
         function getParticipantId(name, surname, email, callback) {
             var userId = localStorage.getItem('userId');
-            if (!userId) {
-                return callback("Error: userId not found in localStorage", null);
-            }
-
-            // Construir URL con los parámetros codificados manualmente
-            var url = `https://backend-chatbotevaluator.up.railway.app/users/${userId}/find-participant?name=${encodeURIComponent(name)}&surname=${encodeURIComponent(surname)}&email=${encodeURIComponent(email)}`;
-
             $.ajax({
                 type: 'GET',
-                url: url,
+                url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/find-participant?name=${encodeURIComponent(name)}&surname=${encodeURIComponent(surname)}&email=${encodeURIComponent(email)}`,
                 success: function (response) {
-                    if (response && response._id) {
-                        console.log(response._id);
-                        callback(null, response._id);
-                    } else {
-                        callback("Error: Invalid response format", null);
-                    }
+                    console.log(response._id);
+                    callback(null, response._id);
                 },
                 error: function (error) {
-                    let errorMessage = "Error fetching participant ID";
-                    if (error && error.responseText) {
-                        errorMessage += `: ${error.responseText}`;
-                    }
-                    callback(errorMessage, null);
+                    callback("Error fetching participant ID: " + error.responseText, null);
                 }
             });
         }
-    
+        
         // Edita un participante existente en la agenda.
         function editParticipant(index) {
             var row = $('#participant-' + index);
@@ -214,5 +319,293 @@
             }
         }
     </script>    
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Agenda</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/home.css" rel="stylesheet">
+    <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
+    <style>
+        form {
+            background-color: #ce93d8;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #fff;
+        }
+
+        .participants-table-container {
+            max-height: 450px;
+            overflow-y: auto;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .participants-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .participants-table th,
+        .participants-table td {
+            border: 1px solid #ddd;
+            padding: 16px;
+            text-align: left;
+            vertical-align: middle;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background-color: #ce93d8;
+            color: white;
+        }
+
+        .participants-table th {
+            background-color: #ce93d8;
+            color: white;
+        }
+
+        .add-participant-input{
+            padding: 8px;
+            width: calc(25%);
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            color: #333;
+            background-color: #fff;
+        }
+
+        .edit-input {
+            padding: 8px;
+            width: calc(85%);
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            color: #333;
+            background-color: #fff;
+        }
+
+        .add-participant-button, .edit-button, .delete-button {
+            background-color: #6c3880; /* Gris oscuro para mejor contraste */
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .add-participant-button:hover, .edit-button:hover, .delete-button:hover {
+            background-color: #5a6268; /* Un gris más oscuro para el hover */
+        }
+    </style>
+</head>
+<body>
+    <div id="navbarContainer"></div>
+    <header>
+        <div class="header-content">
+            <div class="header-content-inner">
+                <form id="createForm">
+                    <div class="form-group participants-table-container">
+                        <table class="participants-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Surname</th>
+                                    <th>Email</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody id="participantsTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="add-participant-input" placeholder="Enter Name" id="participantName">
+                        <input type="text" class="add-participant-input" placeholder="Enter Surname" id="participantSurname">
+                        <input type="text" class="add-participant-input" placeholder="Enter Email" id="participantEmail">
+                        <button type="button" class="btn add-participant-button" onclick="addParticipant()">Add Participant</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </header>
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/custom.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#navbarContainer').load('navbar.html');
+            fetchAgenda(); 
+        });
+
+        function addParticipant() {
+            var name = $('#participantName').val();
+            var surname = $('#participantSurname').val();
+            var email = $('#participantEmail').val();
+
+            if (name && surname && email) {
+                var participant = {
+                    name: name,
+                    surname: surname,
+                    email: email
+                };
+                var userId = localStorage.getItem('userId');
+                $.ajax({
+                    type: 'POST',
+                    url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda`,
+                    contentType: 'application/json',
+                    data: JSON.stringify(participant),
+                    success: function (response) {
+                        console.log('Participant added:', response);
+                        location.reload();
+                    },
+                    error: function (error) {
+                        console.error('Error adding participant:', error.responseText);
+                    }
+                });
+
+                $('#participantName').val('');
+                $('#participantSurname').val('');
+                $('#participantEmail').val('');
+            } else {
+                alert('Please enter all participant details.');
+            }
+        }
+
+        function fetchAgenda() {
+            var userId = localStorage.getItem('userId');
+            $.ajax({
+                type: 'GET',
+                url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda`, 
+                success: function (data) {
+                    console.log('Agenda fetched:', data);
+                    displayAgenda(data);
+                },
+                error: function (error) {
+                    console.error('Error fetching agenda:', error.responseText);
+                }
+            });
+        }
+
+        function displayAgenda(agenda) {
+            $('#participantsTableBody').empty();
+            agenda.forEach(function (participant, index) {
+                var newRow = `<tr id="participant-${index}">
+                    <td class="name" data-old-value="${participant.name}">${participant.name}</td>
+                    <td class="surname" data-old-value="${participant.surname}">${participant.surname}</td>
+                    <td class="email" data-old-value="${participant.email}">${participant.email}</td>
+                    <td><button class="btn edit-button" onclick="editParticipant(${index})">Edit</button></td>
+                    <td><button class="btn delete-button" onclick="deleteParticipant(${index})">Delete</button></td>
+                </tr>`;
+                $('#participantsTableBody').append(newRow);
+            });
+        }
+
+        function getParticipantId(name, surname, email, callback) {
+            var userId = localStorage.getItem('userId');
+            $.ajax({
+                type: 'GET',
+                url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/find-participant?name=${encodeURIComponent(name)}&surname=${encodeURIComponent(surname)}&email=${encodeURIComponent(email)}`,
+                success: function (response) {
+                    console.log(response._id);
+                    callback(null, response._id);
+                },
+                error: function (error) {
+                    callback("Error fetching participant ID: " + error.responseText, null);
+                }
+            });
+        }
+
+        function editParticipant(index) {
+            var row = $('#participant-' + index);
+            var name = row.find('.name').text();
+            var surname = row.find('.surname').text();
+            var email = row.find('.email').text();
+
+            row.find('.name').html(`<input type="text" class="edit-input" value="${name}">`);
+            row.find('.surname').html(`<input type="text" class="edit-input" value="${surname}">`);
+            row.find('.email').html(`<input type="text" class="edit-input" value="${email}">`);
+            row.find('td:nth-child(4)').html(`<button class="btn edit-button" onclick="saveParticipant(${index})">Save</button>`);
+        }
+
+        function saveParticipant(index) {
+            var row = $('#participant-' + index);
+            var newName = row.find('.name input').val();
+            var newSurname = row.find('.surname input').val();
+            var newEmail = row.find('.email input').val();
+
+            var oldName = row.find('.name').attr('data-old-value');
+            var oldSurname = row.find('.surname').attr('data-old-value');
+            var oldEmail = row.find('.email').attr('data-old-value');
+
+            event.preventDefault();
+               
+            getParticipantId(oldName, oldSurname, oldEmail, function(err, participantId) {
+                if (err) {
+                    alert(err);
+                    return;
+                }
+                else{
+                    var userId = localStorage.getItem('userId');
+                    $.ajax({
+                        type: 'PATCH',
+                        url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/agenda/'+participantId,
+                        contentType: 'application/json',
+                        data: JSON.stringify({name: newName, surname: newSurname, email: newEmail}),
+                        success: function () {
+                            row.find('.name').text(newName).attr('data-old-value', newName);
+                            row.find('.surname').text(newSurname).attr('data-old-value', newSurname);
+                            row.find('.email').text(newEmail).attr('data-old-value', newEmail);
+                            row.find('td:nth-child(4)').html(`<button class="btn edit-button" onclick="editParticipant(${index})">Edit</button>`);
+                            window.location.reload();
+                        },
+                        error: function (error) {
+                            console.error('Error saving participant:', error.responseText);
+                        }
+                    });
+                }
+            });
+        }
+
+        function deleteParticipant(index) {
+            var row = $('#participant-' + index);
+            var oldName = row.find('.name').attr('data-old-value');
+            var oldSurname = row.find('.surname').attr('data-old-value');
+            var oldEmail = row.find('.email').attr('data-old-value');
+
+            var userId = localStorage.getItem('userId');
+            event.preventDefault();
+            if (confirm("Are you sure you want to delete participant: "+oldName+' '+oldSurname)) {
+                getParticipantId(oldName, oldSurname, oldEmail, function(err, participantId) {
+                    if (err) {
+                        alert(err);
+                        return;
+                    }
+
+                    else{
+                        var userId = localStorage.getItem('userId');
+                        console.log(userId);
+                        $.ajax({
+                            type: 'DELETE',
+                            url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/agenda/'+participantId,
+                            success: function () {
+                                window.location.reload();
+                            },
+                            error: function (error) {
+                                alert(error.responseText);
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        
+    </script>
 </body>
 </html>
