@@ -134,14 +134,17 @@
     <script>
         $(document).ready(function () {
             $('#navbarContainer').load('navbar.html');
+            // Llamada a la función que obtiene la agenda del usuario actual.
             fetchAgenda(); 
         });
 
+        // Añade un participante a la agenda del usuario.
         function addParticipant() {
+            // Recupera los valores de los campos del formulario.
             var name = $('#participantName').val();
             var surname = $('#participantSurname').val();
             var email = $('#participantEmail').val();
-
+            // Verifica que todos los campos estén completos.
             if (name && surname && email) {
                 var participant = {
                     name: name,
@@ -149,6 +152,7 @@
                     email: email
                 };
                 var userId = localStorage.getItem('userId');
+                // Realiza una solicitud POST para añadir el participante.
                 $.ajax({
                     type: 'POST',
                     url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda`,
@@ -162,7 +166,7 @@
                         console.error('Error adding participant:', error.responseText);
                     }
                 });
-
+                // Limpia los campos del formulario.
                 $('#participantName').val('');
                 $('#participantSurname').val('');
                 $('#participantEmail').val('');
@@ -171,6 +175,7 @@
             }
         }
 
+        // Obtiene la agenda del usuario.
         function fetchAgenda() {
             var userId = localStorage.getItem('userId');
             $.ajax({
@@ -186,9 +191,11 @@
             });
         }
 
+        // Muestra la agenda en la página.
         function displayAgenda(agenda) {
             $('#participantsTableBody').empty();
             agenda.forEach(function (participant, index) {
+                // Crea una fila por cada participante en la agenda.
                 var newRow = `<tr id="participant-${index}">
                     <td class="name" data-old-value="${participant.name}">${participant.name}</td>
                     <td class="surname" data-old-value="${participant.surname}">${participant.surname}</td>
@@ -200,6 +207,7 @@
             });
         }
 
+        // Obtiene ID de participante en base a su nombre, apellido y email
         function getParticipantId(name, surname, email, callback) {
             var userId = localStorage.getItem('userId');
             $.ajax({
@@ -215,6 +223,7 @@
             });
         }
 
+        // Edita un participante existente en la agenda.
         function editParticipant(index) {
             var row = $('#participant-' + index);
             var name = row.find('.name').text();
@@ -227,6 +236,7 @@
             row.find('td:nth-child(4)').html(`<button class="btn edit-button" onclick="saveParticipant(${index})">Save</button>`);
         }
 
+        // Guarda los cambios realizados a un participante.
         function saveParticipant(index) {
             var row = $('#participant-' + index);
             var newName = row.find('.name input').val();
@@ -239,12 +249,14 @@
 
             event.preventDefault();
                
+            // Obtiene el ID del participante basado en los datos antiguos.
             getParticipantId(oldName, oldSurname, oldEmail, function(err, participantId) {
                 if (err) {
                     alert(err);
                     return;
                 }
                 else{
+                    // Realiza una solicitud PATCH para actualizar los datos del participante.
                     var userId = localStorage.getItem('userId');
                     $.ajax({
                         type: 'PATCH',
@@ -252,6 +264,7 @@
                         contentType: 'application/json',
                         data: JSON.stringify({name: newName, surname: newSurname, email: newEmail}),
                         success: function () {
+                            // Actualiza los datos mostrados en la tabla y reinicia el estado de la fila.
                             row.find('.name').text(newName).attr('data-old-value', newName);
                             row.find('.surname').text(newSurname).attr('data-old-value', newSurname);
                             row.find('.email').text(newEmail).attr('data-old-value', newEmail);
@@ -266,6 +279,7 @@
             });
         }
 
+        // Elimina un participante de la agenda.
         function deleteParticipant(index) {
             var row = $('#participant-' + index);
             var oldName = row.find('.name').attr('data-old-value');
@@ -275,12 +289,12 @@
             var userId = localStorage.getItem('userId');
             event.preventDefault();
             if (confirm("Are you sure you want to delete participant: "+oldName+' '+oldSurname)) {
+                // Obtiene el ID y realiza una solicitud DELETE.
                 getParticipantId(oldName, oldSurname, oldEmail, function(err, participantId) {
                     if (err) {
                         alert(err);
                         return;
                     }
-
                     else{
                         var userId = localStorage.getItem('userId');
                         console.log(userId);
