@@ -1,4 +1,16 @@
 <!DOCTYPE html>
+<!-- 
+    agenda.html
+
+    Descripción: Página encargada de mostrar la agenda de contactos asociada (creada) por el usuario y 
+    permite la creación de nuevos participantes junto con la edición y eliminación de los ya creados.
+    Estos participantes serán los que completen las pruebas creadas por el usuario (interactuarán con chatbots,
+    y rellenarán cuestionarios).
+
+    Año: 2024
+
+    Autora: Celia Jiménez
+-->
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -10,7 +22,7 @@
     <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
     <style>
         form {
-            background-color: #ce93d8;
+            background-color: #a48caf;
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -38,12 +50,12 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            background-color: #ce93d8;
+            background-color: #a48caf;
             color: white;
         }
 
         .participants-table th {
-            background-color: #ce93d8;
+            background-color: #a48caf;
             color: white;
         }
 
@@ -66,17 +78,22 @@
         }
 
         .add-participant-button, .edit-button, .delete-button {
-            background-color: #6c3880; /* Gris oscuro para mejor contraste */
+            background-color: #765183; 
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 10px 16px;
             cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.2s ease-in-out;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+        
 
         .add-participant-button:hover, .edit-button:hover, .delete-button:hover {
-            background-color: #5a6268; /* Un gris más oscuro para el hover */
+            background-color: #352533; 
+        }
+
+        .add-participant-button:focus, .edit-button:focus, .delete-button:focus {
+            outline: none; 
         }
     </style>
 </head>
@@ -104,7 +121,7 @@
                         <input type="text" class="add-participant-input" placeholder="Enter Name" id="participantName">
                         <input type="text" class="add-participant-input" placeholder="Enter Surname" id="participantSurname">
                         <input type="text" class="add-participant-input" placeholder="Enter Email" id="participantEmail">
-                        <button type="button" class="btn add-participant-button" onclick="addParticipant()">Add Participant</button>
+                        <button type="button" class="add-participant-button" onclick="addParticipant()">Add Participant</button>
                     </div>
                 </form>
             </div>
@@ -283,6 +300,6 @@
         }
 
         
-    </script>
+    </script> 
 </body>
 </html>
