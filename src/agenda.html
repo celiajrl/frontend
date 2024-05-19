@@ -215,6 +215,8 @@
             var name = row.find('.name').text();
             var surname = row.find('.surname').text();
             var email = row.find('.email').text();
+            console.log('trato de editar participant: '+index);
+            console.log(name+surname+email);
     
             // Convierte los textos en campos de entrada para editar.
             row.find('.name').html(`<input type="text" class="edit-input" value="${name}">`);
@@ -229,10 +231,15 @@
             var newName = row.find('.name input').val();
             var newSurname = row.find('.surname input').val();
             var newEmail = row.find('.email input').val();
+            console.log('guardo participant'+index);
+            console.log(newName+newSurname+newEmail);
     
             var oldName = row.find('.name').attr('data-old-value');
             var oldSurname = row.find('.surname').attr('data-old-value');
             var oldEmail = row.find('.email').attr('data-old-value');
+            console.log('antiguos');
+            console.log(oldName+oldSurname+oldEmail);
+
     
             // Obtiene el ID del participante basado en los datos antiguos.
             getParticipantId(oldName, oldSurname, oldEmail, function(err, participantId) {
