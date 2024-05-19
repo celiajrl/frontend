@@ -216,14 +216,12 @@
                 return callback("Error: userId not found in localStorage", null);
             }
 
+            // Construir URL con los parámetros codificados manualmente
+            var url = `https://backend-chatbotevaluator.up.railway.app/users/${userId}/find-participant?name=${encodeURIComponent(name)}&surname=${encodeURIComponent(surname)}&email=${encodeURIComponent(email)}`;
+
             $.ajax({
                 type: 'GET',
-                url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/find-participant`,
-                data: {
-                    name: encodeURIComponent(name),
-                    surname: encodeURIComponent(surname),
-                    email: encodeURIComponent(email)
-                },
+                url: url,
                 success: function (response) {
                     if (response && response._id) {
                         console.log(response._id);
@@ -241,7 +239,6 @@
                 }
             });
         }
-
     
         // Edita un participante existente en la agenda.
         function editParticipant(index) {
