@@ -275,6 +275,8 @@
                             row.find('.surname').text(newSurname).attr('data-old-value', newSurname);
                             row.find('.email').text(newEmail).attr('data-old-value', newEmail);
                             row.find('td:nth-child(4)').html(`<button class="edit-button" onclick="editParticipant(${index})">Edit</button>`);
+                            console.log("he editado el participante");
+                            console.log(participantId);
                             window.location.reload();
                         },
                         error: function (error) {
@@ -291,6 +293,7 @@
             var oldName = row.find('.name').attr('data-old-value');
             var oldSurname = row.find('.surname').attr('data-old-value');
             var oldEmail = row.find('.email').attr('data-old-value');
+            console.log(oldName+oldSurname+oldEmail);
     
             var userId = localStorage.getItem('userId');
             // Confirma antes de eliminar.
@@ -304,6 +307,7 @@
                             type: 'DELETE',
                             url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/agenda/'+participantId,
                             success: function () {
+                                console.log(participantId);
                                 window.location.reload();
                             },
                             error: function (error) {
