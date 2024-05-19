@@ -1,16 +1,4 @@
 <!DOCTYPE html>
-<!-- 
-    agenda.html
-
-    Descripción: Página encargada de mostrar la agenda de contactos asociada (creada) por el usuario y 
-    permite la creación de nuevos participantes junto con la edición y eliminación de los ya creados.
-    Estos participantes serán los que completen las pruebas creadas por el usuario (interactuarán con chatbots,
-    y rellenarán cuestionarios).
-
-    Año: 2024
-
-    Autora: Celia Jiménez
--->
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -22,7 +10,7 @@
     <link rel="stylesheet" href="fontawesome-free-6.5.1-web/css/all.min.css">
     <style>
         form {
-            background-color: #a48caf;
+            background-color: #ce93d8;
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -50,12 +38,12 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            background-color: #a48caf;
+            background-color: #ce93d8;
             color: white;
         }
 
         .participants-table th {
-            background-color: #a48caf;
+            background-color: #ce93d8;
             color: white;
         }
 
@@ -78,22 +66,17 @@
         }
 
         .add-participant-button, .edit-button, .delete-button {
-            background-color: #765183; 
+            background-color: #6c3880; /* Gris oscuro para mejor contraste */
             color: white;
             border: none;
-            padding: 10px 16px;
+            padding: 6px 12px;
             cursor: pointer;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            transition: background-color 0.2s ease-in-out;
         }
-        
 
         .add-participant-button:hover, .edit-button:hover, .delete-button:hover {
-            background-color: #352533; 
-        }
-
-        .add-participant-button:focus, .edit-button:focus, .delete-button:focus {
-            outline: none; 
+            background-color: #5a6268; /* Un gris más oscuro para el hover */
         }
     </style>
 </head>
@@ -121,7 +104,7 @@
                         <input type="text" class="add-participant-input" placeholder="Enter Name" id="participantName">
                         <input type="text" class="add-participant-input" placeholder="Enter Surname" id="participantSurname">
                         <input type="text" class="add-participant-input" placeholder="Enter Email" id="participantEmail">
-                        <button type="button" class="add-participant-button" onclick="addParticipant()">Add Participant</button>
+                        <button type="button" class="btn add-participant-button" onclick="addParticipant()">Add Participant</button>
                     </div>
                 </form>
             </div>
@@ -132,22 +115,16 @@
     <script src="js/jquery.easing.min.js"></script>
     <script src="js/custom.js"></script>
     <script>
-        // Prepara la página una vez que el DOM esté listo.
         $(document).ready(function () {
-            // Carga dinámica de la barra de navegación.
             $('#navbarContainer').load('navbar.html');
-            // Llamada a la función que obtiene la agenda del usuario actual.
             fetchAgenda(); 
         });
-    
-        // Añade un participante a la agenda del usuario.
+
         function addParticipant() {
-            // Recupera los valores de los campos del formulario.
             var name = $('#participantName').val();
             var surname = $('#participantSurname').val();
             var email = $('#participantEmail').val();
-    
-            // Verifica que todos los campos estén completos.
+
             if (name && surname && email) {
                 var participant = {
                     name: name,
@@ -155,21 +132,20 @@
                     email: email
                 };
                 var userId = localStorage.getItem('userId');
-                // Realiza una solicitud POST para añadir el participante.
                 $.ajax({
                     type: 'POST',
                     url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda`,
                     contentType: 'application/json',
                     data: JSON.stringify(participant),
                     success: function (response) {
-                        location.reload(); // Recarga la página para actualizar la lista de participantes.
+                        console.log('Participant added:', response);
+                        location.reload();
                     },
                     error: function (error) {
                         console.error('Error adding participant:', error.responseText);
                     }
                 });
-    
-                // Limpia los campos del formulario.
+
                 $('#participantName').val('');
                 $('#participantSurname').val('');
                 $('#participantEmail').val('');
@@ -177,39 +153,36 @@
                 alert('Please enter all participant details.');
             }
         }
-    
-        // Obtiene la agenda del usuario.
+
         function fetchAgenda() {
             var userId = localStorage.getItem('userId');
             $.ajax({
                 type: 'GET',
-                url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda`,
+                url: `https://backend-chatbotevaluator.up.railway.app/users/${userId}/agenda`, 
                 success: function (data) {
-                    displayAgenda(data); // Muestra la agenda en la página.
+                    console.log('Agenda fetched:', data);
+                    displayAgenda(data);
                 },
                 error: function (error) {
                     console.error('Error fetching agenda:', error.responseText);
                 }
             });
         }
-    
-        // Muestra la agenda en la página.
+
         function displayAgenda(agenda) {
             $('#participantsTableBody').empty();
             agenda.forEach(function (participant, index) {
-                // Crea una fila por cada participante en la agenda.
                 var newRow = `<tr id="participant-${index}">
                     <td class="name" data-old-value="${participant.name}">${participant.name}</td>
                     <td class="surname" data-old-value="${participant.surname}">${participant.surname}</td>
                     <td class="email" data-old-value="${participant.email}">${participant.email}</td>
-                    <td><button class="edit-button" onclick="editParticipant(${index})">Edit</button></td>
-                    <td><button class="delete-button" onclick="deleteParticipant(${index})">Delete</button></td>
+                    <td><button class="btn edit-button" onclick="editParticipant(${index})">Edit</button></td>
+                    <td><button class="btn delete-button" onclick="deleteParticipant(${index})">Delete</button></td>
                 </tr>`;
                 $('#participantsTableBody').append(newRow);
             });
         }
 
-        // Obtiene el ID de un participante en función de su nombre, apellido y email
         function getParticipantId(name, surname, email, callback) {
             var userId = localStorage.getItem('userId');
             $.ajax({
@@ -225,58 +198,47 @@
             });
         }
 
-        // Edita un participante existente en la agenda.
         function editParticipant(index) {
             var row = $('#participant-' + index);
             var name = row.find('.name').text();
             var surname = row.find('.surname').text();
             var email = row.find('.email').text();
-            console.log('trato de editar participant: '+index);
-            console.log(name+surname+email);
-    
-            // Convierte los textos en campos de entrada para editar.
+
             row.find('.name').html(`<input type="text" class="edit-input" value="${name}">`);
             row.find('.surname').html(`<input type="text" class="edit-input" value="${surname}">`);
             row.find('.email').html(`<input type="text" class="edit-input" value="${email}">`);
-            row.find('td:nth-child(4)').html(`<button class="edit-button" onclick="saveParticipant(${index})">Save</button>`);
+            row.find('td:nth-child(4)').html(`<button class="btn edit-button" onclick="saveParticipant(${index})">Save</button>`);
         }
-    
-        // Guarda los cambios realizados a un participante.
+
         function saveParticipant(index) {
             var row = $('#participant-' + index);
             var newName = row.find('.name input').val();
             var newSurname = row.find('.surname input').val();
             var newEmail = row.find('.email input').val();
-            console.log('guardo participant'+index);
-            console.log(newName+newSurname+newEmail);
-    
+
             var oldName = row.find('.name').attr('data-old-value');
             var oldSurname = row.find('.surname').attr('data-old-value');
             var oldEmail = row.find('.email').attr('data-old-value');
-            console.log('antiguos');
-            console.log(oldName+oldSurname+oldEmail);
 
-    
-            // Obtiene el ID del participante basado en los datos antiguos.
+            event.preventDefault();
+               
             getParticipantId(oldName, oldSurname, oldEmail, function(err, participantId) {
                 if (err) {
-                    alert(err); 
-                } else {
+                    alert(err);
+                    return;
+                }
+                else{
                     var userId = localStorage.getItem('userId');
-                    // Realiza una solicitud PATCH para actualizar los datos del participante.
                     $.ajax({
                         type: 'PATCH',
                         url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/agenda/'+participantId,
                         contentType: 'application/json',
                         data: JSON.stringify({name: newName, surname: newSurname, email: newEmail}),
                         success: function () {
-                            // Actualiza los datos mostrados en la tabla y reinicia el estado de la fila.
                             row.find('.name').text(newName).attr('data-old-value', newName);
                             row.find('.surname').text(newSurname).attr('data-old-value', newSurname);
                             row.find('.email').text(newEmail).attr('data-old-value', newEmail);
-                            row.find('td:nth-child(4)').html(`<button class="edit-button" onclick="editParticipant(${index})">Edit</button>`);
-                            console.log("he editado el participante");
-                            console.log(participantId);
+                            row.find('td:nth-child(4)').html(`<button class="btn edit-button" onclick="editParticipant(${index})">Edit</button>`);
                             window.location.reload();
                         },
                         error: function (error) {
@@ -286,38 +248,41 @@
                 }
             });
         }
-    
-        // Elimina un participante de la agenda.
+
         function deleteParticipant(index) {
             var row = $('#participant-' + index);
             var oldName = row.find('.name').attr('data-old-value');
             var oldSurname = row.find('.surname').attr('data-old-value');
             var oldEmail = row.find('.email').attr('data-old-value');
-            console.log(oldName+oldSurname+oldEmail);
-    
+
             var userId = localStorage.getItem('userId');
-            // Confirma antes de eliminar.
+            event.preventDefault();
             if (confirm("Are you sure you want to delete participant: "+oldName+' '+oldSurname)) {
-                // Obtiene el ID y realiza una solicitud DELETE.
                 getParticipantId(oldName, oldSurname, oldEmail, function(err, participantId) {
                     if (err) {
                         alert(err);
-                    } else {
+                        return;
+                    }
+
+                    else{
+                        var userId = localStorage.getItem('userId');
+                        console.log(userId);
                         $.ajax({
                             type: 'DELETE',
                             url: 'https://backend-chatbotevaluator.up.railway.app/users/'+userId+'/agenda/'+participantId,
                             success: function () {
-                                console.log(participantId);
                                 window.location.reload();
                             },
                             error: function (error) {
-                                alert('Error deleting participant: ' + error.responseText);
+                                alert(error.responseText);
                             }
                         });
                     }
                 });
             }
         }
-    </script>    
+
+        
+    </script>
 </body>
 </html>
