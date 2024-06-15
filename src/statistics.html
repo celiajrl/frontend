@@ -351,48 +351,136 @@
             });
         }
 
-        // Función para crear diagrama de barras para puntuajes SUS
-        function createChart(susValues) {
-            const ctx = document.getElementById('myChart').getContext('2d');
-            const backgroundColors = susValues.map(value => {
-                if (value > 80) return 'green';
-                if (value >= 68) return 'lightgreen';
-                if (value >= 51) return 'orange';
-                return 'red';
-            });
-            const myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Array.from({ length: susValues.length }, (_, i) => `P ${i + 1}`),
-                    datasets: [{
-                        label: 'SUS Score',
-                        data: susValues,
-                        backgroundColor: backgroundColors,
-                        borderColor: backgroundColors,
-                        borderWidth: 1
-                    }]
+       // Función para crear diagrama de barras para puntuajes SUS
+function createChart(susValues) {
+    const ctx = document.getElementById('myChart').getContext('2d');
+    
+    const backgroundColors = susValues.map(value => {
+        if (value > 80) return 'green';
+        if (value >= 68) return 'lightgreen';
+        if (value >= 51) return 'orange';
+        return 'red';
+    });
+
+    // Calcular la media SUS
+    const totalSUS = susValues.reduce((sum, score) => sum + score, 0);
+    const averageSUS = totalSUS / susValues.length;
+    let susColor;
+    if (averageSUS > 80) {
+        susColor = 'green'; // Excellent
+    } else if (averageSUS >= 68) {
+        susColor = 'lightgreen'; // Good
+    } else if (averageSUS >= 51) {
+        susColor = 'orange'; // Poor
+    } else {
+        susColor = 'red'; // Awful
+    }
+
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Array.from({ length: susValues.length }, (_, i) => `P ${i + 1}`),
+            datasets: [{
+                label: `Average SUS Score: ${averageSUS.toFixed(2)}`,
+                data: susValues,
+                backgroundColor: backgroundColors,
+                borderColor: backgroundColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'SUS Score'
+                    }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'SUS Score'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Participants'
-                            }
-                        }
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Participants'
                     }
                 }
-            });
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        generateLabels: function(chart) {
+                            return [
+                                {
+                                    text: 'Excellent (> 80)',
+                                    fillStyle: 'green',
+                                    hidden: false,
+                                    lineCap: 'butt',
+                                    lineDash: [],
+                                    lineDashOffset: 0,
+                                    lineJoin: 'miter',
+                                    lineWidth: 1,
+                                    strokeStyle: 'green',
+                                    pointStyle: 'rect',
+                                    datasetIndex: 0
+                                },
+                                {
+                                    text: 'Good (68 - 80)',
+                                    fillStyle: 'lightgreen',
+                                    hidden: false,
+                                    lineCap: 'butt',
+                                    lineDash: [],
+                                    lineDashOffset: 0,
+                                    lineJoin: 'miter',
+                                    lineWidth: 1,
+                                    strokeStyle: 'lightgreen',
+                                    pointStyle: 'rect',
+                                    datasetIndex: 0
+                                },
+                                {
+                                    text: 'Okay (51 - 67)',
+                                    fillStyle: 'orange',
+                                    hidden: false,
+                                    lineCap: 'butt',
+                                    lineDash: [],
+                                    lineDashOffset: 0,
+                                    lineJoin: 'miter',
+                                    lineWidth: 1,
+                                    strokeStyle: 'orange',
+                                    pointStyle: 'rect',
+                                    datasetIndex: 0
+                                },
+                                {
+                                    text: 'Awful (< 51)',
+                                    fillStyle: 'red',
+                                    hidden: false,
+                                    lineCap: 'butt',
+                                    lineDash: [],
+                                    lineDashOffset: 0,
+                                    lineJoin: 'miter',
+                                    lineWidth: 1,
+                                    strokeStyle: 'red',
+                                    pointStyle: 'rect',
+                                    datasetIndex: 0
+                                }
+                            ];
+                        }
+                    }
+                },
+                title: {
+                    display: true,
+                    text: `Average SUS Score: ${averageSUS.toFixed(2)}`,
+                    color: susColor,
+                    font: {
+                        size: 16
+                    }
+                }
+            }
         }
+    });
+}
+
 
         // Función para generar boxplots por cada pregunta en caso de cuestionario preconfigurado
         function generateBoxPlots(results, questions) {
