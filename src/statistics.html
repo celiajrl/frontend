@@ -159,8 +159,10 @@
                             let susColor;
                             if (averageSUS > 80.3) {
                                 susColor = 'green'; // Excellent
-                            } else if (averageSUS >= 68) {
+                            } else if (averageSUS > 68) {
                                 susColor = 'lightgreen'; // Good
+                            } else if (averageSUS == 68) {
+                                susColor = 'yellow'; // OK
                             } else if (averageSUS >= 51) {
                                 susColor = 'orange'; // Poor
                             } else {
