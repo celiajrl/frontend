@@ -149,7 +149,36 @@
                                 const average = responses.reduce((sum, current) => sum + current, 0) / responses.length;
                                 susQuestions.push({ question, index, average });
                             });
-                            createChart(susValues.map(result => result.sus));
+
+                            // Calcular la media SUS
+                            const susValues1 = susValues.map(result => result.sus);
+                            const totalSUS = susValues1.reduce((sum, score) => sum + score, 0);
+                            const averageSUS = totalSUS / susValues1.length;
+
+                            // Determinar el color basado en la media SUS
+                            let susColor;
+                            if (averageSUS > 80.3) {
+                                susColor = 'green'; // Excellent
+                            } else if (averageSUS >= 68) {
+                                susColor = 'lightgreen'; // Good
+                            } else if (averageSUS >= 51) {
+                                susColor = 'orange'; // Poor
+                            } else {
+                                susColor = 'red'; // Awful
+                            }
+
+                            // Mostrar la media SUS y el color asociado
+                            const susDisplayElement = document.createElement('div');
+                            susDisplayElement.style.backgroundColor = susColor;
+                            susDisplayElement.style.color = 'white';
+                            susDisplayElement.style.padding = '10px';
+                            susDisplayElement.style.borderRadius = '5px';
+                            susDisplayElement.style.textAlign = 'center';
+                            susDisplayElement.textContent = `Average SUS Score: ${averageSUS.toFixed(2)} (${susColor.toUpperCase()})`;
+                            document.body.appendChild(susDisplayElement);
+
+
+                            createChart(susValues1);
                             generateBoxPlots(susValues, transformedQuestions);
                             displayAverageTable(susQuestions);
                         }
@@ -325,21 +354,27 @@
         // Función para crear diagrama de barras para puntuajes SUS
         function createChart(susValues) {
             const ctx = document.getElementById('myChart').getContext('2d');
+            const backgroundColors = susValues.map(value => {
+                if (value > 80) return 'green';
+                if (value >= 68) return 'lightgreen';
+                if (value >= 51) return 'orange';
+                return 'red';
+            });
             const myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: Array.from({length: susValues.length}, (_, i) => `P ${i+1}`),
+                    labels: Array.from({ length: susValues.length }, (_, i) => `P ${i + 1}`),
                     datasets: [{
                         label: 'SUS Score',
                         data: susValues,
-                        backgroundColor: 'rgba(153, 102, 255, 0.5)', 
-                        borderColor: 'rgba(153, 102, 255, 1)', 
+                        backgroundColor: backgroundColors,
+                        borderColor: backgroundColors,
                         borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false, 
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             beginAtZero: true,
